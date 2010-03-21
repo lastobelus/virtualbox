@@ -5,6 +5,7 @@ require 'nokogiri'
 
 # Internal Dependencies
 require 'virtualbox/ext/platform'
+require 'virtualbox/ffi'
 require 'virtualbox/exceptions'
 require 'virtualbox/command'
 require 'virtualbox/abstract_model'
