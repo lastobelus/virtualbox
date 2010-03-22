@@ -8,7 +8,7 @@ module VirtualBox
     PRUint16 = :ushort
     PRUint32 = :uint
     PRUnichar = PRUint16
-    PRBool = :boolean
+    PRBool = :bool
 
     ffi_lib "/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"
     attach_function :VBoxGetXPCOMCFunctions, [ :uint ], :pointer

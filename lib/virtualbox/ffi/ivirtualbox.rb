@@ -1,5 +1,7 @@
 module VirtualBox
   module FFI
+    IVIRTUALBOX_IID_STR = "2158464a-f706-414b-a8c4-fb589dfc6b62"
+
     # Callback types for IVirtualBox_vtbl
     callback :GetVersion, [:pointer, :pointer], NSRESULT_TYPE
     callback :GetRevision, [:pointer, :pointer], NSRESULT_TYPE
@@ -54,6 +56,10 @@ module VirtualBox
 
     class IVirtualBox < ::FFI::Struct
       layout :vtbl, :pointer # Pointer to IVirtualBox_vtbl
+
+      def vtbl
+        @_vtbl ||= IVirtualBox_vtbl.new(self[:vtbl])
+      end
     end
 
     class IVirtualBox_vtbl < ::FFI::Struct
