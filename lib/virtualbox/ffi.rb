@@ -4,6 +4,7 @@ module VirtualBox
   module FFI
     extend ::FFI::Library
 
+    XPCOMC_VERSION = 0x00020000
     NSRESULT_TYPE = :uint
     PRInt32 = :int
     PRUint16 = :ushort
@@ -11,8 +12,18 @@ module VirtualBox
     PRUnichar = PRUint16
     PRBool = :bool
 
-    ffi_lib "/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"
-    attach_function :VBoxGetXPCOMCFunctions, [ :uint ], :pointer
+    def self.init(lib_path)
+      # Attach the library and the only function
+      ffi_lib lib_path
+      attach_function :VBoxGetXPCOMCFunctions, [ :uint ], :pointer
+
+      # Initial the XPCOM C interface, and return the various instances
+      # associated with it
+      pVBOXXPCOMC = VBoxGetXPCOMCFunctions(XPCOMC_VERSION)
+      xpcom = VBOXXPCOMC.new(pVBOXXPCOMC)
+      vbox, session = xpcom.pfnComInitialize
+      [xpcom, vbox, session]
+    end
   end
 end
 
