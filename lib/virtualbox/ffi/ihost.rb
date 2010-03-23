@@ -50,9 +50,9 @@ module VirtualBox
         member :GetMemorySize, :getter, PRUint32
         member :GetMemoryAvailable, :getter, PRUint32
         member :GetOperatingSystem, :getter, :unicode_string
-        member :GetOSVersion, :GetOSVersion
-        member :GetUTCTime, :GetUTCTime
-        member :GetAcceleration3DAvailable, :GetAcceleration3DAvailable
+        member :GetOSVersion, :getter, :unicode_string
+        member :GetUTCTime, :getter, PRInt64
+        member :GetAcceleration3DAvailable, :getter, PRBool
         member :GetProcessorSpeed, :GetProcessorSpeed
         member :GetProcessorFeature, :GetProcessorFeature
         member :GetProcessorDescription, :GetProcessorDescription

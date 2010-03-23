@@ -44,7 +44,8 @@ class FFIUtilTest < Test::Unit::TestCase
       tests = {
         :GetVersion => :get_version,
         :key => :key,
-        :testingThisOut => :testing_this_out
+        :testingThisOut => :testing_this_out,
+        :GetAcceleration3DAvailable => :get_acceleration_3davailable
       }
 
       tests.each do |original, result|

@@ -32,7 +32,7 @@ module VirtualBox
         # method name such as `get_version`
         def functionify(c_string)
           # Yes, this is a pretty inefficient/verbose way to do this, but it works
-          c_string.to_s.gsub(/([A-Z])/, ' \1').strip.gsub(' ', '_').downcase.to_sym
+          c_string.to_s.gsub(/([a-z])([A-Z0-9])/, '\1 \2').strip.gsub(' ', '_').downcase.to_sym
         end
       end
     end

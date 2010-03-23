@@ -7,10 +7,11 @@ module VirtualBox
     XPCOMC_VERSION = 0x00020000
     NSRESULT_TYPE = :uint
     PRInt32 = :int
+    PRInt64 = :long
     PRUint16 = :ushort
     PRUint32 = :uint
     PRUnichar = PRUint16
-    PRBool = :bool
+    PRBool = :char
 
     def self.init(lib_path)
       # Attach the library and the only function
