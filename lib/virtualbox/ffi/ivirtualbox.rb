@@ -66,7 +66,7 @@ module VirtualBox
         member :GetPackageType, :getter, :unicode_string
         member :GetHomeFolder, :getter, :unicode_string
         member :GetSettingsFilePath, :getter, :unicode_string
-        member :GetHost, :GetHost
+        member :GetHost, :getter, :IHost
         member :GetSystemProperties, :GetSystemProperties
         member :GetMachines, :GetMachines
         member :GetHardDisks, :GetHardDisks

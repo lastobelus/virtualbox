@@ -154,5 +154,22 @@ class FFIVTblTest < Test::Unit::TestCase
         assert_equal result, @struct.read_unicode_string(@ptr, @original_type)
       end
     end
+
+    context "reading struct" do
+      setup do
+        @original_type = :foo
+        @klass = mock("foo_class")
+
+        @sub_ptr = mock("sub_ptr")
+        @ptr = mock("pointer")
+        @ptr.stubs(:get_pointer).with(0).returns(@sub_ptr)
+      end
+
+      should "convert type to a const and return instance" do
+        VirtualBox::FFI.expects(:const_get).with(@original_type).returns(@klass)
+        @klass.expects(:new).with(@ptr.get_pointer(0)).returns(@instance)
+        assert_equal @instance, @struct.read_struct(@ptr, @original_type)
+      end
+    end
   end
 end

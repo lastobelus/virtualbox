@@ -39,16 +39,17 @@ module VirtualBox
 
     class IHost_vtbl < VTbl
       define_layout do
+        member :nsisupports, NSISupports_vtbl
         member :GetDVDDrives, :GetDVDDrives
         member :GetFloppyDrives, :GetFloppyDrives
         member :GetUSBDevices, :GetUSBDevices
         member :GetUSBDeviceFilters, :GetUSBDeviceFilters
         member :GetNetworkInterfaces, :GetNetworkInterfaces
-        member :GetProcessorCount, :GetProcessorCount
-        member :GetProcessorOnlineCount, :GetProcessorOnlineCount
-        member :GetMemorySize, :GetMemorySize
-        member :GetMemoryAvailable, :GetMemoryAvailable
-        member :GetOperatingSystem, :GetOperatingSystem
+        member :GetProcessorCount, :getter, PRUint32
+        member :GetProcessorOnlineCount, :getter, PRUint32
+        member :GetMemorySize, :getter, PRUint32
+        member :GetMemoryAvailable, :getter, PRUint32
+        member :GetOperatingSystem, :getter, :unicode_string
         member :GetOSVersion, :GetOSVersion
         member :GetUTCTime, :GetUTCTime
         member :GetAcceleration3DAvailable, :GetAcceleration3DAvailable
