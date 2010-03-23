@@ -1,30 +1,30 @@
-$:.unshift(File.expand_path(File.dirname(__FILE__)))
-
 # External Dependencies
 require 'nokogiri'
 
 # Internal Dependencies
-require 'virtualbox/ext/platform'
-require 'virtualbox/ffi'
-require 'virtualbox/exceptions'
-require 'virtualbox/lib'
-require 'virtualbox/command'
-require 'virtualbox/abstract_model'
-require 'virtualbox/proxies/collection'
-require 'virtualbox/image'
-require 'virtualbox/attached_device'
-require 'virtualbox/dvd'
-require 'virtualbox/extra_data'
-require 'virtualbox/forwarded_port'
-require 'virtualbox/hard_drive'
-require 'virtualbox/nic'
-require 'virtualbox/usb'
-require 'virtualbox/shared_folder'
-require 'virtualbox/storage_controller'
-require 'virtualbox/vm'
-require 'virtualbox/media'
-require 'virtualbox/global'
-require 'virtualbox/system_property'
+['virtualbox/ext/platform',
+  'virtualbox/ffi',
+  'virtualbox/exceptions',
+  'virtualbox/lib',
+  'virtualbox/command',
+  'virtualbox/abstract_model',
+  'virtualbox/proxies/collection',
+  'virtualbox/image',
+  'virtualbox/attached_device',
+  'virtualbox/dvd',
+  'virtualbox/extra_data',
+  'virtualbox/forwarded_port',
+  'virtualbox/hard_drive',
+  'virtualbox/nic',
+  'virtualbox/usb',
+  'virtualbox/shared_folder',
+  'virtualbox/storage_controller',
+  'virtualbox/vm',
+  'virtualbox/media',
+  'virtualbox/global',
+  'virtualbox/system_property'].each do |lib|
+  require File.expand_path(lib, File.dirname(__FILE__))
+end
 
 module VirtualBox
   class <<self
