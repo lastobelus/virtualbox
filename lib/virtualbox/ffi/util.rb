@@ -55,6 +55,22 @@ module VirtualBox
           [c_type, type]
         end
 
+        # Reads a unicode string value from a pointer to that value.
+        #
+        # @return [String]
+        def read_unicode_string(ptr, original_type)
+          VirtualBox::Lib.xpcom[:pfnUtf16ToUtf8].call(ptr.get_pointer(0), ptr)
+          ptr.read_pointer().read_string().to_s
+        end
+
+        # Reads a struct from the pointer
+        #
+        # @return [::FFI::Struct]
+        def read_struct(ptr, original_type)
+          klass = FFI.const_get(original_type)
+          klass.new(ptr.get_pointer(0))
+        end
+
         # Converts a C-style member name such as `GetVersion` into a Ruby-style
         # method name such as `get_version`
         def functionify(c_string)

@@ -72,14 +72,7 @@ module VirtualBox
           define_method(Util.functionify(key)) do
             Util.pointer_for_type(type) do |pointer, inferred_type|
               self[key].call(parent, pointer)
-
-              # Now, depending on the type, we return different values
-              if pointer.respond_to?("get_#{inferred_type}".to_sym)
-                # This handles reading the typical times such as :uint, :int, etc.
-                pointer.send("get_#{inferred_type}".to_sym, 0)
-              else
-                send("read_#{inferred_type}".to_sym, pointer, type)
-              end
+              Util.dereference_pointer(pointer, type)
             end
           end
         end
@@ -113,22 +106,6 @@ module VirtualBox
       # @return [VBOXXPCOMC]
       def xpcom
         VirtualBox::Lib.xpcom
-      end
-
-      # Reads a unicode string value from a pointer to that value.
-      #
-      # @return [String]
-      def read_unicode_string(ptr, original_type)
-        xpcom[:pfnUtf16ToUtf8].call(ptr.get_pointer(0), ptr)
-        ptr.read_pointer().read_string().to_s
-      end
-
-      # Reads a struct from the pointer
-      #
-      # @return [::FFI::Struct]
-      def read_struct(ptr, original_type)
-        klass = FFI.const_get(original_type)
-        klass.new(ptr.get_pointer(0))
       end
     end
   end

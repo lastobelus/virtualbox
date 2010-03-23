@@ -83,17 +83,10 @@ class FFIVTblTest < Test::Unit::TestCase
           @struct.send(@name)
         end
 
-        should "call the get_* on the pointer if it responds to it" do
-          result = mock("result")
-          @ptr.expects(:respond_to?).with("get_#{@type}".to_sym).once.returns(true)
-          @ptr.expects("get_#{@type}".to_sym).once.with(0).returns(result)
-          @struct.send(@name)
-        end
-
-        should "call the read_* method on the struct if it responds to it" do
-          result = mock("result")
-          @ptr.expects(:respond_to?).returns(false)
-          @struct.expects("read_#{@type}".to_sym).with(@ptr, @type).once.returns(result)
+        should "return the result of dereferencing the pointer" do
+          deref_seq = sequence("deref_seq")
+          @proc.expects(:call).with(@parent, @ptr).once.in_sequence(deref_seq)
+          VirtualBox::FFI::Util.expects(:dereference_pointer).with(@ptr, @type).once.in_sequence(deref_seq)
           @struct.send(@name)
         end
       end
@@ -125,50 +118,6 @@ class FFIVTblTest < Test::Unit::TestCase
         xpcom = mock("xpcom")
         VirtualBox::Lib.expects(:xpcom).returns(xpcom)
         assert_equal xpcom, @struct.xpcom
-      end
-    end
-
-    context "reading unicode string" do
-      setup do
-        @sub_ptr = mock("subptr")
-        @ptr = mock("ptr")
-        @ptr.stubs(:get_pointer).returns(@sub_ptr)
-
-        @function = mock("function")
-        @function.stubs(:call)
-
-        @xpcom = mock("xpcom")
-        @xpcom.stubs(:[]).returns(@function)
-        @struct.stubs(:xpcom).returns(@xpcom)
-
-        @original_type = :foo
-      end
-
-      should "convert to UTF8 then return the result" do
-        result = "foo"
-        convert_seq = sequence("convert")
-        @xpcom.expects(:[]).with(:pfnUtf16ToUtf8).returns(@function).in_sequence(convert_seq)
-        @function.expects(:call).with(@sub_ptr, @ptr).once.in_sequence(convert_seq)
-        @ptr.expects(:read_pointer).returns(@sub_ptr).in_sequence(convert_seq)
-        @sub_ptr.expects(:read_string).returns(result).in_sequence(convert_seq)
-        assert_equal result, @struct.read_unicode_string(@ptr, @original_type)
-      end
-    end
-
-    context "reading struct" do
-      setup do
-        @original_type = :foo
-        @klass = mock("foo_class")
-
-        @sub_ptr = mock("sub_ptr")
-        @ptr = mock("pointer")
-        @ptr.stubs(:get_pointer).with(0).returns(@sub_ptr)
-      end
-
-      should "convert type to a const and return instance" do
-        VirtualBox::FFI.expects(:const_get).with(@original_type).returns(@klass)
-        @klass.expects(:new).with(@ptr.get_pointer(0)).returns(@instance)
-        assert_equal @instance, @struct.read_struct(@ptr, @original_type)
       end
     end
   end
