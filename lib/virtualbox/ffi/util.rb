@@ -9,9 +9,15 @@ module VirtualBox
         def pointer_for_type(type)
           c_type, type = infer_type(type)
 
-          # Create the pointer, yield
+          # Create the pointer, yield, returning the result of the block
+          # if a block is given, or otherwise just returning the pointer
+          # and inferred type
           pointer = ::FFI::MemoryPointer.new(c_type)
-          yield pointer, type
+          if block_given?
+            yield pointer, type
+          else
+            [pointer, type]
+          end
         end
 
         # Decodes a pointer with a given type into a proper Ruby object
