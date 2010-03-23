@@ -28,6 +28,6 @@ module VirtualBox
 end
 
 # Load in the remaining structs and other files
-%w{nsisupports vtbl vtbl_parent isession ivirtualbox vboxxpcomc imachine}.each do |file|
+%w{nsisupports util vtbl vtbl_parent isession ivirtualbox vboxxpcomc imachine}.each do |file|
   require File.expand_path(File.join(File.dirname(__FILE__), 'ffi', file))
 end

@@ -69,33 +69,17 @@ module VirtualBox
           layout_args << [key, key]
 
           # Define the getter
-          define_method(functionify(key)) do
-            # Figure out the c type for creating the pointer
-            original_type = type
-            c_type = type
-            begin
-              if type == :unicode_string
-                c_type = :pointer
-              elsif type.is_a?(Class) || FFI.const_get(type)
-                # The type is another struct
-                original_type = FFI.const_get(type)
-                c_type = :pointer
-                type = :struct
+          define_method(Util.functionify(key)) do
+            Util.pointer_for_type(type) do |pointer, inferred_type|
+              self[key].call(parent, pointer)
+
+              # Now, depending on the type, we return different values
+              if pointer.respond_to?("get_#{inferred_type}".to_sym)
+                # This handles reading the typical times such as :uint, :int, etc.
+                pointer.send("get_#{inferred_type}".to_sym, 0)
+              else
+                send("read_#{inferred_type}".to_sym, pointer, type)
               end
-            rescue NameError
-              # Do nothing
-            end
-
-            # Call the getter method with a regular pointer
-            ptr = ::FFI::MemoryPointer.new(c_type)
-            self[key].call(parent, ptr)
-
-            # Now, depending on the type, we return different values
-            if ptr.respond_to?("get_#{type}".to_sym)
-              # This handles reading the typical times such as :uint, :int, etc.
-              return ptr.send("get_#{type}".to_sym, 0)
-            else
-              send("read_#{type}".to_sym, ptr, original_type)
             end
           end
         end
@@ -108,13 +92,6 @@ module VirtualBox
         # @return [Array]
         def layout_args
           @_layout_args ||= []
-        end
-
-        # Converts a C-style member name such as `GetVersion` into a Ruby-style
-        # method name such as `get_version`
-        def functionify(c_string)
-          # Yes, this is a pretty inefficient/verbose way to do this, but it works
-          c_string.to_s.gsub(/([A-Z])/, ' \1').strip.gsub(' ', '_').downcase.to_sym
         end
       end
 

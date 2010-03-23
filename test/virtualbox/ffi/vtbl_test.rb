@@ -64,48 +64,38 @@ class FFIVTblTest < Test::Unit::TestCase
 
           @ptr = mock("pointer")
           @ptr.stubs(:respond_to?).returns(true)
-          @ptr.stubs(:get_string)
-          FFI::MemoryPointer.stubs(:new).returns(@ptr)
+          @ptr.stubs(:get_string).returns('foo')
+
+          VirtualBox::FFI::Util.stubs(:pointer_for_type).yields(@ptr, @type)
         end
 
         should "respond to the getter method" do
           assert @struct.respond_to?(@name)
         end
 
-        should "call the method with a pointer" do
+        should "call the Util.pointer_for_type method" do
+          VirtualBox::FFI::Util.expects(:pointer_for_type).with(@type).once
+          @struct.send(@name)
+        end
+
+        should "call the proc with the given pointer and parent" do
           @proc.expects(:call).with(@parent, @ptr).once
           @struct.send(@name)
         end
 
-        should "call the read_* method on the pointer if it responds and return its value" do
-          result = mock('result')
+        should "call the get_* on the pointer if it responds to it" do
+          result = mock("result")
           @ptr.expects(:respond_to?).with("get_#{@type}".to_sym).once.returns(true)
-          @ptr.expects("get_#{@type}".to_sym).once.returns(result)
-          assert_equal result, @struct.send(@name)
+          @ptr.expects("get_#{@type}".to_sym).once.with(0).returns(result)
+          @struct.send(@name)
         end
 
-        should "call the read_* method on the struct itself otherwise and return its value" do
-          result = mock('result')
-          klass = mock('klass')
-          VirtualBox::FFI.expects(:const_get).twice.with(@type).returns(klass)
+        should "call the read_* method on the struct if it responds to it" do
+          result = mock("result")
           @ptr.expects(:respond_to?).returns(false)
-          @struct.expects("read_struct".to_sym).with(@ptr, klass).once.returns(result)
-          assert_equal result, @struct.send(@name)
+          @struct.expects("read_#{@type}".to_sym).with(@ptr, @type).once.returns(result)
+          @struct.send(@name)
         end
-      end
-    end
-  end
-
-  context "functionify" do
-    should "convert properly" do
-      tests = {
-        :GetVersion => :get_version,
-        :key => :key,
-        :testingThisOut => :testing_this_out
-      }
-
-      tests.each do |original, result|
-        assert_equal result, VirtualBox::FFI::VTbl.functionify(original)
       end
     end
   end
