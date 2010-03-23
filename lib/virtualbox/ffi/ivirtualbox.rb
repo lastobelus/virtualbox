@@ -59,57 +59,59 @@ module VirtualBox
     end
 
     class IVirtualBox_vtbl < VTbl
-      layout  :nsisupports, NSISupports_vtbl,
-              :GetVersion, :GetVersion,
-              :GetRevision, :GetRevision,
-              :GetPackageType, :GetPackageType,
-              :GetHomeFolder, :GetHomeFolder,
-              :GetSettingsFilePath, :GetSettingsFilePath,
-              :GetHost, :GetHost,
-              :GetSystemProperties, :GetSystemProperties,
-              :GetMachines, :GetMachines,
-              :GetHardDisks, :GetHardDisks,
-              :GetDVDImages, :GetDVDImages,
-              :GetFloppyImages, :GetFloppyImages,
-              :GetProgressOperations, :GetProgressOperations,
-              :GetGuestOSTypes, :GetGuestOSTypes,
-              :GetSharedFolders, :GetSharedFolders,
-              :GetPerformanceCollector, :GetPerformanceCollector,
-              :GetDHCPServers, :GetDHCPServers,
-              :CreateMachine, :CreateMachine,
-              :CreateLegacyMachine, :CreateLegacyMachine,
-              :OpenMachine, :OpenMachine,
-              :RegisterMachine, :RegisterMachine,
-              :GetMachine, :GetMachine,
-              :FindMachine, :FindMachine,
-              :UnregisterMachine, :UnregisterMachine,
-              :CreateAppliance, :CreateAppliance,
-              :CreateHardDisk, :CreateHardDisk,
-              :OpenHardDisk, :OpenHardDisk,
-              :GetHardDisk, :GetHardDisk,
-              :FindHardDisk, :FindHardDisk,
-              :OpenDVDImage, :OpenDVDImage,
-              :GetDVDImage, :GetDVDImage,
-              :FindDVDImage, :FindDVDImage,
-              :OpenFloppyImage, :OpenFloppyImage,
-              :GetFloppyImage, :GetFloppyImage,
-              :FindFloppyImage, :FindFloppyImage,
-              :GetGuestOSType, :GetGuestOSType,
-              :CreateSharedFolder, :CreateSharedFolder,
-              :RemoveSharedFolder, :RemoveSharedFolder,
-              :GetExtraDataKeys, :GetExtraDataKeys,
-              :GetExtraData, :GetExtraData,
-              :SetExtraData, :SetExtraData,
-              :OpenSession, :OpenSession,
-              :OpenRemoteSession, :OpenRemoteSession,
-              :OpenExistingSession, :OpenExistingSession,
-              :RegisterCallback, :RegisterCallback,
-              :UnregisterCallback, :UnregisterCallback,
-              :WaitForPropertyChange, :WaitForPropertyChange,
-              :CreateDHCPServer, :CreateDHCPServer,
-              :FindDHCPServerByNetworkName, :FindDHCPServerByNetworkName,
-              :RemoveDHCPServer, :RemoveDHCPServer,
-              :CheckFirmwarePresent, :CheckFirmwarePresent
+      define_layout do
+        member :nsisupports, NSISupports_vtbl
+        member :GetVersion, :getter, :unicode_string
+        member :GetRevision, :GetRevision
+        member :GetPackageType, :GetPackageType
+        member :GetHomeFolder, :GetHomeFolder
+        member :GetSettingsFilePath, :GetSettingsFilePath
+        member :GetHost, :GetHost
+        member :GetSystemProperties, :GetSystemProperties
+        member :GetMachines, :GetMachines
+        member :GetHardDisks, :GetHardDisks
+        member :GetDVDImages, :GetDVDImages
+        member :GetFloppyImages, :GetFloppyImages
+        member :GetProgressOperations, :GetProgressOperations
+        member :GetGuestOSTypes, :GetGuestOSTypes
+        member :GetSharedFolders, :GetSharedFolders
+        member :GetPerformanceCollector, :GetPerformanceCollector
+        member :GetDHCPServers, :GetDHCPServers
+        member :CreateMachine, :CreateMachine
+        member :CreateLegacyMachine, :CreateLegacyMachine
+        member :OpenMachine, :OpenMachine
+        member :RegisterMachine, :RegisterMachine
+        member :GetMachine, :GetMachine
+        member :FindMachine, :FindMachine
+        member :UnregisterMachine, :UnregisterMachine
+        member :CreateAppliance, :CreateAppliance
+        member :CreateHardDisk, :CreateHardDisk
+        member :OpenHardDisk, :OpenHardDisk
+        member :GetHardDisk, :GetHardDisk
+        member :FindHardDisk, :FindHardDisk
+        member :OpenDVDImage, :OpenDVDImage
+        member :GetDVDImage, :GetDVDImage
+        member :FindDVDImage, :FindDVDImage
+        member :OpenFloppyImage, :OpenFloppyImage
+        member :GetFloppyImage, :GetFloppyImage
+        member :FindFloppyImage, :FindFloppyImage
+        member :GetGuestOSType, :GetGuestOSType
+        member :CreateSharedFolder, :CreateSharedFolder
+        member :RemoveSharedFolder, :RemoveSharedFolder
+        member :GetExtraDataKeys, :GetExtraDataKeys
+        member :GetExtraData, :GetExtraData
+        member :SetExtraData, :SetExtraData
+        member :OpenSession, :OpenSession
+        member :OpenRemoteSession, :OpenRemoteSession
+        member :OpenExistingSession, :OpenExistingSession
+        member :RegisterCallback, :RegisterCallback
+        member :UnregisterCallback, :UnregisterCallback
+        member :WaitForPropertyChange, :WaitForPropertyChange
+        member :CreateDHCPServer, :CreateDHCPServer
+        member :FindDHCPServerByNetworkName, :FindDHCPServerByNetworkName
+        member :RemoveDHCPServer, :RemoveDHCPServer
+        member :CheckFirmwarePresent, :CheckFirmwarePresent
+      end
     end
   end
 end
