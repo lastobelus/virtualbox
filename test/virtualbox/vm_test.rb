@@ -324,12 +324,11 @@ raw
       assert @vm.save
     end
 
-    should "save name first if changed, then following values should modify new VM" do
+    should "save with the old name" do
       new_name = "foo2"
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--ostype", "Zubuntu", "--name", new_name)
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--name", new_name)
 
       @vm.name = new_name
-      @vm.ostype = "Zubuntu"
       assert @vm.save
     end
 
