@@ -13,7 +13,7 @@ module VirtualBox
 
           # Create the instance method to access the vtbl
           define_method :vtbl do
-            @_vtbl ||= klass.new(self, self[:vtbl])
+            @_vtbl ||= FFI.const_get(klass).new(self, self[:vtbl])
           end
         end
       end

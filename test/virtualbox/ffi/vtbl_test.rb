@@ -94,6 +94,20 @@ class FFIVTblTest < Test::Unit::TestCase
     end
   end
 
+  context "functionify" do
+    should "convert properly" do
+      tests = {
+        :GetVersion => :get_version,
+        :key => :key,
+        :testingThisOut => :testing_this_out
+      }
+
+      tests.each do |original, result|
+        assert_equal result, VirtualBox::FFI::VTbl.functionify(original)
+      end
+    end
+  end
+
   context "instance" do
     class FooStruct < VirtualBox::FFI::VTbl
       define_layout do

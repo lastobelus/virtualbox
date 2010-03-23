@@ -54,15 +54,11 @@ module VirtualBox
     callback :RemoveDHCPServer, [:pointer, :pointer], NSRESULT_TYPE
     callback :CheckFirmwarePresent, [:pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
 
-    class IVirtualBox < ::FFI::Struct
-      layout :vtbl, :pointer # Pointer to IVirtualBox_vtbl
-
-      def vtbl
-        @_vtbl ||= IVirtualBox_vtbl.new(self[:vtbl])
-      end
+    class IVirtualBox < VTblParent
+      parent_of :IVirtualBox_vtbl
     end
 
-    class IVirtualBox_vtbl < ::FFI::Struct
+    class IVirtualBox_vtbl < VTbl
       layout  :nsisupports, NSISupports_vtbl,
               :GetVersion, :GetVersion,
               :GetRevision, :GetRevision,

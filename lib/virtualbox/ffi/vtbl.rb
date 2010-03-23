@@ -69,7 +69,7 @@ module VirtualBox
           layout_args << [key, key]
 
           # Define the getter
-          define_method key do
+          define_method(functionify(key)) do
             # Call the getter method with a regular pointer
             ptr = ::FFI::MemoryPointer.new(:pointer)
             self[key].call(parent, ptr)
@@ -92,6 +92,13 @@ module VirtualBox
         # @return [Array]
         def layout_args
           @_layout_args ||= []
+        end
+
+        # Converts a C-style member name such as `GetVersion` into a Ruby-style
+        # method name such as `get_version`
+        def functionify(c_string)
+          # Yes, this is a pretty inefficient/verbose way to do this, but it works
+          c_string.to_s.gsub(/([A-Z])/, ' \1').strip.gsub(' ', '_').downcase.to_sym
         end
       end
 
