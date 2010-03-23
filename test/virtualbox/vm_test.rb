@@ -326,7 +326,7 @@ raw
 
     should "save name first if changed, then following values should modify new VM" do
       new_name = "foo2"
-      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--name", new_name, "--ostype", "Zubuntu")
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @name, "--ostype", "Zubuntu", "--name", new_name)
 
       @vm.name = new_name
       @vm.ostype = "Zubuntu"

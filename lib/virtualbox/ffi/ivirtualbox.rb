@@ -62,10 +62,10 @@ module VirtualBox
       define_layout do
         member :nsisupports, NSISupports_vtbl
         member :GetVersion, :getter, :unicode_string
-        member :GetRevision, :GetRevision
-        member :GetPackageType, :GetPackageType
-        member :GetHomeFolder, :GetHomeFolder
-        member :GetSettingsFilePath, :GetSettingsFilePath
+        member :GetRevision, :getter, :uint
+        member :GetPackageType, :getter, :unicode_string
+        member :GetHomeFolder, :getter, :unicode_string
+        member :GetSettingsFilePath, :getter, :unicode_string
         member :GetHost, :GetHost
         member :GetSystemProperties, :GetSystemProperties
         member :GetMachines, :GetMachines

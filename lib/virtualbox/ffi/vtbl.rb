@@ -70,16 +70,32 @@ module VirtualBox
 
           # Define the getter
           define_method(functionify(key)) do
+            # Figure out the c type for creating the pointer
+            original_type = type
+            c_type = type
+            begin
+              if type == :unicode_string
+                c_type = :pointer
+              elsif type.is_a?(Class) || FFI.const_get(type)
+                # The type is another struct
+                original_type = FFI.const_get(type)
+                c_type = :pointer
+                type = :struct
+              end
+            rescue NameError
+              # Do nothing
+            end
+
             # Call the getter method with a regular pointer
-            ptr = ::FFI::MemoryPointer.new(:pointer)
+            ptr = ::FFI::MemoryPointer.new(c_type)
             self[key].call(parent, ptr)
 
             # Now, depending on the type, we return different values
-            if ptr.respond_to?("read_#{type}".to_sym)
+            if ptr.respond_to?("get_#{type}".to_sym)
               # This handles reading the typical times such as :uint, :int, etc.
-              return ptr.send("read_#{type}".to_sym)
+              return ptr.send("get_#{type}".to_sym, 0)
             else
-              send("read_#{type}".to_sym, ptr)
+              send("read_#{type}".to_sym, ptr, original_type)
             end
           end
         end
@@ -125,7 +141,7 @@ module VirtualBox
       # Reads a unicode string value from a pointer to that value.
       #
       # @return [String]
-      def read_unicode_string(ptr)
+      def read_unicode_string(ptr, original_type)
         xpcom[:pfnUtf16ToUtf8].call(ptr.get_pointer(0), ptr)
         ptr.read_pointer().read_string().to_s
       end

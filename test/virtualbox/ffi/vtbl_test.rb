@@ -64,7 +64,7 @@ class FFIVTblTest < Test::Unit::TestCase
 
           @ptr = mock("pointer")
           @ptr.stubs(:respond_to?).returns(true)
-          @ptr.stubs(:read_string)
+          @ptr.stubs(:get_string)
           FFI::MemoryPointer.stubs(:new).returns(@ptr)
         end
 
@@ -79,15 +79,17 @@ class FFIVTblTest < Test::Unit::TestCase
 
         should "call the read_* method on the pointer if it responds and return its value" do
           result = mock('result')
-          @ptr.expects(:respond_to?).with("read_#{@type}".to_sym).once.returns(true)
-          @ptr.expects("read_#{@type}".to_sym).once.returns(result)
+          @ptr.expects(:respond_to?).with("get_#{@type}".to_sym).once.returns(true)
+          @ptr.expects("get_#{@type}".to_sym).once.returns(result)
           assert_equal result, @struct.send(@name)
         end
 
         should "call the read_* method on the struct itself otherwise and return its value" do
           result = mock('result')
+          klass = mock('klass')
+          VirtualBox::FFI.expects(:const_get).twice.with(@type).returns(klass)
           @ptr.expects(:respond_to?).returns(false)
-          @struct.expects("read_#{@type}".to_sym).with(@ptr).once.returns(result)
+          @struct.expects("read_struct".to_sym).with(@ptr, klass).once.returns(result)
           assert_equal result, @struct.send(@name)
         end
       end
@@ -148,6 +150,8 @@ class FFIVTblTest < Test::Unit::TestCase
         @xpcom = mock("xpcom")
         @xpcom.stubs(:[]).returns(@function)
         @struct.stubs(:xpcom).returns(@xpcom)
+
+        @original_type = :foo
       end
 
       should "convert to UTF8 then return the result" do
@@ -157,7 +161,7 @@ class FFIVTblTest < Test::Unit::TestCase
         @function.expects(:call).with(@sub_ptr, @ptr).once.in_sequence(convert_seq)
         @ptr.expects(:read_pointer).returns(@sub_ptr).in_sequence(convert_seq)
         @sub_ptr.expects(:read_string).returns(result).in_sequence(convert_seq)
-        assert_equal result, @struct.read_unicode_string(@ptr)
+        assert_equal result, @struct.read_unicode_string(@ptr, @original_type)
       end
     end
   end
