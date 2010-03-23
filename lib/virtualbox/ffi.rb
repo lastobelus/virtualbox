@@ -5,6 +5,7 @@ module VirtualBox
     extend ::FFI::Library
 
     NSRESULT_TYPE = :uint
+    PRInt32 = :int
     PRUint16 = :ushort
     PRUint32 = :uint
     PRUnichar = PRUint16

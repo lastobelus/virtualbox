@@ -236,6 +236,10 @@ module VirtualBox
 
     class IMachine < ::FFI::Struct
       layout :vtbl, :pointer # IMachine_vtbl
+
+      def vtbl
+        @_vtbl ||= IMachine_vtbl.new(self[:vtbl])
+      end
     end
   end
 end
