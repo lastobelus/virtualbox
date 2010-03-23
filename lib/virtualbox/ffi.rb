@@ -27,7 +27,16 @@ module VirtualBox
   end
 end
 
-# Load in the remaining structs and other files
-%w{nsisupports util vtbl vtbl_parent isession ivirtualbox vboxxpcomc imachine}.each do |file|
-  require File.expand_path(File.join(File.dirname(__FILE__), 'ffi', file))
+# The FFI directory of the gem
+ffidir = File.join(File.dirname(__FILE__), 'ffi')
+
+# Load in the initially required files, which must be loaded prior
+# to the rest
+%w{nsisupports util vtbl vtbl_parent}.each do |f|
+  require File.expand_path(f, ffidir)
+end
+
+# Glob require the rest
+Dir[File.join(ffidir, "**", "*.rb")].each do |f|
+  require File.expand_path(f)
 end
