@@ -1,28 +1,28 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'test_helper')
 
 class FFIUtilTest < Test::Unit::TestCase
+  context "inferring types" do
+    should "return the proper values" do
+      expectations = {
+        :int => [:int, :int],
+        :unicode_string => [:pointer, :unicode_string],
+        :IHost => [:pointer, :struct]
+      }
+
+      expectations.each do |original, result|
+        assert_equal result, VirtualBox::FFI::Util.infer_type(original)
+      end
+    end
+  end
+
   context "pointers for type" do
     setup do
       @pointer = mock("pointer")
       FFI::MemoryPointer.stubs(:new).returns(@pointer)
     end
 
-    should "create a standard MemoryPointer for primitives" do
-      [:int, :short, :uint, :char].each do |prim|
-        FFI::MemoryPointer.expects(:new).with(prim).once.returns(@pointer)
-        VirtualBox::FFI::Util.pointer_for_type(prim) {}
-      end
-    end
-
-    should "create a pointer type for unicode string" do
-      FFI::MemoryPointer.expects(:new).with(:pointer).once.returns(@pointer)
-      VirtualBox::FFI::Util.pointer_for_type(:unicode_string) do |ptr, type|
-        assert_equal :unicode_string, type
-      end
-    end
-
-    should "create a pointer type for structs" do
-      VirtualBox::FFI.expects(:const_get).with(:MyType).returns(true)
+    should "create a pointer type for the given type" do
+      VirtualBox::FFI::Util.expects(:infer_type).with(:MyType).returns([:pointer, :struct])
       FFI::MemoryPointer.expects(:new).with(:pointer).once.returns(@pointer)
       VirtualBox::FFI::Util.pointer_for_type(:MyType) do |ptr, type|
         assert_equal :struct, type
@@ -36,6 +36,39 @@ class FFIUtilTest < Test::Unit::TestCase
       end
 
       assert_equal expected, result
+    end
+  end
+
+  context "dereferencing pointers" do
+    setup do
+      @pointer = mock('pointer')
+      @pointer.stubs(:respond_to?).returns(true)
+      @pointer.stubs(:get_bar).returns("foo")
+
+      @type = :zoo
+
+      @c_type = :foo
+      @inferred_type = :bar
+      VirtualBox::FFI::Util.stubs(:infer_type).returns([@c_type, @inferred_type])
+    end
+
+    should "infer the type" do
+      VirtualBox::FFI::Util.expects(:infer_type).with(@type).returns([@c_type, @inferred_type])
+      VirtualBox::FFI::Util.dereference_pointer(@pointer, @type)
+    end
+
+    should "call get_* method on pointer if it exists" do
+      result = mock("result")
+      @pointer.expects(:respond_to?).with("get_#{@inferred_type}".to_sym).returns(true)
+      @pointer.expects("get_#{@inferred_type}".to_sym).with(0).returns(result)
+      assert_equal result, VirtualBox::FFI::Util.dereference_pointer(@pointer, @type)
+    end
+
+    should "call read_* on Util if pointer doesn't support it" do
+      result = mock("result")
+      @pointer.expects(:respond_to?).with("get_#{@inferred_type}".to_sym).returns(false)
+      VirtualBox::FFI::Util.expects("read_#{@inferred_type}".to_sym).with(@pointer, @type).returns(result)
+      assert_equal result, VirtualBox::FFI::Util.dereference_pointer(@pointer, @type)
     end
   end
 

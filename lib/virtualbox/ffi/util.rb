@@ -7,6 +7,35 @@ module VirtualBox
         # Converts a symbol type into a MemoryPointer and yield a block
         # with the pointer, the C type, and the FFI type
         def pointer_for_type(type)
+          c_type, type = infer_type(type)
+
+          # Create the pointer, yield
+          pointer = ::FFI::MemoryPointer.new(c_type)
+          yield pointer, type
+        end
+
+        # Decodes a pointer with a given type into a proper Ruby object
+        def dereference_pointer(pointer, type)
+          c_type, inferred_type = infer_type(type)
+
+          if pointer.respond_to?("get_#{inferred_type}".to_sym)
+            # This handles reading the typical times such as :uint, :int, etc.
+            pointer.send("get_#{inferred_type}".to_sym, 0)
+          else
+            send("read_#{inferred_type}".to_sym, pointer, type)
+          end
+        end
+
+        # Gives the C type and inferred type of a parameter type. Quite confusing
+        # since the terminology is not consistent, but hopefully these examples
+        # will help:
+        #
+        #   type => [pointer_type, internal_type]
+        #   :int => [:int, :int]
+        #   :MyStruct => [:pointer, :struct]
+        #   :unicode_string => [:pointer, :unicode_string]
+        #
+        def infer_type(type)
           c_type = type
 
           begin
@@ -23,9 +52,7 @@ module VirtualBox
             # Do nothing
           end
 
-          # Create the pointer, yield
-          pointer = ::FFI::MemoryPointer.new(c_type)
-          yield pointer, type
+          [c_type, type]
         end
 
         # Converts a C-style member name such as `GetVersion` into a Ruby-style
