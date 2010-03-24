@@ -117,9 +117,15 @@ module VirtualBox
         # Converts a C-style member name such as `GetVersion` into a Ruby-style
         # method name such as `get_version`
         def functionify(c_string)
-          # Yes, this is a pretty inefficient/verbose way to do this, but it works
-          c_string.to_s.gsub(/([a-z])([A-Z0-9])/, '\1 \2').
-                        gsub(/([A-Z0-9])([A-Z0-9])([a-z])/, '\1 \2\3').strip.gsub(' ', '_').downcase.to_sym
+          # Replace the word breaks such as "GetFoo" with "Get Foo"
+          c_string = c_string.to_s.gsub(/([a-z])([A-Z0-9])/, '\1 \2')
+
+          # Replace word breaks such as "DVDImages" with "DVD Images"
+          c_string = c_string.gsub(/([A-Z0-9])([A-Z0-9])([a-z])/, '\1 \2\3')
+
+          # Strip any trailing whitespace, replaces spaces with underscores, and
+          # downcase the whole thing. Ex: "Get DVD Images " => "get_dvd_images"
+          c_string.strip.gsub(' ', '_').downcase.to_sym
         end
       end
     end
