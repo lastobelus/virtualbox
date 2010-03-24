@@ -3,56 +3,56 @@ module VirtualBox
     IVIRTUALBOX_IID_STR = "2158464a-f706-414b-a8c4-fb589dfc6b62"
 
     # Callback types for IVirtualBox_vtbl
-    callback :GetVersion, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetRevision, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetPackageType, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetHomeFolder, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetSettingsFilePath, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetHost, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetSystemProperties, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetMachines, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetHardDisks, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetDVDImages, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetFloppyImages, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetProgressOperations, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetGuestOSTypes, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetSharedFolders, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetPerformanceCollector, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetDHCPServers, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :CreateMachine, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :CreateLegacyMachine, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :OpenMachine, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :RegisterMachine, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetMachine, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :FindMachine, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :UnregisterMachine, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :CreateAppliance, [:pointer, :pointer], NSRESULT_TYPE
-    callback :CreateHardDisk, [:pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :OpenHardDisk, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetHardDisk, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :FindHardDisk, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :OpenDVDImage, [:pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetDVDImage, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :FindDVDImage, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :OpenFloppyImage, [:pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetFloppyImage, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :FindFloppyImage, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetGuestOSType, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :CreateSharedFolder, [:pointer, :pointer, :pointer, PRBool], NSRESULT_TYPE
-    callback :RemoveSharedFolder, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetExtraDataKeys, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :GetExtraData, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :SetExtraData, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :OpenSession, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :OpenRemoteSession, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :OpenExistingSession, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :RegisterCallback, [:pointer, :pointer], NSRESULT_TYPE
-    callback :UnregisterCallback, [:pointer, :pointer], NSRESULT_TYPE
-    callback :WaitForPropertyChange, [:pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :CreateDHCPServer, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :FindDHCPServerByNetworkName, [:pointer, :pointer, :pointer], NSRESULT_TYPE
-    callback :RemoveDHCPServer, [:pointer, :pointer], NSRESULT_TYPE
-    callback :CheckFirmwarePresent, [:pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetVersion, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetRevision, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetPackageType, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetHomeFolder, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetSettingsFilePath, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetHost, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetSystemProperties, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetMachines, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetHardDisks, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetDVDImages, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetFloppyImages, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetProgressOperations, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetGuestOSTypes, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetSharedFolders, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetPerformanceCollector, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetDHCPServers, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_CreateMachine, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_CreateLegacyMachine, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_OpenMachine, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_RegisterMachine, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetMachine, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_FindMachine, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_UnregisterMachine, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_CreateAppliance, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_CreateHardDisk, [:pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_OpenHardDisk, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetHardDisk, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_FindHardDisk, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_OpenDVDImage, [:pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetDVDImage, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_FindDVDImage, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_OpenFloppyImage, [:pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetFloppyImage, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_FindFloppyImage, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetGuestOSType, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_CreateSharedFolder, [:pointer, :pointer, :pointer, PRBool], NSRESULT_TYPE
+    callback :ivb_RemoveSharedFolder, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetExtraDataKeys, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_GetExtraData, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_SetExtraData, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_OpenSession, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_OpenRemoteSession, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_OpenExistingSession, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_RegisterCallback, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_UnregisterCallback, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_WaitForPropertyChange, [:pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_CreateDHCPServer, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_FindDHCPServerByNetworkName, [:pointer, :pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_RemoveDHCPServer, [:pointer, :pointer], NSRESULT_TYPE
+    callback :ivb_CheckFirmwarePresent, [:pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
 
     class IVirtualBox < VTblParent
       parent_of :IVirtualBox_vtbl
@@ -61,56 +61,56 @@ module VirtualBox
     class IVirtualBox_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetVersion, :getter, :unicode_string
-        member :GetRevision, :getter, :uint
-        member :GetPackageType, :getter, :unicode_string
-        member :GetHomeFolder, :getter, :unicode_string
-        member :GetSettingsFilePath, :getter, :unicode_string
-        member :GetHost, :getter, :IHost
-        member :GetSystemProperties, :getter, :ISystemProperties
-        member :GetMachines, :array_getter, :IMachine
-        member :GetHardDisks, :array_getter, :IMedium
-        member :GetDVDImages, :array_getter, :IMedium
-        member :GetFloppyImages, :array_getter, :IMedium
-        member :GetProgressOperations, :array_getter, :IProgress
-        member :GetGuestOSTypes, :GetGuestOSTypes
-        member :GetSharedFolders, :GetSharedFolders
-        member :GetPerformanceCollector, :GetPerformanceCollector
-        member :GetDHCPServers, :GetDHCPServers
-        member :CreateMachine, :CreateMachine
-        member :CreateLegacyMachine, :CreateLegacyMachine
-        member :OpenMachine, :OpenMachine
-        member :RegisterMachine, :RegisterMachine
-        member :GetMachine, :GetMachine
-        member :FindMachine, :FindMachine
-        member :UnregisterMachine, :UnregisterMachine
-        member :CreateAppliance, :CreateAppliance
-        member :CreateHardDisk, :CreateHardDisk
-        member :OpenHardDisk, :OpenHardDisk
-        member :GetHardDisk, :GetHardDisk
-        member :FindHardDisk, :FindHardDisk
-        member :OpenDVDImage, :OpenDVDImage
-        member :GetDVDImage, :GetDVDImage
-        member :FindDVDImage, :FindDVDImage
-        member :OpenFloppyImage, :OpenFloppyImage
-        member :GetFloppyImage, :GetFloppyImage
-        member :FindFloppyImage, :FindFloppyImage
-        member :GetGuestOSType, :GetGuestOSType
-        member :CreateSharedFolder, :CreateSharedFolder
-        member :RemoveSharedFolder, :RemoveSharedFolder
-        member :GetExtraDataKeys, :GetExtraDataKeys
-        member :GetExtraData, :GetExtraData
-        member :SetExtraData, :SetExtraData
-        member :OpenSession, :OpenSession
-        member :OpenRemoteSession, :OpenRemoteSession
-        member :OpenExistingSession, :OpenExistingSession
-        member :RegisterCallback, :RegisterCallback
-        member :UnregisterCallback, :UnregisterCallback
-        member :WaitForPropertyChange, :WaitForPropertyChange
-        member :CreateDHCPServer, :CreateDHCPServer
-        member :FindDHCPServerByNetworkName, :FindDHCPServerByNetworkName
-        member :RemoveDHCPServer, :RemoveDHCPServer
-        member :CheckFirmwarePresent, :CheckFirmwarePresent
+        member :GetVersion, :getter, :unicode_string, :function_type => :ivb_GetVersion
+        member :GetRevision, :getter, :uint, :function_type => :ivb_GetRevision
+        member :GetPackageType, :getter, :unicode_string, :function_type => :ivb_GetPackageType
+        member :GetHomeFolder, :getter, :unicode_string, :function_type => :ivb_GetHomeFolder
+        member :GetSettingsFilePath, :getter, :unicode_string, :function_type => :ivb_GetSettingsFilePath
+        member :GetHost, :getter, :IHost, :function_type => :ivb_GetHost
+        member :GetSystemProperties, :getter, :ISystemProperties, :function_type => :ivb_GetSystemProperties
+        member :GetMachines, :array_getter, :IMachine, :function_type => :ivb_GetMachines
+        member :GetHardDisks, :array_getter, :IMedium, :function_type => :ivb_GetHardDisks
+        member :GetDVDImages, :array_getter, :IMedium, :function_type => :ivb_GetDVDImages
+        member :GetFloppyImages, :array_getter, :IMedium, :function_type => :ivb_GetFloppyImages
+        member :GetProgressOperations, :array_getter, :IProgress, :function_type => :ivb_GetProgressOperations
+        member :GetGuestOSTypes, :ivb_GetGuestOSTypes
+        member :GetSharedFolders, :ivb_GetSharedFolders
+        member :GetPerformanceCollector, :ivb_GetPerformanceCollector
+        member :GetDHCPServers, :ivb_GetDHCPServers
+        member :CreateMachine, :ivb_CreateMachine
+        member :CreateLegacyMachine, :ivb_CreateLegacyMachine
+        member :OpenMachine, :ivb_OpenMachine
+        member :RegisterMachine, :ivb_RegisterMachine
+        member :GetMachine, :ivb_GetMachine
+        member :FindMachine, :ivb_FindMachine
+        member :UnregisterMachine, :ivb_UnregisterMachine
+        member :CreateAppliance, :ivb_CreateAppliance
+        member :CreateHardDisk, :ivb_CreateHardDisk
+        member :OpenHardDisk, :ivb_OpenHardDisk
+        member :GetHardDisk, :ivb_GetHardDisk
+        member :FindHardDisk, :ivb_FindHardDisk
+        member :OpenDVDImage, :ivb_OpenDVDImage
+        member :GetDVDImage, :ivb_GetDVDImage
+        member :FindDVDImage, :ivb_FindDVDImage
+        member :OpenFloppyImage, :ivb_OpenFloppyImage
+        member :GetFloppyImage, :ivb_GetFloppyImage
+        member :FindFloppyImage, :ivb_FindFloppyImage
+        member :GetGuestOSType, :ivb_GetGuestOSType
+        member :CreateSharedFolder, :ivb_CreateSharedFolder
+        member :RemoveSharedFolder, :ivb_RemoveSharedFolder
+        member :GetExtraDataKeys, :ivb_GetExtraDataKeys
+        member :GetExtraData, :ivb_GetExtraData
+        member :SetExtraData, :ivb_SetExtraData
+        member :OpenSession, :ivb_OpenSession
+        member :OpenRemoteSession, :ivb_OpenRemoteSession
+        member :OpenExistingSession, :ivb_OpenExistingSession
+        member :RegisterCallback, :ivb_RegisterCallback
+        member :UnregisterCallback, :ivb_UnregisterCallback
+        member :WaitForPropertyChange, :ivb_WaitForPropertyChange
+        member :CreateDHCPServer, :ivb_CreateDHCPServer
+        member :FindDHCPServerByNetworkName, :ivb_FindDHCPServerByNetworkName
+        member :RemoveDHCPServer, :ivb_RemoveDHCPServer
+        member :CheckFirmwarePresent, :ivb_CheckFirmwarePresent
       end
     end
   end
