@@ -176,8 +176,16 @@ module VirtualBox
         #   foo(-7, 42) # => Returns a string
         #
         def member_function(key, params, opts={})
-          # Add the method to the layout args
-          # TODO
+          # Merge in default options
+          default_opts = {
+            :function_type => key,
+            :function_type_prefix => nil
+          }
+          opts = default_opts.merge(scoped_opts).merge(opts)
+
+          # Add the function to the layout args per normal
+          function_type = opts[:function_type_prefix] ? "#{opts[:function_type_prefix]}#{opts[:function_type]}".to_sym : opts[:function_type]
+          layout_args << [key, function_type]
 
           # Create the method
           define_method(Util.functionify(key)) do |*args|
@@ -188,8 +196,31 @@ module VirtualBox
               if param.is_a?(Array) && param[0] == :out
                 # Output parameter, create the pointer for it and put it onto
                 # the array, ignoring the args
+                Util.pointer_for_type(param[1])
+              elsif param == :unicode_string
+                # We have to convert the string to a UTF16 string
+                Util.string_to_utf16(args.shift)
+              else
+                # Replace param with the next parameter in the args list,
+                # removing it as well
+                args.shift
               end
             end
+
+            # Call the function
+            self[key].call(parent, *filtered_params)
+
+            # Grab return values
+            return_values = []
+            params.each_with_index do |param, i|
+              # Output parameters are all we care about
+              if param.is_a?(Array) && param[0] == :out
+                return_values << Util.dereference_pointer(filtered_params[i], param[1])
+              end
+            end
+
+            # Return the return values
+            return_values
           end
         end
 

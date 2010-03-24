@@ -77,9 +77,10 @@ module VirtualBox
           member :GetProgressOperations, :array_getter, :IProgress
           member :GetGuestOSTypes, :array_getter, :IGuestOSType
           member :GetSharedFolders, :array_getter, :ISharedFolder
+
+          member :FindMachine, :function, [:unicode_string, [:out, :IMachine]]
         end
 
-        #member :OpenMachine, :function, [:IVirtualBox, :unicode_string, [:out, :IMachine]]
         member :GetPerformanceCollector, :ivb_GetPerformanceCollector
         member :GetDHCPServers, :ivb_GetDHCPServers
         member :CreateMachine, :ivb_CreateMachine
@@ -87,7 +88,7 @@ module VirtualBox
         member :OpenMachine, :ivb_OpenMachine
         member :RegisterMachine, :ivb_RegisterMachine
         member :GetMachine, :ivb_GetMachine
-        member :FindMachine, :ivb_FindMachine
+        #member :FindMachine, :ivb_FindMachine
         member :UnregisterMachine, :ivb_UnregisterMachine
         member :CreateAppliance, :ivb_CreateAppliance
         member :CreateHardDisk, :ivb_CreateHardDisk

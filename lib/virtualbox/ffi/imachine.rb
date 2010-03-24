@@ -190,7 +190,10 @@ module VirtualBox
         member :GetTeleporterPassword, :GetTeleporterPassword
         member :SetTeleporterPassword, :SetTeleporterPassword
         member :SetBootOrder, :SetBootOrder
-        member :GetBootOrder, :GetBootOrder
+
+        member :GetBootOrder, :function, [PRUint32, [:out, PRUint32]]
+        #member :GetBootOrder, :GetBootOrder
+
         member :AttachDevice, :AttachDevice
         member :DetachDevice, :DetachDevice
         member :PassthroughDevice, :PassthroughDevice

@@ -129,31 +129,44 @@ class FFIUtilTest < Test::Unit::TestCase
     end
   end
 
+  context "string conversions" do
+    context "converting UTF8 to UTF16" do
+      setup do
+        @string = "HEY"
+      end
+
+      should "create a string that is UTF16" do
+        utf16 = VirtualBox::FFI::Util.string_to_utf16(@string)
+        assert_equal @string, VirtualBox::FFI::Util.utf16_to_string(utf16)
+      end
+    end
+
+    context "converting UTF16 to UTF8" do
+      setup do
+        @string = "FOO"
+        @utf16 = VirtualBox::FFI::Util.string_to_utf16(@string)
+      end
+
+      should "be equal when coverted both ways" do
+        assert_equal @string, VirtualBox::FFI::Util.utf16_to_string(@utf16)
+      end
+    end
+  end
+
   context "custom pointer dereferencers" do
     context "reading unicode string" do
       setup do
-        @sub_ptr = mock("subptr")
-        @ptr = mock("ptr")
+        @sub_ptr = mock("sub_ptr")
+
+        @ptr = mock("pointer")
         @ptr.stubs(:get_pointer).returns(@sub_ptr)
-
-        @function = mock("function")
-        @function.stubs(:call)
-
-        @xpcom = mock("xpcom")
-        @xpcom.stubs(:[]).returns(@function)
-        VirtualBox::Lib.stubs(:xpcom).returns(@xpcom)
-
-        @original_type = :foo
       end
 
-      should "convert to UTF8 then return the result" do
-        result = "foo"
-        convert_seq = sequence("convert")
-        @xpcom.expects(:[]).with(:pfnUtf16ToUtf8).returns(@function).in_sequence(convert_seq)
-        @function.expects(:call).with(@sub_ptr, @ptr).once.in_sequence(convert_seq)
-        @ptr.expects(:read_pointer).returns(@sub_ptr).in_sequence(convert_seq)
-        @sub_ptr.expects(:read_string).returns(result).in_sequence(convert_seq)
-        assert_equal result, VirtualBox::FFI::Util.read_unicode_string(@ptr, @original_type)
+      should "call utf16_to_string on the dereferenced pointer" do
+        result = mock("result")
+        @ptr.expects(:get_pointer).with(0).returns(@sub_ptr)
+        VirtualBox::FFI::Util.expects(:utf16_to_string).with(@sub_ptr).returns(result)
+        assert_equal result, VirtualBox::FFI::Util.read_unicode_string(@ptr)
       end
     end
 

@@ -8,7 +8,7 @@ module VirtualBox
     callback :pfnUtf16Free, [:pointer], :void
     callback :pfnUtf8Free, [:string], :void
     callback :pfnUtf16ToUtf8, [:pointer, :pointer], :int
-    callback :pfnUtf8ToUtf16, [:pointer, :pointer], :int
+    callback :pfnUtf8ToUtf16, [:string, :pointer], :int
     callback :pfnGetEventQueue, [:pointer], :void
 
     class VBOXXPCOMC < ::FFI::Struct

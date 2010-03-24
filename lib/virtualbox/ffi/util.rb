@@ -88,12 +88,28 @@ module VirtualBox
           [c_type, type]
         end
 
+        # Converts a ruby string to a UTF16 string
+        #
+        # @param [String] Ruby String object
+        # @return [::FFI::Pointer]
+        def string_to_utf16(string)
+          ptr = pointer_for_type(:pointer)
+          VirtualBox::Lib.xpcom[:pfnUtf8ToUtf16].call(string, ptr)
+          ptr.read_pointer()
+        end
+
+        # Converts a UTF16 string to UTF8
+        def utf16_to_string(pointer)
+          result_pointer = pointer_for_type(:pointer)
+          VirtualBox::Lib.xpcom[:pfnUtf16ToUtf8].call(pointer, result_pointer)
+          result_pointer.read_pointer().read_string().to_s
+        end
+
         # Reads a unicode string value from a pointer to that value.
         #
         # @return [String]
-        def read_unicode_string(ptr, original_type)
-          VirtualBox::Lib.xpcom[:pfnUtf16ToUtf8].call(ptr.get_pointer(0), ptr)
-          ptr.read_pointer().read_string().to_s
+        def read_unicode_string(ptr, original_type=nil)
+          utf16_to_string(ptr.get_pointer(0))
         end
 
         # Reads a struct from the pointer
