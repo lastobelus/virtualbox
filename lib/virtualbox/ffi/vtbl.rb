@@ -89,12 +89,14 @@ module VirtualBox
         def member_getter(key, type, opts={})
           # Merge in default options
           default_opts = {
-            :function_type => key
+            :function_type => key,
+            :function_type_prefix => nil
           }
           opts = default_opts.merge(scoped_opts).merge(opts)
 
           # Add the function to the layout args per normal
-          layout_args << [key, opts[:function_type]]
+          function_type = opts[:function_type_prefix] ? "#{opts[:function_type_prefix]}#{opts[:function_type]}".to_sym : opts[:function_type]
+          layout_args << [key, function_type]
 
           # Define the getter
           define_method(Util.functionify(key)) do
@@ -125,12 +127,14 @@ module VirtualBox
         def member_array_getter(key, type, opts={})
           # Merge in default options
           default_opts = {
-            :function_type => key
+            :function_type => key,
+            :function_type_prefix => nil
           }
           opts = default_opts.merge(scoped_opts).merge(opts)
 
           # Add the function to the layout args per normal
-          layout_args << [key, opts[:function_type]]
+          function_type = opts[:function_type_prefix] ? "#{opts[:function_type_prefix]}#{opts[:function_type]}".to_sym : opts[:function_type]
+          layout_args << [key, function_type]
 
           # Define the array getter
           define_method(Util.functionify(key)) do

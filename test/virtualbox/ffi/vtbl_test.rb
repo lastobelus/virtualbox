@@ -100,6 +100,14 @@ class FFIVTblTest < Test::Unit::TestCase
         test_layout_args_with_type(:scoped_type)
       end
 
+      should "use custom function prefix if given" do
+        test_layout_args_with_type(:foo_key, :function_type_prefix => :foo_)
+      end
+
+      should "use custom function prefix with the function type if given" do
+        test_layout_args_with_type(:foo_bar, :function_type_prefix => :foo_, :function_type => :bar)
+      end
+
       context "the defined method" do
         class GetterFooStruct < VirtualBox::FFI::VTbl
           define_layout do
@@ -167,6 +175,14 @@ class FFIVTblTest < Test::Unit::TestCase
       should "use scoped opts if given" do
         VirtualBox::FFI::VTbl.stubs(:scoped_opts).returns(:function_type => :scoped_type)
         test_array_layout_args_with_type(:scoped_type)
+      end
+
+      should "use custom function prefix if given" do
+        test_array_layout_args_with_type(:foo_key, :function_type_prefix => :foo_)
+      end
+
+      should "use custom function prefix with the function type if given" do
+        test_array_layout_args_with_type(:foo_bar, :function_type_prefix => :foo_, :function_type => :bar)
       end
 
       context "the defined method" do
