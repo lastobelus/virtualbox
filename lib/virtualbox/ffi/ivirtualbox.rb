@@ -61,18 +61,22 @@ module VirtualBox
     class IVirtualBox_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetVersion, :getter, :unicode_string, :function_type => :ivb_GetVersion
-        member :GetRevision, :getter, :uint, :function_type => :ivb_GetRevision
-        member :GetPackageType, :getter, :unicode_string, :function_type => :ivb_GetPackageType
-        member :GetHomeFolder, :getter, :unicode_string, :function_type => :ivb_GetHomeFolder
-        member :GetSettingsFilePath, :getter, :unicode_string, :function_type => :ivb_GetSettingsFilePath
-        member :GetHost, :getter, :IHost, :function_type => :ivb_GetHost
-        member :GetSystemProperties, :getter, :ISystemProperties, :function_type => :ivb_GetSystemProperties
-        member :GetMachines, :array_getter, :IMachine, :function_type => :ivb_GetMachines
-        member :GetHardDisks, :array_getter, :IMedium, :function_type => :ivb_GetHardDisks
-        member :GetDVDImages, :array_getter, :IMedium, :function_type => :ivb_GetDVDImages
-        member :GetFloppyImages, :array_getter, :IMedium, :function_type => :ivb_GetFloppyImages
-        member :GetProgressOperations, :array_getter, :IProgress, :function_type => :ivb_GetProgressOperations
+
+        with_opts(:function_type_prefix => :ivb_) do
+          member :GetVersion, :getter, :unicode_string
+          member :GetRevision, :getter, :uint
+          member :GetPackageType, :getter, :unicode_string
+          member :GetHomeFolder, :getter, :unicode_string
+          member :GetSettingsFilePath, :getter, :unicode_string
+          member :GetHost, :getter, :IHost
+          member :GetSystemProperties, :getter, :ISystemProperties
+          member :GetMachines, :array_getter, :IMachine
+          member :GetHardDisks, :array_getter, :IMedium
+          member :GetDVDImages, :array_getter, :IMedium
+          member :GetFloppyImages, :array_getter, :IMedium
+          member :GetProgressOperations, :array_getter, :IProgress
+        end
+
         member :GetGuestOSTypes, :ivb_GetGuestOSTypes
         member :GetSharedFolders, :ivb_GetSharedFolders
         member :GetPerformanceCollector, :ivb_GetPerformanceCollector
