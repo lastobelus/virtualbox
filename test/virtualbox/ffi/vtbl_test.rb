@@ -18,6 +18,49 @@ class FFIVTblTest < Test::Unit::TestCase
     end
   end
 
+  context "with opts" do
+    class WithOptsTestClass < VirtualBox::FFI::VTbl
+      class <<self
+        # Accessor for inspection during testing
+        def scoped_opts
+          @@_scoped_opts
+        end
+      end
+    end
+
+    setup do
+      @klass = WithOptsTestClass
+    end
+
+    should "setup the scoped opts to the given value" do
+      # Since the block is evaled in another context, we have to use
+      # exceptions to do testing
+      assert_nothing_raised {
+        @klass.with_opts(:foo => :bar) do
+          raise Exception.new if :bar != scoped_opts[:foo]
+        end
+      }
+    end
+
+    should "reset the scoped opts after running" do
+      @klass.with_opts(:foo => :bar) {}
+      assert @klass.scoped_opts.empty?
+    end
+
+    should "allow nested scoped opts" do
+      assert_nothing_raised {
+        @klass.with_opts(:foo => :bar, :bar => :foo) do
+          with_opts(:foo => :baz) do
+            raise Exception.new("foo incorrect") unless scoped_opts[:foo] == :baz
+            raise Exception.new("bar incorrect") unless scoped_opts[:bar] == :foo
+          end
+
+          raise Exception.new("foo was not reset") unless scoped_opts[:foo] == :bar
+        end
+      }
+    end
+  end
+
   context "members" do
     setup do
       @layout_args = []
@@ -37,18 +80,24 @@ class FFIVTblTest < Test::Unit::TestCase
     end
 
     context "getter member" do
-      should "add to layout args then define method" do
+      def test_layout_args_with_type(expected_type, opts = {})
         member_seq = sequence("member")
-        @layout_args.expects(:<<).with([:key, :key]).once.in_sequence(member_seq)
+        @layout_args.expects(:<<).with([:key, expected_type]).once.in_sequence(member_seq)
         VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
-        VirtualBox::FFI::VTbl.member_getter(:key, :foo)
+        VirtualBox::FFI::VTbl.member_getter(:key, :foo, opts)
+      end
+
+      should "add to layout args then define method" do
+        test_layout_args_with_type(:key)
       end
 
       should "use custom function type if given" do
-        member_seq = sequence("member")
-        @layout_args.expects(:<<).with([:key, :custom_type]).once.in_sequence(member_seq)
-        VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
-        VirtualBox::FFI::VTbl.member_getter(:key, :foo, :function_type => :custom_type)
+        test_layout_args_with_type(:custom_type, :function_type => :custom_type)
+      end
+
+      should "use scoped opts if given" do
+        VirtualBox::FFI::VTbl.stubs(:scoped_opts).returns(:function_type => :scoped_type)
+        test_layout_args_with_type(:scoped_type)
       end
 
       context "the defined method" do
@@ -100,18 +149,24 @@ class FFIVTblTest < Test::Unit::TestCase
     end
 
     context "array getter member" do
-      should "add to layout args then define method" do
+      def test_array_layout_args_with_type(expected_type, opts = {})
         member_seq = sequence("member")
-        @layout_args.expects(:<<).with([:key, :key]).once.in_sequence(member_seq)
+        @layout_args.expects(:<<).with([:key, expected_type]).once.in_sequence(member_seq)
         VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
-        VirtualBox::FFI::VTbl.member_array_getter(:key, :foo)
+        VirtualBox::FFI::VTbl.member_array_getter(:key, :foo, opts)
+      end
+
+      should "add to layout args then define method" do
+        test_array_layout_args_with_type(:key)
       end
 
       should "use custom function type if given" do
-        member_seq = sequence("member")
-        @layout_args.expects(:<<).with([:key, :custom_type]).once.in_sequence(member_seq)
-        VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
-        VirtualBox::FFI::VTbl.member_array_getter(:key, :foo, :function_type => :custom_type)
+        test_array_layout_args_with_type(:custom_type, :function_type => :custom_type)
+      end
+
+      should "use scoped opts if given" do
+        VirtualBox::FFI::VTbl.stubs(:scoped_opts).returns(:function_type => :scoped_type)
+        test_array_layout_args_with_type(:scoped_type)
       end
 
       context "the defined method" do

@@ -9,6 +9,8 @@ module VirtualBox
     class VTbl < ::FFI::Struct
       attr_reader :parent
 
+      @@_scoped_opts = {}
+
       class <<self
         # This method replaces the `layout` method of `FFI::Struct`. Instead
         # of defining all members using many parameters to `layout`, pass a
@@ -23,6 +25,26 @@ module VirtualBox
 
           # Commit all of them using the old-style `layout` method
           layout(*layout_args.flatten)
+        end
+
+        # This method allows a group of members to be scoped with a given set
+        # of options. Example:
+        #
+        #   with_opts(:function_type_prefix => :foo_) do
+        #     member :Foo, :getter, :int
+        #     member :Bar, :getter, :string
+        #   end
+        #
+        def with_opts(opts, &block)
+          # Merge in the previous value, so nested scopes work
+          previous_value = @@_scoped_opts
+          @@_scoped_opts = previous_value.merge(opts)
+
+          # Instance eval instead of yield to run in context of class
+          instance_eval(&block)
+
+          # Pop back the previous value onto the scoped opts
+          @@_scoped_opts = previous_value
         end
 
         # This method helps to replace the `layout` method of `FFI::Struct`. Instead
@@ -69,7 +91,7 @@ module VirtualBox
           default_opts = {
             :function_type => key
           }
-          opts = default_opts.merge(opts)
+          opts = default_opts.merge(scoped_opts).merge(opts)
 
           # Add the function to the layout args per normal
           layout_args << [key, opts[:function_type]]
@@ -105,7 +127,7 @@ module VirtualBox
           default_opts = {
             :function_type => key
           }
-          opts = default_opts.merge(opts)
+          opts = default_opts.merge(scoped_opts).merge(opts)
 
           # Add the function to the layout args per normal
           layout_args << [key, opts[:function_type]]
@@ -130,6 +152,12 @@ module VirtualBox
         # @return [Array]
         def layout_args
           @_layout_args ||= []
+        end
+
+        # The scoped options. These are set using {with_opts}. These should not be
+        # modified directly
+        def scoped_opts
+          @@_scoped_opts ||= {}
         end
       end
 
