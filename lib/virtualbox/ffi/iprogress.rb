@@ -37,10 +37,10 @@ module VirtualBox
         member :GetInitiator, :getter, :NSISupports
         member :GetCancelable, :getter, PRBool
         member :GetPercent, :getter, PRUint32
-        member :GetTimeRemaining, :getter, PRint32
+        member :GetTimeRemaining, :getter, PRInt32
         member :GetCompleted, :getter, PRBool
         member :GetCanceled, :getter, PRBool
-        member :GetResultCode, :getter, PRint32
+        member :GetResultCode, :getter, PRInt32
         member :GetErrorInfo, :GetErrorInfo #TODO
         member :GetOperationCount, :getter, PRUint32
         member :GetOperation, :getter, PRUint32
