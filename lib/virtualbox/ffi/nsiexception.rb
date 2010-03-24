@@ -21,16 +21,16 @@ module VirtualBox
     class NSIException_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetMessage, :GetMessage
-        member :GetResult, :GetResult
-        member :GetName, :GetName
-        member :GetFilename, :GetFilename
-        member :GetLineNumber, :GetLineNumber
-        member :GetColumnNumber, :GetColumnNumber
-        member :GetLocation, :GetLocation
-        member :GetInner, :GetInner
-        member :GetData, :GetData
-        member :ToString, :ToString
+        member :GetMessage, :getter, :unicode_string
+        member :GetResult, :getter, NSRESULT_TYPE
+        member :GetName, :getter, :unicode_string
+        member :GetFilename, :getter, :unicode_string
+        member :GetLineNumber, :getter, PRUint32
+        member :GetColumnNumber, :getter, PRUint32
+        member :GetLocation, :GetLocation # TODO
+        member :GetInner, :getter, :NSIException
+        member :GetData, :getter, :NSISupports
+        member :ToString, :getter, :unicode_string
       end
     end
   end
