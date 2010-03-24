@@ -34,7 +34,7 @@ ffidir = File.join(File.dirname(__FILE__), 'ffi')
 
 # Load in the initially required files, which must be loaded prior
 # to the rest
-%w{nsisupports nsiexception util vtbl vtbl_parent}.each do |f|
+%w{util vtbl vtbl_parent nsisupports nsiexception}.each do |f|
   require File.expand_path(f, ffidir)
 end
 

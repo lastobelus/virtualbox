@@ -16,11 +16,11 @@ module VirtualBox
     class IVirtualBoxErrorInfo_vtbl < VTbl
       define_layout do
         member :nsiexception, NSIException
-        member :GetResultCode, :GetResultCode
-        member :GetInterfaceID, :GetInterfaceID
-        member :GetComponent, :GetComponent
-        member :GetText, :GetText
-        member :GetNext, :GetNext
+        member :GetResultCode, :getter, PRInt32
+        member :GetInterfaceID, :getter, :unicode_string
+        member :GetComponent, :getter, :unicode_string
+        member :GetText, :getter, :unicode_string
+        member :GetNext, :getter, :IVirtualBoxErrorInfo
       end
     end
   end

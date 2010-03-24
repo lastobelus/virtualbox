@@ -41,7 +41,7 @@ module VirtualBox
         member :GetCompleted, :getter, PRBool
         member :GetCanceled, :getter, PRBool
         member :GetResultCode, :getter, PRInt32
-        member :GetErrorInfo, :GetErrorInfo #TODO
+        member :GetErrorInfo, :getter, :IVirtualBoxErrorInfo
         member :GetOperationCount, :getter, PRUint32
         member :GetOperation, :getter, PRUint32
         member :GetOperationDescription, :getter, :unicode_string
