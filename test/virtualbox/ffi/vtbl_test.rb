@@ -45,7 +45,7 @@ class FFIVTblTest < Test::Unit::TestCase
       end
 
       context "the defined method" do
-        class FooStruct < VirtualBox::FFI::VTbl
+        class GetterFooStruct < VirtualBox::FFI::VTbl
           define_layout do
             member :int, :getter, :string
           end
@@ -56,7 +56,7 @@ class FFIVTblTest < Test::Unit::TestCase
           @type = :string
 
           @parent = mock("parent")
-          @struct = FooStruct.new(@parent)
+          @struct = GetterFooStruct.new(@parent)
 
           @proc = mock("proc")
           @proc.stubs(:call)
@@ -88,6 +88,65 @@ class FFIVTblTest < Test::Unit::TestCase
           @proc.expects(:call).with(@parent, @ptr).once.in_sequence(deref_seq)
           VirtualBox::FFI::Util.expects(:dereference_pointer).with(@ptr, @type).once.in_sequence(deref_seq)
           @struct.send(@name)
+        end
+      end
+    end
+
+    context "array getter member" do
+      should "add to layout args then define method" do
+        member_seq = sequence("member")
+        @layout_args.expects(:<<).with([:key, :key]).once.in_sequence(member_seq)
+        VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
+        VirtualBox::FFI::VTbl.member_array_getter(:key, :foo)
+      end
+
+      context "the defined method" do
+        class ArrayGetterFooStruct < VirtualBox::FFI::VTbl
+          define_layout do
+            member :int, :array_getter, :string
+          end
+        end
+
+        setup do
+          @name = :int
+          @type = :string
+          @count_type = VirtualBox::FFI::PRUint32
+
+          @parent = mock("parent")
+          @struct = ArrayGetterFooStruct.new(@parent)
+
+          @proc = mock("proc")
+          @proc.stubs(:call)
+          @struct.stubs(:[]).with(@name).returns(@proc)
+
+          @ptr = mock("pointer")
+          @ptr.stubs(:respond_to?).returns(true)
+          @ptr.stubs(:get_string).returns('foo')
+
+          @count_ptr = mock("count_pointer")
+
+          VirtualBox::FFI::Util.stubs(:pointer_for_type).with(@type).returns([@ptr, @type])
+          VirtualBox::FFI::Util.stubs(:pointer_for_type).with(@count_type).returns([@count_ptr, @count_type])
+
+          VirtualBox::FFI::Util.stubs(:dereference_pointer).returns('foo')
+          VirtualBox::FFI::Util.stubs(:dereference_pointer_array).returns('foo')
+        end
+
+        should "respond to the getter method" do
+          assert @struct.respond_to?(@name)
+        end
+
+        should "call the proc with the proper pointer types" do
+          @proc.expects(:call).with(@parent, @count_ptr, @ptr)
+          @struct.send(@name)
+        end
+
+        should "dereference the array with the dereferenced count" do
+          count = 7
+          result = mock("result")
+          VirtualBox::FFI::Util.expects(:dereference_pointer).with(@count_ptr, @count_type).returns(count)
+          VirtualBox::FFI::Util.expects(:dereference_pointer_array).with(@ptr, @type, count).returns(result)
+          assert_equal result, @struct.send(@name)
         end
       end
     end

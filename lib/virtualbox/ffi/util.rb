@@ -20,7 +20,15 @@ module VirtualBox
           end
         end
 
-        # Decodes a pointer with a given type into a proper Ruby object
+        # Dereferences a pointer with a given type into a proper Ruby object.
+        # If the type is a standard primitive of Ruby-FFI, it simply calls the
+        # proper `get_*` method on the pointer. Otherwise, it calls a
+        # `read_*` on the Util class. For an example, see {read_struct}, which
+        # reads a struct out of a pointer.
+        #
+        # @param [FFI::MemoryPointer] pointer
+        # @param [Symbol] type The type of the pointer
+        # @return [Object] The value of the dereferenced pointer
         def dereference_pointer(pointer, type)
           c_type, inferred_type = infer_type(type)
 
@@ -29,6 +37,25 @@ module VirtualBox
             pointer.send("get_#{inferred_type}".to_sym, 0)
           else
             send("read_#{inferred_type}".to_sym, pointer, type)
+          end
+        end
+
+        # Dereferences an array out of a pointer into an array of proper Ruby
+        # objects.
+        #
+        # @param [FFI::MemoryPointer] pointer
+        # @param [Symbol] type The type of the pointer
+        # @param [Fixnum] length The length of the array
+        # @return [Array<Object>]
+        def dereference_pointer_array(pointer, type, length)
+          c_type, inferred_type = infer_type(type)
+
+          array_pointer = pointer.get_pointer(0)
+          if array_pointer.respond_to?("get_array_of_#{inferred_type}".to_sym)
+            # This handles reading the typical times such as :uint, :int, etc.
+            array_pointer.send("get_array_of_#{inferred_type}".to_sym, 0, length)
+          else
+            send("read_array_of_#{inferred_type}".to_sym, array_pointer, type, length)
           end
         end
 
@@ -75,6 +102,15 @@ module VirtualBox
         def read_struct(ptr, original_type)
           klass = FFI.const_get(original_type)
           klass.new(ptr.get_pointer(0))
+        end
+
+        # Reads an array of structs from a pointer
+        #
+        # @return [Array<::FFI::Struct>]
+        def read_array_of_struct(ptr, type, length)
+          ptr.get_array_of_pointer(0, length).collect do |single_pointer|
+            read_struct(single_pointer, type)
+          end
         end
 
         # Converts a C-style member name such as `GetVersion` into a Ruby-style

@@ -51,7 +51,7 @@ module VirtualBox
         # This method adds a getter function to the struct. The getter functions
         # typically have a prototype of:
         #
-        #   nsresult (*SomeFunction)(IInterface *this, ResultType *result);
+        #   nsresult (*GetFoo)(IInterface *this, ResultType *result);
         #
         # By defining it as a getter function, the VTbl struct automatically
         # creates the instance method `get_foo` for it, automatically returning
@@ -74,6 +74,39 @@ module VirtualBox
               self[key].call(parent, pointer)
               Util.dereference_pointer(pointer, type)
             end
+          end
+        end
+
+        # This method adds an array getter function to the struct. The getter
+        # functions which return arrays typically have a prototype of:
+        #
+        #   nsresult (*GetFoos)(IInterface *this, PRUint32 *size, ResultType **result);
+        #
+        # By defining it as an array getter function, the VTbl struct automatically
+        # creates the instance method `get_foos` for it, automatically returning
+        # an array of the proper type, allowing the caller to avoid handling all the
+        # pointer logic.
+        #
+        # This method requires two parameters. The first is simply the name of the
+        # get method in C. This method will automatically be turned into a more
+        # Ruby-style name. Ex: `GetDiskDrives` => `get_disk_drives`
+        #
+        # The second parameter is the type of a single element of the array returned.
+        # This type can be one of the typical Ruby-FFI primitives or it can also
+        # be a symbol or class representing another struct.
+        def member_array_getter(key, type)
+          # Add the function to the layout args per normal
+          layout_args << [key, key]
+
+          # Define the array getter
+          define_method(Util.functionify(key)) do
+            count_pointer, count_type = Util.pointer_for_type(PRUint32)
+            array_pointer, array_type = Util.pointer_for_type(type)
+
+            self[key].call(parent, count_pointer, array_pointer)
+
+            count = Util.dereference_pointer(count_pointer, PRUint32)
+            Util.dereference_pointer_array(array_pointer, type, count)
           end
         end
 

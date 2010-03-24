@@ -68,7 +68,7 @@ module VirtualBox
         member :GetSettingsFilePath, :getter, :unicode_string
         member :GetHost, :getter, :IHost
         member :GetSystemProperties, :GetSystemProperties
-        member :GetMachines, :GetMachines
+        member :GetMachines, :array_getter, :IMachine
         member :GetHardDisks, :GetHardDisks
         member :GetDVDImages, :GetDVDImages
         member :GetFloppyImages, :GetFloppyImages

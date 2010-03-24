@@ -76,6 +76,43 @@ class FFIUtilTest < Test::Unit::TestCase
     end
   end
 
+  context "dereferencing pointer array" do
+    setup do
+      @array_pointer = mock('array_pointer')
+      @array_pointer.stubs(:respond_to?).returns(true)
+      @array_pointer.stubs(:get_array_of_bar)
+
+      @pointer = mock('pointer')
+      @pointer.stubs(:get_pointer).with(0).returns(@array_pointer)
+
+      @type = :zoo
+      @length = 3
+
+      @c_type = :foo
+      @inferred_type = :bar
+      VirtualBox::FFI::Util.stubs(:infer_type).returns([@c_type, @inferred_type])
+    end
+
+    should "infer the type" do
+      VirtualBox::FFI::Util.expects(:infer_type).with(@type).returns([@c_type, @inferred_type])
+      VirtualBox::FFI::Util.dereference_pointer_array(@pointer, @type, @length)
+    end
+
+    should "call get_* method on array pointer if it exists" do
+      result = mock("result")
+      @array_pointer.expects(:respond_to?).with("get_array_of_#{@inferred_type}".to_sym).returns(true)
+      @array_pointer.expects("get_array_of_#{@inferred_type}".to_sym).with(0, @length).returns(result)
+      assert_equal result, VirtualBox::FFI::Util.dereference_pointer_array(@pointer, @type, @length)
+    end
+
+    should "call read_* on Util if pointer doesn't support it" do
+      result = mock("result")
+      @array_pointer.expects(:respond_to?).with("get_array_of_#{@inferred_type}".to_sym).returns(false)
+      VirtualBox::FFI::Util.expects("read_array_of_#{@inferred_type}".to_sym).with(@array_pointer, @type, @length).returns(result)
+      assert_equal result, VirtualBox::FFI::Util.dereference_pointer_array(@pointer, @type, @length)
+    end
+  end
+
   context "functionify" do
     should "convert properly" do
       tests = {
@@ -133,6 +170,36 @@ class FFIUtilTest < Test::Unit::TestCase
         VirtualBox::FFI.expects(:const_get).with(@original_type).returns(@klass)
         @klass.expects(:new).with(@ptr.get_pointer(0)).returns(@instance)
         assert_equal @instance, VirtualBox::FFI::Util.read_struct(@ptr, @original_type)
+      end
+    end
+
+    context "reading an array of structs" do
+      setup do
+        @type = :foo
+        @length = 3
+
+        @pointers = []
+        @length.times do |i|
+          pointer = mock("pointer#{i}")
+          @pointers << pointer
+        end
+
+        @pointer = mock("pointer")
+        @pointer.stubs(:get_array_of_pointer).returns(@pointers)
+
+        VirtualBox::FFI::Util.stubs(:read_struct).returns("foo")
+      end
+
+      should "grab the array of pointers, then convert each to a struct" do
+        deref_seq = sequence("deref_seq")
+        @pointer.expects(:get_array_of_pointer).with(0, @length).returns(@pointers).in_sequence(deref_seq)
+        return_values = @pointers.collect do |pointer|
+          value = "struct_of_pointer: #{pointer}"
+          VirtualBox::FFI::Util.expects(:read_struct).with(pointer, @type).returns(value).in_sequence(deref_seq)
+          value
+        end
+
+        assert_equal return_values, VirtualBox::FFI::Util.read_array_of_struct(@pointer, @type, @length)
       end
     end
   end
