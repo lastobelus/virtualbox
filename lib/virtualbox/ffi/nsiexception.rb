@@ -27,7 +27,7 @@ module VirtualBox
         member :GetFilename, :getter, :unicode_string
         member :GetLineNumber, :getter, PRUint32
         member :GetColumnNumber, :getter, PRUint32
-        member :GetLocation, :GetLocation # TODO
+        member :GetLocation, :getter, :NSIStackFrame
         member :GetInner, :getter, :NSIException
         member :GetData, :getter, :NSISupports
         member :ToString, :getter, :unicode_string
