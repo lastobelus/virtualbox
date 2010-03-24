@@ -32,21 +32,21 @@ module VirtualBox
     class IProgress_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetId, :GetId
-        member :GetDescription, :GetDescription
-        member :GetInitiator, :GetInitiator
-        member :GetCancelable, :GetCancelable
-        member :GetPercent, :GetPercent
-        member :GetTimeRemaining, :GetTimeRemaining
-        member :GetCompleted, :GetCompleted
-        member :GetCanceled, :GetCanceled
-        member :GetResultCode, :GetResultCode
-        member :GetErrorInfo, :GetErrorInfo
-        member :GetOperationCount, :GetOperationCount
-        member :GetOperation, :GetOperation
-        member :GetOperationDescription, :GetOperationDescription
-        member :GetOperationPercent, :GetOperationPercent
-        member :GetTimeout, :GetTimeout
+        member :GetId, :getter, :unicode_string
+        member :GetDescription, :getter, :unicode_string
+        member :GetInitiator, :getter, :NSISupports
+        member :GetCancelable, :getter, PRBool
+        member :GetPercent, :getter, PRUint32
+        member :GetTimeRemaining, :getter, PRint32
+        member :GetCompleted, :getter, PRBool
+        member :GetCanceled, :getter, PRBool
+        member :GetResultCode, :getter, PRint32
+        member :GetErrorInfo, :GetErrorInfo #TODO
+        member :GetOperationCount, :getter, PRUint32
+        member :GetOperation, :getter, PRUint32
+        member :GetOperationDescription, :getter, :unicode_string
+        member :GetOperationPercent, :getter, PRUint32
+        member :GetTimeout, :getter, PRUint32
         member :SetTimeout, :SetTimeout
         member :SetCurrentOperationProgress, :SetCurrentOperationProgress
         member :SetNextOperation, :SetNextOperation

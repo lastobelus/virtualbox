@@ -72,7 +72,7 @@ module VirtualBox
         member :GetHardDisks, :array_getter, :IMedium
         member :GetDVDImages, :array_getter, :IMedium
         member :GetFloppyImages, :array_getter, :IMedium
-        member :GetProgressOperations, :GetProgressOperations
+        member :GetProgressOperations, :array_getter, :IProgress
         member :GetGuestOSTypes, :GetGuestOSTypes
         member :GetSharedFolders, :GetSharedFolders
         member :GetPerformanceCollector, :GetPerformanceCollector
