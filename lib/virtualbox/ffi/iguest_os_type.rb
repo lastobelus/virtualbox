@@ -22,17 +22,20 @@ module VirtualBox
     class IGuestOSType_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetFamilyId, :igt_GetFamilyId
-        member :GetFamilyDescription, :igt_GetFamilyDescription
-        member :GetId, :igt_GetId
-        member :GetDescription, :igt_GetDescription
-        member :GetIs64Bit, :igt_GetIs64Bit
-        member :GetRecommendedIOAPIC, :igt_GetRecommendedIOAPIC
-        member :GetRecommendedVirtEx, :igt_GetRecommendedVirtEx
-        member :GetRecommendedRAM, :igt_GetRecommendedRAM
-        member :GetRecommendedVRAM, :igt_GetRecommendedVRAM
-        member :GetRecommendedHDD, :igt_GetRecommendedHDD
-        member :GetAdapterType, :igt_GetAdapterType
+
+        with_opts(:function_type_prefix => :igt_) do
+          member :GetFamilyId, :getter, :unicode_string
+          member :GetFamilyDescription, :getter, :unicode_string
+          member :GetId, :getter, :unicode_string
+          member :GetDescription, :getter, :unicode_string
+          member :GetIs64Bit, :getter, PRBool
+          member :GetRecommendedIOAPIC, :getter, PRBool
+          member :GetRecommendedVirtEx, :getter, PRBool
+          member :GetRecommendedRAM, :getter, PRUint32
+          member :GetRecommendedVRAM, :getter, PRUint32
+          member :GetRecommendedHDD, :getter, PRUint32
+          member :GetAdapterType, :getter, PRUint32
+        end
       end
     end
   end
