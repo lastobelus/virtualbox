@@ -117,128 +117,126 @@ module VirtualBox
     callback :QuerySavedScreenshotPNGSize, [:pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
     callback :ReadSavedScreenshotPNGToArray, [:pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
 
-    class IMachine_vtbl < ::FFI::Struct
-      layout  :nsisupports, NSISupports_vtbl,
-              :GetParent, :GetParent,
-              :GetAccessible, :GetAccessible,
-              :GetAccessError, :GetAccessError,
-              :GetName, :GetName,
-              :SetName, :SetName,
-              :GetDescription, :GetDescription,
-              :SetDescription, :SetDescription,
-              :GetId, :GetId,
-              :GetOSTypeId, :GetOSTypeId,
-              :SetOSTypeId, :SetOSTypeId,
-              :GetHardwareVersion, :GetHardwareVersion,
-              :SetHardwareVersion, :SetHardwareVersion,
-              :GetHardwareUUID, :GetHardwareUUID,
-              :SetHardwareUUID, :SetHardwareUUID,
-              :GetCPUCount, :GetCPUCount,
-              :SetCPUCount, :SetCPUCount,
-              :GetMemorySize, :GetMemorySize,
-              :SetMemorySize, :SetMemorySize,
-              :GetMemoryBalloonSize, :GetMemoryBalloonSize,
-              :SetMemoryBalloonSize, :SetMemoryBalloonSize,
-              :GetStatisticsUpdateInterval, :GetStatisticsUpdateInterval,
-              :SetStatisticsUpdateInterval, :SetStatisticsUpdateInterval,
-              :GetVRAMSize, :GetVRAMSize,
-              :SetVRAMSize, :SetVRAMSize,
-              :GetAccelerate3DEnabled, :GetAccelerate3DEnabled,
-              :SetAccelerate3DEnabled, :SetAccelerate3DEnabled,
-              :GetAccelerate2DVideoEnabled, :GetAccelerate2DVideoEnabled,
-              :SetAccelerate2DVideoEnabled, :SetAccelerate2DVideoEnabled,
-              :GetMonitorCount, :GetMonitorCount,
-              :SetMonitorCount, :SetMonitorCount,
-              :GetBIOSSettings, :GetBIOSSettings,
-              :GetFirmwareType, :GetFirmwareType,
-              :SetFirmwareType, :SetFirmwareType,
-              :GetSnapshotFolder, :GetSnapshotFolder,
-              :SetSnapshotFolder, :SetSnapshotFolder,
-              :GetVRDPServer, :GetVRDPServer,
-              :GetMediumAttachments, :GetMediumAttachments,
-              :GetUSBController, :GetUSBController,
-              :GetAudioAdapter, :GetAudioAdapter,
-              :GetStorageControllers, :GetStorageControllers,
-              :GetSettingsFilePath, :GetSettingsFilePath,
-              :GetSettingsModified, :GetSettingsModified,
-              :GetSessionState, :GetSessionState,
-              :GetSessionType, :GetSessionType,
-              :GetSessionPid, :GetSessionPid,
-              :GetState, :GetState,
-              :GetLastStateChange, :GetLastStateChange,
-              :GetStateFilePath, :GetStateFilePath,
-              :GetLogFolder, :GetLogFolder,
-              :GetCurrentSnapshot, :GetCurrentSnapshot,
-              :GetSnapshotCount, :GetSnapshotCount,
-              :GetCurrentStateModified, :GetCurrentStateModified,
-              :GetSharedFolders, :GetSharedFolders,
-              :GetClipboardMode, :GetClipboardMode,
-              :SetClipboardMode, :SetClipboardMode,
-              :GetGuestPropertyNotificationPatterns, :GetGuestPropertyNotificationPatterns,
-              :SetGuestPropertyNotificationPatterns, :SetGuestPropertyNotificationPatterns,
-              :GetTeleporterEnabled, :GetTeleporterEnabled,
-              :SetTeleporterEnabled, :SetTeleporterEnabled,
-              :GetTeleporterPort, :GetTeleporterPort,
-              :SetTeleporterPort, :SetTeleporterPort,
-              :GetTeleporterAddress, :GetTeleporterAddress,
-              :SetTeleporterAddress, :SetTeleporterAddress,
-              :GetTeleporterPassword, :GetTeleporterPassword,
-              :SetTeleporterPassword, :SetTeleporterPassword,
-              :SetBootOrder, :SetBootOrder,
-              :GetBootOrder, :GetBootOrder,
-              :AttachDevice, :AttachDevice,
-              :DetachDevice, :DetachDevice,
-              :PassthroughDevice, :PassthroughDevice,
-              :MountMedium, :MountMedium,
-              :GetMedium, :GetMedium,
-              :GetMediumAttachmentsOfController, :GetMediumAttachmentsOfController,
-              :GetMediumAttachment, :GetMediumAttachment,
-              :GetNetworkAdapter, :GetNetworkAdapter,
-              :AddStorageController, :AddStorageController,
-              :GetStorageControllerByName, :GetStorageControllerByName,
-              :GetStorageControllerByInstance, :GetStorageControllerByInstance,
-              :RemoveStorageController, :RemoveStorageController,
-              :GetSerialPort, :GetSerialPort,
-              :GetParallelPort, :GetParallelPort,
-              :GetExtraDataKeys, :GetExtraDataKeys,
-              :GetExtraData, :GetExtraData,
-              :SetExtraData, :SetExtraData,
-              :GetCpuProperty, :GetCpuProperty,
-              :SetCpuProperty, :SetCpuProperty,
-              :GetCpuIdLeaf, :GetCpuIdLeaf,
-              :SetCpuIdLeaf, :SetCpuIdLeaf,
-              :RemoveCpuIdLeaf, :RemoveCpuIdLeaf,
-              :RemoveAllCpuIdLeafs, :RemoveAllCpuIdLeafs,
-              :GetHWVirtExProperty, :GetHWVirtExProperty,
-              :SetHWVirtExProperty, :SetHWVirtExProperty,
-              :SaveSettings, :SaveSettings,
-              :DiscardSettings, :DiscardSettings,
-              :DeleteSettings, :DeleteSettings,
-              :Export, :Export,
-              :GetSnapshot, :GetSnapshot,
-              :FindSnapshot, :FindSnapshot,
-              :SetCurrentSnapshot, :SetCurrentSnapshot,
-              :CreateSharedFolder, :CreateSharedFolder,
-              :RemoveSharedFolder, :RemoveSharedFolder,
-              :CanShowConsoleWindow, :CanShowConsoleWindow,
-              :ShowConsoleWindow, :ShowConsoleWindow,
-              :GetGuestProperty, :GetGuestProperty,
-              :GetGuestPropertyValue, :GetGuestPropertyValue,
-              :GetGuestPropertyTimestamp, :GetGuestPropertyTimestamp,
-              :SetGuestProperty, :SetGuestProperty,
-              :SetGuestPropertyValue, :SetGuestPropertyValue,
-              :EnumerateGuestProperties, :EnumerateGuestProperties,
-              :QuerySavedThumbnailSize, :QuerySavedThumbnailSize,
-              :ReadSavedThumbnailToArray, :ReadSavedThumbnailToArray,
-              :QuerySavedScreenshotPNGSize, :QuerySavedScreenshotPNGSize,
-              :ReadSavedScreenshotPNGToArray, :ReadSavedScreenshotPNGToArray
+    class IMachine < VTblParent
+      parent_of :IMachine_vtbl
     end
 
-    class IMachine < ::FFI::Struct
-      layout :vtbl, :pointer # IMachine_vtbl
-
-      def vtbl
-        @_vtbl ||= IMachine_vtbl.new(self[:vtbl])
+    class IMachine_vtbl < VTbl
+      define_layout do
+        member :nsisupports, NSISupports_vtbl
+        member :GetParent, :GetParent
+        member :GetAccessible, :GetAccessible
+        member :GetAccessError, :GetAccessError
+        member :GetName, :getter, :unicode_string
+        member :SetName, :SetName
+        member :GetDescription, :GetDescription
+        member :SetDescription, :SetDescription
+        member :GetId, :GetId
+        member :GetOSTypeId, :GetOSTypeId
+        member :SetOSTypeId, :SetOSTypeId
+        member :GetHardwareVersion, :GetHardwareVersion
+        member :SetHardwareVersion, :SetHardwareVersion
+        member :GetHardwareUUID, :GetHardwareUUID
+        member :SetHardwareUUID, :SetHardwareUUID
+        member :GetCPUCount, :GetCPUCount
+        member :SetCPUCount, :SetCPUCount
+        member :GetMemorySize, :GetMemorySize
+        member :SetMemorySize, :SetMemorySize
+        member :GetMemoryBalloonSize, :GetMemoryBalloonSize
+        member :SetMemoryBalloonSize, :SetMemoryBalloonSize
+        member :GetStatisticsUpdateInterval, :GetStatisticsUpdateInterval
+        member :SetStatisticsUpdateInterval, :SetStatisticsUpdateInterval
+        member :GetVRAMSize, :GetVRAMSize
+        member :SetVRAMSize, :SetVRAMSize
+        member :GetAccelerate3DEnabled, :GetAccelerate3DEnabled
+        member :SetAccelerate3DEnabled, :SetAccelerate3DEnabled
+        member :GetAccelerate2DVideoEnabled, :GetAccelerate2DVideoEnabled
+        member :SetAccelerate2DVideoEnabled, :SetAccelerate2DVideoEnabled
+        member :GetMonitorCount, :GetMonitorCount
+        member :SetMonitorCount, :SetMonitorCount
+        member :GetBIOSSettings, :GetBIOSSettings
+        member :GetFirmwareType, :GetFirmwareType
+        member :SetFirmwareType, :SetFirmwareType
+        member :GetSnapshotFolder, :GetSnapshotFolder
+        member :SetSnapshotFolder, :SetSnapshotFolder
+        member :GetVRDPServer, :GetVRDPServer
+        member :GetMediumAttachments, :GetMediumAttachments
+        member :GetUSBController, :GetUSBController
+        member :GetAudioAdapter, :GetAudioAdapter
+        member :GetStorageControllers, :GetStorageControllers
+        member :GetSettingsFilePath, :GetSettingsFilePath
+        member :GetSettingsModified, :GetSettingsModified
+        member :GetSessionState, :GetSessionState
+        member :GetSessionType, :GetSessionType
+        member :GetSessionPid, :GetSessionPid
+        member :GetState, :GetState
+        member :GetLastStateChange, :GetLastStateChange
+        member :GetStateFilePath, :GetStateFilePath
+        member :GetLogFolder, :GetLogFolder
+        member :GetCurrentSnapshot, :GetCurrentSnapshot
+        member :GetSnapshotCount, :GetSnapshotCount
+        member :GetCurrentStateModified, :GetCurrentStateModified
+        member :GetSharedFolders, :GetSharedFolders
+        member :GetClipboardMode, :GetClipboardMode
+        member :SetClipboardMode, :SetClipboardMode
+        member :GetGuestPropertyNotificationPatterns, :GetGuestPropertyNotificationPatterns
+        member :SetGuestPropertyNotificationPatterns, :SetGuestPropertyNotificationPatterns
+        member :GetTeleporterEnabled, :GetTeleporterEnabled
+        member :SetTeleporterEnabled, :SetTeleporterEnabled
+        member :GetTeleporterPort, :GetTeleporterPort
+        member :SetTeleporterPort, :SetTeleporterPort
+        member :GetTeleporterAddress, :GetTeleporterAddress
+        member :SetTeleporterAddress, :SetTeleporterAddress
+        member :GetTeleporterPassword, :GetTeleporterPassword
+        member :SetTeleporterPassword, :SetTeleporterPassword
+        member :SetBootOrder, :SetBootOrder
+        member :GetBootOrder, :GetBootOrder
+        member :AttachDevice, :AttachDevice
+        member :DetachDevice, :DetachDevice
+        member :PassthroughDevice, :PassthroughDevice
+        member :MountMedium, :MountMedium
+        member :GetMedium, :GetMedium
+        member :GetMediumAttachmentsOfController, :GetMediumAttachmentsOfController
+        member :GetMediumAttachment, :GetMediumAttachment
+        member :GetNetworkAdapter, :GetNetworkAdapter
+        member :AddStorageController, :AddStorageController
+        member :GetStorageControllerByName, :GetStorageControllerByName
+        member :GetStorageControllerByInstance, :GetStorageControllerByInstance
+        member :RemoveStorageController, :RemoveStorageController
+        member :GetSerialPort, :GetSerialPort
+        member :GetParallelPort, :GetParallelPort
+        member :GetExtraDataKeys, :GetExtraDataKeys
+        member :GetExtraData, :GetExtraData
+        member :SetExtraData, :SetExtraData
+        member :GetCpuProperty, :GetCpuProperty
+        member :SetCpuProperty, :SetCpuProperty
+        member :GetCpuIdLeaf, :GetCpuIdLeaf
+        member :SetCpuIdLeaf, :SetCpuIdLeaf
+        member :RemoveCpuIdLeaf, :RemoveCpuIdLeaf
+        member :RemoveAllCpuIdLeafs, :RemoveAllCpuIdLeafs
+        member :GetHWVirtExProperty, :GetHWVirtExProperty
+        member :SetHWVirtExProperty, :SetHWVirtExProperty
+        member :SaveSettings, :SaveSettings
+        member :DiscardSettings, :DiscardSettings
+        member :DeleteSettings, :DeleteSettings
+        member :Export, :Export
+        member :GetSnapshot, :GetSnapshot
+        member :FindSnapshot, :FindSnapshot
+        member :SetCurrentSnapshot, :SetCurrentSnapshot
+        member :CreateSharedFolder, :CreateSharedFolder
+        member :RemoveSharedFolder, :RemoveSharedFolder
+        member :CanShowConsoleWindow, :CanShowConsoleWindow
+        member :ShowConsoleWindow, :ShowConsoleWindow
+        member :GetGuestProperty, :GetGuestProperty
+        member :GetGuestPropertyValue, :GetGuestPropertyValue
+        member :GetGuestPropertyTimestamp, :GetGuestPropertyTimestamp
+        member :SetGuestProperty, :SetGuestProperty
+        member :SetGuestPropertyValue, :SetGuestPropertyValue
+        member :EnumerateGuestProperties, :EnumerateGuestProperties
+        member :QuerySavedThumbnailSize, :QuerySavedThumbnailSize
+        member :ReadSavedThumbnailToArray, :ReadSavedThumbnailToArray
+        member :QuerySavedScreenshotPNGSize, :QuerySavedScreenshotPNGSize
+        member :ReadSavedScreenshotPNGToArray, :ReadSavedScreenshotPNGToArray
       end
     end
   end

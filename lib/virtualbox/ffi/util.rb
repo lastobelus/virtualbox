@@ -108,8 +108,9 @@ module VirtualBox
         #
         # @return [Array<::FFI::Struct>]
         def read_array_of_struct(ptr, type, length)
+          klass = FFI.const_get(type)
           ptr.get_array_of_pointer(0, length).collect do |single_pointer|
-            read_struct(single_pointer, type)
+            klass.new(single_pointer)
           end
         end
 

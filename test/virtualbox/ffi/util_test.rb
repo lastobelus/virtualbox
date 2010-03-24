@@ -187,15 +187,18 @@ class FFIUtilTest < Test::Unit::TestCase
         @pointer = mock("pointer")
         @pointer.stubs(:get_array_of_pointer).returns(@pointers)
 
+        @klass = mock("foo_class")
+
         VirtualBox::FFI::Util.stubs(:read_struct).returns("foo")
       end
 
       should "grab the array of pointers, then convert each to a struct" do
         deref_seq = sequence("deref_seq")
+        VirtualBox::FFI.expects(:const_get).with(@type).returns(@klass)
         @pointer.expects(:get_array_of_pointer).with(0, @length).returns(@pointers).in_sequence(deref_seq)
         return_values = @pointers.collect do |pointer|
           value = "struct_of_pointer: #{pointer}"
-          VirtualBox::FFI::Util.expects(:read_struct).with(pointer, @type).returns(value).in_sequence(deref_seq)
+          @klass.expects(:new).with(pointer).returns(value).in_sequence(deref_seq)
           value
         end
 
