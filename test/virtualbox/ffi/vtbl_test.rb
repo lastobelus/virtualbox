@@ -44,6 +44,13 @@ class FFIVTblTest < Test::Unit::TestCase
         VirtualBox::FFI::VTbl.member_getter(:key, :foo)
       end
 
+      should "use custom function type if given" do
+        member_seq = sequence("member")
+        @layout_args.expects(:<<).with([:key, :custom_type]).once.in_sequence(member_seq)
+        VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
+        VirtualBox::FFI::VTbl.member_getter(:key, :foo, :function_type => :custom_type)
+      end
+
       context "the defined method" do
         class GetterFooStruct < VirtualBox::FFI::VTbl
           define_layout do
@@ -98,6 +105,13 @@ class FFIVTblTest < Test::Unit::TestCase
         @layout_args.expects(:<<).with([:key, :key]).once.in_sequence(member_seq)
         VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
         VirtualBox::FFI::VTbl.member_array_getter(:key, :foo)
+      end
+
+      should "use custom function type if given" do
+        member_seq = sequence("member")
+        @layout_args.expects(:<<).with([:key, :custom_type]).once.in_sequence(member_seq)
+        VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
+        VirtualBox::FFI::VTbl.member_array_getter(:key, :foo, :function_type => :custom_type)
       end
 
       context "the defined method" do

@@ -64,9 +64,15 @@ module VirtualBox
         # with the above example, the type should be `:ResultType`, and not a
         # pointer, since the actual resulting type is `ResultType`, and the pointer
         # is just a means to return it.
-        def member_getter(key, type)
+        def member_getter(key, type, opts={})
+          # Merge in default options
+          default_opts = {
+            :function_type => key
+          }
+          opts = default_opts.merge(opts)
+
           # Add the function to the layout args per normal
-          layout_args << [key, key]
+          layout_args << [key, opts[:function_type]]
 
           # Define the getter
           define_method(Util.functionify(key)) do
@@ -94,9 +100,15 @@ module VirtualBox
         # The second parameter is the type of a single element of the array returned.
         # This type can be one of the typical Ruby-FFI primitives or it can also
         # be a symbol or class representing another struct.
-        def member_array_getter(key, type)
+        def member_array_getter(key, type, opts={})
+          # Merge in default options
+          default_opts = {
+            :function_type => key
+          }
+          opts = default_opts.merge(opts)
+
           # Add the function to the layout args per normal
-          layout_args << [key, key]
+          layout_args << [key, opts[:function_type]]
 
           # Define the array getter
           define_method(Util.functionify(key)) do
