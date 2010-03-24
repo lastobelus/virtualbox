@@ -76,9 +76,9 @@ module VirtualBox
           member :GetFloppyImages, :array_getter, :IMedium
           member :GetProgressOperations, :array_getter, :IProgress
           member :GetGuestOSTypes, :array_getter, :IGuestOSType
+          member :GetSharedFolders, :array_getter, :ISharedFolder
         end
 
-        member :GetSharedFolders, :ivb_GetSharedFolders
         member :GetPerformanceCollector, :ivb_GetPerformanceCollector
         member :GetDHCPServers, :ivb_GetDHCPServers
         member :CreateMachine, :ivb_CreateMachine
