@@ -138,13 +138,58 @@ module VirtualBox
 
           # Define the array getter
           define_method(Util.functionify(key)) do
-            count_pointer, count_type = Util.pointer_for_type(PRUint32)
-            array_pointer, array_type = Util.pointer_for_type(type)
+            count_pointer = Util.pointer_for_type(PRUint32)
+            array_pointer = Util.pointer_for_type(type)
 
             self[key].call(parent, count_pointer, array_pointer)
 
             count = Util.dereference_pointer(count_pointer, PRUint32)
             Util.dereference_pointer_array(array_pointer, type, count)
+          end
+        end
+
+        # This method adds a general `function` type to the layout. This method is more
+        # specific than Ruby-FFI's `callback` in that it automatically handles creating
+        # pointers for out parameters and wrapping in parameters in pointers as well if
+        # that is what is needed.
+        #
+        # Its also tailored specifically to VirtualBox in that the return value, typically
+        # `nsresult` is never actually returned. Instead, the parameters specified as
+        # `out` parameters are returned as an array (or just a single object if there is just
+        # one).
+        #
+        # The params array is simply an array of types as symbols. Example of a simple one:
+        #
+        #   [:int, :string, :uint, :SomeStruct]
+        #
+        # Things can get more complicated with `parameter flags`. An example of parameter
+        # flags in use is shown below:
+        #
+        #   [:int, [:out, :string], :uint]
+        #
+        # In this case, the 2nd parameter is an output parameter, meaning its just a pointer
+        # that the function uses to return a value rather than return it through the function.
+        # For functions like this, `member_function` will ignore that 2nd parameter when
+        # creating the function, and use it as a return value. Example, if the above function
+        # was called `foo`:
+        #
+        #   foo(-7, 42) # => Returns a string
+        #
+        def member_function(key, params, opts={})
+          # Add the method to the layout args
+          # TODO
+
+          # Create the method
+          define_method(Util.functionify(key)) do |*args|
+            # TODO: Verify parameters count and types
+
+            # Generate the parameters array we're sending to the function
+            filtered_params = params.collect do |param|
+              if param.is_a?(Array) && param[0] == :out
+                # Output parameter, create the pointer for it and put it onto
+                # the array, ignoring the args
+              end
+            end
           end
         end
 

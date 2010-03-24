@@ -210,8 +210,8 @@ class FFIVTblTest < Test::Unit::TestCase
 
           @count_ptr = mock("count_pointer")
 
-          VirtualBox::FFI::Util.stubs(:pointer_for_type).with(@type).returns([@ptr, @type])
-          VirtualBox::FFI::Util.stubs(:pointer_for_type).with(@count_type).returns([@count_ptr, @count_type])
+          VirtualBox::FFI::Util.stubs(:pointer_for_type).with(@type).returns(@ptr)
+          VirtualBox::FFI::Util.stubs(:pointer_for_type).with(@count_type).returns(@count_ptr)
 
           VirtualBox::FFI::Util.stubs(:dereference_pointer).returns('foo')
           VirtualBox::FFI::Util.stubs(:dereference_pointer_array).returns('foo')

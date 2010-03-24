@@ -38,8 +38,8 @@ class FFIUtilTest < Test::Unit::TestCase
       assert_equal expected, result
     end
 
-    should "return the pointer and type if no block is given" do
-      assert_equal [@pointer, :int], VirtualBox::FFI::Util.pointer_for_type(:int)
+    should "return the pointer if no block is given" do
+      assert_equal @pointer, VirtualBox::FFI::Util.pointer_for_type(:int)
     end
   end
 

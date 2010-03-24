@@ -79,6 +79,7 @@ module VirtualBox
           member :GetSharedFolders, :array_getter, :ISharedFolder
         end
 
+        #member :OpenMachine, :function, [:IVirtualBox, :unicode_string, [:out, :IMachine]]
         member :GetPerformanceCollector, :ivb_GetPerformanceCollector
         member :GetDHCPServers, :ivb_GetDHCPServers
         member :CreateMachine, :ivb_CreateMachine

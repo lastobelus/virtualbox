@@ -16,7 +16,7 @@ module VirtualBox
           if block_given?
             yield pointer, type
           else
-            [pointer, type]
+            pointer
           end
         end
 
