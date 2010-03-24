@@ -19,14 +19,14 @@ module VirtualBox
     class NSIStackFrame_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :nsisf_GetLanguage, :nsisf_GetLanguage
-        member :nsisf_GetLanguageName, :nsisf_GetLanguageName
-        member :nsisf_GetFilename, :nsisf_GetFilename
-        member :nsisf_GetName, :nsisf_GetName
-        member :nsisf_GetLineNumber, :nsisf_GetLineNumber
-        member :nsisf_GetSourceLine, :nsisf_GetSourceLine
-        member :nsisf_GetCaller, :nsisf_GetCaller
-        member :nsisf_ToString, :nsisf_ToString
+        member :GetLanguage, :nsisf_GetLanguage
+        member :GetLanguageName, :nsisf_GetLanguageName
+        member :GetFilename, :nsisf_GetFilename
+        member :GetName, :nsisf_GetName
+        member :GetLineNumber, :nsisf_GetLineNumber
+        member :GetSourceLine, :nsisf_GetSourceLine
+        member :GetCaller, :nsisf_GetCaller
+        member :ToString, :nsisf_ToString
       end
     end
   end
