@@ -69,9 +69,9 @@ module VirtualBox
         member :GetHost, :getter, :IHost
         member :GetSystemProperties, :getter, :ISystemProperties
         member :GetMachines, :array_getter, :IMachine
-        member :GetHardDisks, :GetHardDisks
-        member :GetDVDImages, :GetDVDImages
-        member :GetFloppyImages, :GetFloppyImages
+        member :GetHardDisks, :array_getter, :IMedium
+        member :GetDVDImages, :array_getter, :IMedium
+        member :GetFloppyImages, :array_getter, :IMedium
         member :GetProgressOperations, :GetProgressOperations
         member :GetGuestOSTypes, :GetGuestOSTypes
         member :GetSharedFolders, :GetSharedFolders

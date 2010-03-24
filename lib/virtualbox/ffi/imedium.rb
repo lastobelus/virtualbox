@@ -52,27 +52,27 @@ module VirtualBox
     class IMedium_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetId, :GetId
-        member :GetDescription, :GetDescription
+        member :GetId, :getter, :unicode_string
+        member :GetDescription, :getter, :unicode_string
         member :SetDescription, :SetDescription
-        member :GetState, :GetState
-        member :GetLocation, :GetLocation
+        member :GetState, :getter, PRUint32
+        member :GetLocation, :getter, :unicode_string
         member :SetLocation, :SetLocation
-        member :GetName, :GetName
-        member :GetDeviceType, :GetDeviceType
+        member :GetName, :getter, :unicode_string
+        member :GetDeviceType, :getter, PRUint32
         member :GetHostDrive, :GetHostDrive
-        member :GetSize, :GetSize
-        member :GetFormat, :GetFormat
-        member :GetType, :GetType
+        member :GetSize, :getter, PRUint64
+        member :GetFormat, :getter, :unicode_string
+        member :GetType, :getter, PRUint32
         member :SetType, :SetType
-        member :GetParent, :GetParent
-        member :GetChildren, :GetChildren
-        member :GetBase, :GetBase
-        member :GetReadOnly, :GetReadOnly
-        member :GetLogicalSize, :GetLogicalSize
-        member :GetAutoReset, :GetAutoReset
+        member :GetParent, :getter, :IMedium
+        member :GetChildren, :array_getter, :IMedium
+        member :GetBase, :getter, :IMedium
+        member :GetReadOnly, :getter, PRBool
+        member :GetLogicalSize, :getter, PRUint64
+        member :GetAutoReset, :getter, PRBool
         member :SetAutoReset, :SetAutoReset
-        member :GetLastAccessError, :GetLastAccessError
+        member :GetLastAccessError, :getter, :unicode_string
         member :GetMachineIds, :GetMachineIds
         member :RefreshState, :RefreshState
         member :GetSnapshotIds, :GetSnapshotIds
