@@ -119,7 +119,8 @@ class FFIUtilTest < Test::Unit::TestCase
         :GetVersion => :get_version,
         :key => :key,
         :testingThisOut => :testing_this_out,
-        :GetAcceleration3DAvailable => :get_acceleration_3davailable
+        :GetAcceleration3DAvailable => :get_acceleration_3d_available,
+        :GetDVDImages => :get_dvd_images
       }
 
       tests.each do |original, result|
