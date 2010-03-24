@@ -41,31 +41,31 @@ module VirtualBox
     class ISystemProperties_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetMinGuestRAM, :GetMinGuestRAM
-        member :GetMaxGuestRAM, :GetMaxGuestRAM
-        member :GetMinGuestVRAM, :GetMinGuestVRAM
-        member :GetMaxGuestVRAM, :GetMaxGuestVRAM
-        member :GetMinGuestCPUCount, :GetMinGuestCPUCount
-        member :GetMaxGuestCPUCount, :GetMaxGuestCPUCount
-        member :GetMaxVDISize, :GetMaxVDISize
-        member :GetNetworkAdapterCount, :GetNetworkAdapterCount
-        member :GetSerialPortCount, :GetSerialPortCount
-        member :GetParallelPortCount, :GetParallelPortCount
-        member :GetMaxBootPosition, :GetMaxBootPosition
-        member :GetDefaultMachineFolder, :GetDefaultMachineFolder
+        member :GetMinGuestRAM, :getter, PRUint32
+        member :GetMaxGuestRAM, :getter, PRUint32
+        member :GetMinGuestVRAM, :getter, PRUint32
+        member :GetMaxGuestVRAM, :getter, PRUint32
+        member :GetMinGuestCPUCount, :getter, PRUint32
+        member :GetMaxGuestCPUCount, :getter, PRUint32
+        member :GetMaxVDISize, :getter, PRUint64
+        member :GetNetworkAdapterCount, :getter, PRUint32
+        member :GetSerialPortCount, :getter, PRUint32
+        member :GetParallelPortCount, :getter, PRUint32
+        member :GetMaxBootPosition, :getter, PRUint32
+        member :GetDefaultMachineFolder, :getter, :unicode_string
         member :SetDefaultMachineFolder, :SetDefaultMachineFolder
-        member :GetDefaultHardDiskFolder, :GetDefaultHardDiskFolder
+        member :GetDefaultHardDiskFolder, :getter, :unicode_string
         member :SetDefaultHardDiskFolder, :SetDefaultHardDiskFolder
         member :GetMediumFormats, :GetMediumFormats
-        member :GetDefaultHardDiskFormat, :GetDefaultHardDiskFormat
+        member :GetDefaultHardDiskFormat, :getter, :unicode_string
         member :SetDefaultHardDiskFormat, :SetDefaultHardDiskFormat
-        member :GetRemoteDisplayAuthLibrary, :GetRemoteDisplayAuthLibrary
+        member :GetRemoteDisplayAuthLibrary, :getter, :unicode_string
         member :SetRemoteDisplayAuthLibrary, :SetRemoteDisplayAuthLibrary
-        member :GetWebServiceAuthLibrary, :GetWebServiceAuthLibrary
+        member :GetWebServiceAuthLibrary, :getter, :unicode_string
         member :SetWebServiceAuthLibrary, :SetWebServiceAuthLibrary
-        member :GetLogHistoryCount, :GetLogHistoryCount
+        member :GetLogHistoryCount, :getter, PRUint32
         member :SetLogHistoryCount, :SetLogHistoryCount
-        member :GetDefaultAudioDriver, :GetDefaultAudioDriver
+        member :GetDefaultAudioDriver, :getter, PRUint32
         member :GetMaxDevicesPerPortForStorageBus, :GetMaxDevicesPerPortForStorageBus
         member :GetMinPortCountForStorageBus, :GetMinPortCountForStorageBus
         member :GetMaxPortCountForStorageBus, :GetMaxPortCountForStorageBus

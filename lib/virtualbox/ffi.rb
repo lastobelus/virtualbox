@@ -10,6 +10,7 @@ module VirtualBox
     PRInt64 = :long
     PRUint16 = :ushort
     PRUint32 = :uint
+    PRUint64 = :ulong
     PRUnichar = PRUint16
     PRBool = :char
 
