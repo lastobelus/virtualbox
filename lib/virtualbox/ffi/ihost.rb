@@ -40,8 +40,8 @@ module VirtualBox
     class IHost_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetDVDDrives, :GetDVDDrives
-        member :GetFloppyDrives, :GetFloppyDrives
+        member :GetDVDDrives, :array_getter, :IMedium
+        member :GetFloppyDrives, :array_getter, :IMedium
         member :GetUSBDevices, :GetUSBDevices
         member :GetUSBDeviceFilters, :GetUSBDeviceFilters
         member :GetNetworkInterfaces, :GetNetworkInterfaces
@@ -53,17 +53,17 @@ module VirtualBox
         member :GetOSVersion, :getter, :unicode_string
         member :GetUTCTime, :getter, PRInt64
         member :GetAcceleration3DAvailable, :getter, PRBool
-        member :GetProcessorSpeed, :GetProcessorSpeed
-        member :GetProcessorFeature, :GetProcessorFeature
-        member :GetProcessorDescription, :GetProcessorDescription
-        member :GetProcessorCpuIdLeaf, :GetProcessorCpuIdLeaf
+        member :GetProcessorSpeed, :function, [PRUint32, [:out, PRUint32]]
+        member :GetProcessorFeature, :function, [PRUint32, [:out, PRBool]]
+        member :GetProcessorDescription, :function, [PRUint32, [:out, :unicode_string]]
+        member :GetProcessorCpuIdLeaf, :function, [PRUint32, PRUint32, PRUint32, [:out, PRUint32], [:out, PRUint32], [:out, PRUint32], [:out, PRUint32]]
         member :CreateHostOnlyNetworkInterface, :CreateHostOnlyNetworkInterface
-        member :RemoveHostOnlyNetworkInterface, :RemoveHostOnlyNetworkInterface
+        member :RemoveHostOnlyNetworkInterface, :function, [:unicode_string, [:out, :IProgress]]
         member :CreateUSBDeviceFilter, :CreateUSBDeviceFilter
         member :InsertUSBDeviceFilter, :InsertUSBDeviceFilter
-        member :RemoveUSBDeviceFilter, :RemoveUSBDeviceFilter
-        member :FindHostDVDDrive, :FindHostDVDDrive
-        member :FindHostFloppyDrive, :FindHostFloppyDrive
+        member :RemoveUSBDeviceFilter, :function, [PRUint32]
+        member :FindHostDVDDrive, :function, [:unicode_string, [:out, :IMedium]]
+        member :FindHostFloppyDrive, :function, [:unicode_string, [:out, :IMedium]]
         member :FindHostNetworkInterfaceByName, :FindHostNetworkInterfaceByName
         member :FindHostNetworkInterfaceById, :FindHostNetworkInterfaceById
         member :FindHostNetworkInterfacesOfType, :FindHostNetworkInterfacesOfType
