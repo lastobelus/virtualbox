@@ -124,41 +124,41 @@ module VirtualBox
     class IMachine_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetParent, :GetParent
-        member :GetAccessible, :GetAccessible
-        member :GetAccessError, :GetAccessError
+        member :GetParent, :getter, :IVirtualBox
+        member :GetAccessible, :getter, PRBool
+        member :GetAccessError, :getter, :IVirtualBoxErrorInfo
         member :GetName, :getter, :unicode_string
-        member :SetName, :SetName
-        member :GetDescription, :GetDescription
-        member :SetDescription, :SetDescription
-        member :GetId, :GetId
-        member :GetOSTypeId, :GetOSTypeId
-        member :SetOSTypeId, :SetOSTypeId
-        member :GetHardwareVersion, :GetHardwareVersion
-        member :SetHardwareVersion, :SetHardwareVersion
-        member :GetHardwareUUID, :GetHardwareUUID
-        member :SetHardwareUUID, :SetHardwareUUID
-        member :GetCPUCount, :GetCPUCount
-        member :SetCPUCount, :SetCPUCount
-        member :GetMemorySize, :GetMemorySize
-        member :SetMemorySize, :SetMemorySize
-        member :GetMemoryBalloonSize, :GetMemoryBalloonSize
-        member :SetMemoryBalloonSize, :SetMemoryBalloonSize
-        member :GetStatisticsUpdateInterval, :GetStatisticsUpdateInterval
-        member :SetStatisticsUpdateInterval, :SetStatisticsUpdateInterval
-        member :GetVRAMSize, :GetVRAMSize
-        member :SetVRAMSize, :SetVRAMSize
-        member :GetAccelerate3DEnabled, :GetAccelerate3DEnabled
-        member :SetAccelerate3DEnabled, :SetAccelerate3DEnabled
-        member :GetAccelerate2DVideoEnabled, :GetAccelerate2DVideoEnabled
-        member :SetAccelerate2DVideoEnabled, :SetAccelerate2DVideoEnabled
-        member :GetMonitorCount, :GetMonitorCount
-        member :SetMonitorCount, :SetMonitorCount
+        member :SetName, :function, [:unicode_string]
+        member :GetDescription, :getter, :unicode_string
+        member :SetDescription, :function, [:unicode_string]
+        member :GetId, :getter, :unicode_string
+        member :GetOSTypeId, :getter, :unicode_string
+        member :SetOSTypeId, :function, [:unicode_string]
+        member :GetHardwareVersion, :getter, :unicode_string
+        member :SetHardwareVersion, :function, [:unicode_string]
+        member :GetHardwareUUID, :getter, :unicode_string
+        member :SetHardwareUUID, :function, [:unicode_string]
+        member :GetCPUCount, :getter, PRUint32
+        member :SetCPUCount, :function, [PRUint32]
+        member :GetMemorySize, :getter, PRUint32
+        member :SetMemorySize, :function, [PRUint32]
+        member :GetMemoryBalloonSize, :getter, PRUint32
+        member :SetMemoryBalloonSize, :function, [PRUint32]
+        member :GetStatisticsUpdateInterval, :getter, PRUint32
+        member :SetStatisticsUpdateInterval, :function, [PRUint32]
+        member :GetVRAMSize, :getter, PRUint32
+        member :SetVRAMSize, :function, [PRUint32]
+        member :GetAccelerate3DEnabled, :getter, PRBool
+        member :SetAccelerate3DEnabled, :function, [PRBool]
+        member :GetAccelerate2DVideoEnabled, :getter, PRBool
+        member :SetAccelerate2DVideoEnabled, :function, [PRBool]
+        member :GetMonitorCount, :getter, PRUint32
+        member :SetMonitorCount, :function, [PRUint32]
         member :GetBIOSSettings, :GetBIOSSettings
-        member :GetFirmwareType, :GetFirmwareType
-        member :SetFirmwareType, :SetFirmwareType
-        member :GetSnapshotFolder, :GetSnapshotFolder
-        member :SetSnapshotFolder, :SetSnapshotFolder
+        member :GetFirmwareType, :getter, PRUint32
+        member :SetFirmwareType, :function, [PRUint32]
+        member :GetSnapshotFolder, :getter, :unicode_string
+        member :SetSnapshotFolder, :function, [:unicode_string]
         member :GetVRDPServer, :GetVRDPServer
         member :GetMediumAttachments, :GetMediumAttachments
         member :GetUSBController, :GetUSBController
