@@ -20,15 +20,18 @@ module VirtualBox
     class IAppliance_vtbl < VTbl
       define_layout do
         member :nsisupports, NSISupports_vtbl
-        member :GetPath, :ia_GetPath
-        member :GetDisks, :ia_GetDisks
-        member :GetVirtualSystemDescriptions, :ia_GetVirtualSystemDescriptions
-        member :Read, :ia_Read
-        member :Interpret, :ia_Interpret
-        member :ImportMachines, :ia_ImportMachines
-        member :CreateVFSExplorer, :ia_CreateVFSExplorer
-        member :Write, :ia_Write
-        member :GetWarnings, :ia_GetWarnings
+
+        with_opts(:function_type_prefix => :ia_) do
+          member :GetPath, :getter, :unicode_string
+          member :GetDisks, :array_getter, :unicode_string
+          member :GetVirtualSystemDescriptions, :array_getter, :IVirtualSystemDescription
+          member :Read, :function, [:unicode_string, [:out, :IProgress]]
+          member :Interpret, :function, []
+          member :ImportMachines, :function, [[:out, :IProgress]]
+          member :CreateVFSExplorer, :function, [:unicode_string, [:out, :IVFSExplorer]]
+          member :Write, :function, [:unicode_string, :unicode_string, [:out, :IProgress]]
+          member :GetWarnings, :array_getter, :unicode_string
+        end
       end
     end
   end
