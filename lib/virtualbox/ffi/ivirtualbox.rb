@@ -108,13 +108,17 @@ module VirtualBox
           member :OpenExistingSession, :function, [:ISession, :unicode_string]
         end
 
+        # TODO: IVirtualBoxCallback and nice callback handling
         member :RegisterCallback, :ivb_RegisterCallback
         member :UnregisterCallback, :ivb_UnregisterCallback
-        member :WaitForPropertyChange, :ivb_WaitForPropertyChange
-        member :CreateDHCPServer, :ivb_CreateDHCPServer
-        member :FindDHCPServerByNetworkName, :ivb_FindDHCPServerByNetworkName
-        member :RemoveDHCPServer, :ivb_RemoveDHCPServer
-        member :CheckFirmwarePresent, :ivb_CheckFirmwarePresent
+
+        with_opts(:function_type_prefix => :ivb_) do
+          member :WaitForPropertyChange, :function, [:unicode_string, PRUint32, [:out, :unicode_string], [:out, :unicode_string]]
+          member :CreateDHCPServer, :function, [:unicode_string, [:out, :IDHCPServer]]
+          member :FindDHCPServerByNetworkName, :function, [:unicode_string, [:out, :IDHCPServer]]
+          member :RemoveDHCPServer, :function, [:IDHCPServer]
+          member :CheckFirmwarePresent, :function, [PRUint32, :unicode_string, [:out, :unicode_string], [:out, :unicode_string], [:out, PRBool]]
+        end
       end
     end
   end
