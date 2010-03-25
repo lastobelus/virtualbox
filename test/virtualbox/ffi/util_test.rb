@@ -274,5 +274,35 @@ class FFIUtilTest < Test::Unit::TestCase
         assert_equal return_values, VirtualBox::FFI::Util.read_array_of_struct(@pointer, @type, @length)
       end
     end
+
+    context "reading an array of unicode strings" do
+      setup do
+        @type = :foo
+        @length = 3
+
+        @pointers = []
+        @length.times do |i|
+          pointer = mock("pointer#{i}")
+          @pointers << pointer
+        end
+
+        @pointer = mock("pointer")
+        @pointer.stubs(:get_array_of_pointer).returns(@pointers)
+
+        VirtualBox::FFI::Util.stubs(:read_struct).returns("foo")
+      end
+
+      should "grab the array of pointers, then convert each to a UTF8 string" do
+        deref_seq = sequence("deref_seq")
+        @pointer.expects(:get_array_of_pointer).with(0, @length).returns(@pointers).in_sequence(deref_seq)
+        return_values = @pointers.collect do |pointer|
+          value = "struct_of_pointer: #{pointer}"
+          VirtualBox::FFI::Util.expects(:utf16_to_string).with(pointer).returns(value).in_sequence(deref_seq)
+          value
+        end
+
+        assert_equal return_values, VirtualBox::FFI::Util.read_array_of_unicode_string(@pointer, @type, @length)
+      end
+    end
   end
 end

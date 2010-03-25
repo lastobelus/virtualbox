@@ -185,6 +185,15 @@ module VirtualBox
           end
         end
 
+        # Reads an array of strings from a pointer
+        #
+        # @return [Array<String>]
+        def read_array_of_unicode_string(ptr, type, length)
+          ptr.get_array_of_pointer(0, length).collect do |single_pointer|
+            utf16_to_string(single_pointer)
+          end
+        end
+
         # Converts a C-style member name such as `GetVersion` into a Ruby-style
         # method name such as `get_version`
         def functionify(c_string)
