@@ -87,27 +87,27 @@ module VirtualBox
           member :FindMachine, :function, [:unicode_string, [:out, :IMachine]]
           member :UnregisterMachine, :function, [:unicode_string, [:out, :IMachine]]
           member :CreateAppliance, :function, [[:out, :IAppliance]]
+          member :CreateHardDisk, :function, [:unicode_string, :unicode_string, [:out, :IMedium]]
+          member :OpenHardDisk, :function, [:unicode_string, PRUint32, PRBool, :unicode_string, PRBool, :unicode_string, [:out, :IMedium]]
+          member :GetHardDisk, :function, [:unicode_string, [:out, :IMedium]]
+          member :FindHardDisk, :function, [:unicode_string, [:out, :IMedium]]
+          member :OpenDVDImage, :function, [:unicode_string, :unicode_string, [:out, :IMedium]]
+          member :GetDVDImage, :function, [:unicode_string, [:out, :IMedium]]
+          member :FindDVDImage, :function, [:unicode_string, [:out, :IMedium]]
+          member :OpenFloppyImage, :function, [:unicode_string, :unicode_string, [:out, :IMedium]]
+          member :GetFloppyImage, :function, [:unicode_string, [:out, :IMedium]]
+          member :FindFloppyImage, :function, [:unicode_string, [:out, :IMedium]]
+          member :GetGuestOSType, :function, [:unicode_string, [:out, :IGuestOSType]]
+          member :CreateSharedFolder, :function, [:unicode_string, :unicode_string, PRBool]
+          member :RemoveSharedFolder, :function, [:unicode_string]
+          member :GetExtraDataKeys, :array_getter, :unicode_string
+          member :GetExtraData, :function, [:unicode_string, [:out, :unicode_string]]
+          member :SetExtraData, :function, [:unicode_string, :unicode_string]
+          member :OpenSession, :function, [:ISession, :unicode_string]
+          member :OpenRemoteSession, :function, [:ISession, :unicode_string, :unicode_string, :unicode_string, [:out, :IProgress]]
+          member :OpenExistingSession, :function, [:ISession, :unicode_string]
         end
 
-        member :CreateHardDisk, :ivb_CreateHardDisk
-        member :OpenHardDisk, :ivb_OpenHardDisk
-        member :GetHardDisk, :ivb_GetHardDisk
-        member :FindHardDisk, :ivb_FindHardDisk
-        member :OpenDVDImage, :ivb_OpenDVDImage
-        member :GetDVDImage, :ivb_GetDVDImage
-        member :FindDVDImage, :ivb_FindDVDImage
-        member :OpenFloppyImage, :ivb_OpenFloppyImage
-        member :GetFloppyImage, :ivb_GetFloppyImage
-        member :FindFloppyImage, :ivb_FindFloppyImage
-        member :GetGuestOSType, :ivb_GetGuestOSType
-        member :CreateSharedFolder, :ivb_CreateSharedFolder
-        member :RemoveSharedFolder, :ivb_RemoveSharedFolder
-        member :GetExtraDataKeys, :ivb_GetExtraDataKeys
-        member :GetExtraData, :ivb_GetExtraData
-        member :SetExtraData, :ivb_SetExtraData
-        member :OpenSession, :ivb_OpenSession
-        member :OpenRemoteSession, :ivb_OpenRemoteSession
-        member :OpenExistingSession, :ivb_OpenExistingSession
         member :RegisterCallback, :ivb_RegisterCallback
         member :UnregisterCallback, :ivb_UnregisterCallback
         member :WaitForPropertyChange, :ivb_WaitForPropertyChange
