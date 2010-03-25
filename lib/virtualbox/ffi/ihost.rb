@@ -57,18 +57,18 @@ module VirtualBox
         member :GetProcessorFeature, :function, [PRUint32, [:out, PRBool]]
         member :GetProcessorDescription, :function, [PRUint32, [:out, :unicode_string]]
         member :GetProcessorCpuIdLeaf, :function, [PRUint32, PRUint32, PRUint32, [:out, PRUint32], [:out, PRUint32], [:out, PRUint32], [:out, PRUint32]]
-        member :CreateHostOnlyNetworkInterface, :CreateHostOnlyNetworkInterface
+        member :CreateHostOnlyNetworkInterface, :function, [[:out, :IHostNetworkInterface], [:out, :IProgress]]
         member :RemoveHostOnlyNetworkInterface, :function, [:unicode_string, [:out, :IProgress]]
-        member :CreateUSBDeviceFilter, :CreateUSBDeviceFilter
-        member :InsertUSBDeviceFilter, :InsertUSBDeviceFilter
+        member :CreateUSBDeviceFilter, :function, [:unicode_string, [:out, :IHostUSBDeviceFilter]]
+        member :InsertUSBDeviceFilter, :function, [PRUint32, :IHostUSBDeviceFilter]
         member :RemoveUSBDeviceFilter, :function, [PRUint32]
         member :FindHostDVDDrive, :function, [:unicode_string, [:out, :IMedium]]
         member :FindHostFloppyDrive, :function, [:unicode_string, [:out, :IMedium]]
-        member :FindHostNetworkInterfaceByName, :FindHostNetworkInterfaceByName
-        member :FindHostNetworkInterfaceById, :FindHostNetworkInterfaceById
+        member :FindHostNetworkInterfaceByName, :function, [:unicode_string, [:out, :IHostNetworkInterface]]
+        member :FindHostNetworkInterfaceById, :function, [:unicode_string, [:out, :IHostNetworkInterface]]
         member :FindHostNetworkInterfacesOfType, :FindHostNetworkInterfacesOfType
-        member :FindUSBDeviceById, :FindUSBDeviceById
-        member :FindUSBDeviceByAddress, :FindUSBDeviceByAddress
+        member :FindUSBDeviceById, :function, [:unicode_string, [:out, :IHostUSBDevice]]
+        member :FindUSBDeviceByAddress, :function, [:unicode_string, [:out, :IHostUSBDevice]]
       end
     end
   end
