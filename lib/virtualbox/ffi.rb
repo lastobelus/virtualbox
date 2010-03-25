@@ -14,6 +14,10 @@ module VirtualBox
     PRUnichar = PRUint16
     PRBool = :char
 
+    # Convenience method to initialize the VirtualBox XPCOM C interface.
+    # This method handles setting up the function pointers, creating the
+    # {VBOXXPCOMC} object, and also grabbing the {IVirtualBox} and
+    # {ISession} objects.
     def self.init(lib_path)
       # Attach the library and the only function
       ffi_lib lib_path
@@ -34,7 +38,7 @@ ffidir = File.join(File.dirname(__FILE__), 'ffi')
 
 # Load in the initially required files, which must be loaded prior
 # to the rest
-%w{util vtbl vtbl_parent nsisupports nsiexception nsistack_frame iusb_device}.each do |f|
+%w{util vtbl vtbl_parent nsisupports nsiexception nsistack_frame iusb_device iusb_device_filter}.each do |f|
   require File.expand_path(f, ffidir)
 end
 
