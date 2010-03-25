@@ -79,17 +79,16 @@ module VirtualBox
           member :GetSharedFolders, :array_getter, :ISharedFolder
           member :GetPerformanceCollector, :getter, :IPerformanceCollector
           member :GetDHCPServers, :array_getter, :IDHCPServer
+          member :CreateMachine, :function, [:unicode_string, :unicode_string, :unicode_string, :unicode_string, [:out, :IMachine]]
+          member :CreateLegacyMachine, :function, [:unicode_string, :unicode_string, :unicode_string, :unicode_string, [:out, :IMachine]]
+          member :OpenMachine, :function, [:unicode_string, [:out, :IMachine]]
+          member :RegisterMachine, :function, [:IMachine]
+          member :GetMachine, :function, [:unicode_string, [:out, :IMachine]]
+          member :FindMachine, :function, [:unicode_string, [:out, :IMachine]]
+          member :UnregisterMachine, :function, [:unicode_string, [:out, :IMachine]]
+          member :CreateAppliance, :function, [[:out, :IAppliance]]
         end
 
-        member :CreateMachine, :ivb_CreateMachine
-        member :CreateLegacyMachine, :ivb_CreateLegacyMachine
-        member :OpenMachine, :ivb_OpenMachine
-        member :RegisterMachine, :ivb_RegisterMachine
-        member :GetMachine, :ivb_GetMachine
-        #member :FindMachine, :ivb_FindMachine
-        member :FindMachine, :function, [:unicode_string, [:out, :IMachine]], :function_type_prefix => :ivb_
-        member :UnregisterMachine, :ivb_UnregisterMachine
-        member :CreateAppliance, :ivb_CreateAppliance
         member :CreateHardDisk, :ivb_CreateHardDisk
         member :OpenHardDisk, :ivb_OpenHardDisk
         member :GetHardDisk, :ivb_GetHardDisk
