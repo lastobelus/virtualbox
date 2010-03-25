@@ -78,9 +78,9 @@ module VirtualBox
           member :GetGuestOSTypes, :array_getter, :IGuestOSType
           member :GetSharedFolders, :array_getter, :ISharedFolder
           member :GetPerformanceCollector, :getter, :IPerformanceCollector
+          member :GetDHCPServers, :array_getter, :IDHCPServer
         end
 
-        member :GetDHCPServers, :ivb_GetDHCPServers
         member :CreateMachine, :ivb_CreateMachine
         member :CreateLegacyMachine, :ivb_CreateLegacyMachine
         member :OpenMachine, :ivb_OpenMachine
