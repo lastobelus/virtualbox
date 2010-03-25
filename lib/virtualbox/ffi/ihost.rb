@@ -42,7 +42,7 @@ module VirtualBox
         member :nsisupports, NSISupports_vtbl
         member :GetDVDDrives, :array_getter, :IMedium
         member :GetFloppyDrives, :array_getter, :IMedium
-        member :GetUSBDevices, :GetUSBDevices
+        member :GetUSBDevices, :array_getter, :IHostUSBDevice
         member :GetUSBDeviceFilters, :GetUSBDeviceFilters
         member :GetNetworkInterfaces, :GetNetworkInterfaces
         member :GetProcessorCount, :getter, PRUint32
