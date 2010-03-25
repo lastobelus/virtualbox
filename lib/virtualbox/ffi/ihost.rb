@@ -43,7 +43,7 @@ module VirtualBox
         member :GetDVDDrives, :array_getter, :IMedium
         member :GetFloppyDrives, :array_getter, :IMedium
         member :GetUSBDevices, :array_getter, :IHostUSBDevice
-        member :GetUSBDeviceFilters, :GetUSBDeviceFilters
+        member :GetUSBDeviceFilters, :array_getter, :IHostUSBDeviceFilter
         member :GetNetworkInterfaces, :GetNetworkInterfaces
         member :GetProcessorCount, :getter, PRUint32
         member :GetProcessorOnlineCount, :getter, PRUint32
