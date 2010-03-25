@@ -60,7 +60,8 @@ class FFIUtilTest < Test::Unit::TestCase
       expectations = {
         :int => [:int, :int],
         :unicode_string => [:pointer, :unicode_string],
-        :IHost => [:pointer, :struct]
+        :IHost => [:pointer, :struct],
+        [:array] => [:pointer, :array]
       }
 
       expectations.each do |original, result|

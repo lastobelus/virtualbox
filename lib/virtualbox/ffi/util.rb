@@ -75,6 +75,10 @@ module VirtualBox
             if type == :unicode_string
               # Handle strings as pointer types
               c_type = :pointer
+            elsif type.is_a?(Array)
+              # Handle arrays as pointer types
+              c_type = :pointer
+              type = :array
             elsif type.is_a?(Class) || FFI.const_get(type)
               # The type is another struct (FFI::Struct), so we read it
               # as a pointer but handle it as a generic struct
@@ -101,7 +105,7 @@ module VirtualBox
           args = args.dup
 
           specs.collect do |spec|
-            if spec.is_a?(Array) && spec[0] == :out
+            if spec.is_a?(Array) && spec.length == 2 && spec[0] == :out
               # Output parameter, create the pointer for it and put it onto
               # the array, ignoring the args
               Util.pointer_for_type(spec[1])
