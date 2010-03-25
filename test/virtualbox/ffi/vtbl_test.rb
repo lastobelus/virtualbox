@@ -235,6 +235,86 @@ class FFIVTblTest < Test::Unit::TestCase
         end
       end
     end
+
+    context "function member" do
+      context "defining the member" do
+        context "adding to the layout args" do
+          def test_layout_args_with_type(expected_type, opts = {})
+            member_seq = sequence("member")
+            @layout_args.expects(:<<).with([:key, expected_type]).once.in_sequence(member_seq)
+            VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
+            VirtualBox::FFI::VTbl.member_function(:key, [], opts)
+          end
+
+          should "add to layout args then define method" do
+            test_layout_args_with_type(:key)
+          end
+
+          should "use custom function type if given" do
+            test_layout_args_with_type(:custom_type, :function_type => :custom_type)
+          end
+
+          should "use scoped opts if given" do
+            VirtualBox::FFI::VTbl.stubs(:scoped_opts).returns(:function_type => :scoped_type)
+            test_layout_args_with_type(:scoped_type)
+          end
+
+          should "use custom function prefix if given" do
+            test_layout_args_with_type(:foo_key, :function_type_prefix => :foo_)
+          end
+
+          should "use custom function prefix with the function type if given" do
+            test_layout_args_with_type(:foo_bar, :function_type_prefix => :foo_, :function_type => :bar)
+          end
+        end
+
+        context "defining the method" do
+          setup do
+            @key = :key
+            @function_name = :foo
+            @args = []
+          end
+
+          should "functionify the method name with the key" do
+            VirtualBox::FFI::Util.expects(:functionify).with(@key).returns(@function_name)
+            VirtualBox::FFI::VTbl.expects(:define_method).with(@function_name).once
+            VirtualBox::FFI::VTbl.member_function(@key, @args)
+          end
+        end
+      end
+
+      context "the defined method" do
+        class FunctionFooStruct < VirtualBox::FFI::VTbl
+          define_layout do
+            member :int, :function, [:int]
+          end
+        end
+
+        setup do
+          @name = :int
+
+          @parent = mock("parent")
+          @struct = FunctionFooStruct.new(@parent)
+
+          @proc = mock("proc")
+          @proc.stubs(:call)
+          @struct.stubs(:[]).with(@name).returns(@proc)
+
+          @params = [:int]
+          @args = [7]
+          @formal_params = [7]
+        end
+
+        should "formalized the params, call, and extract return values" do
+          result = mock("result")
+          call_seq = sequence("call_sequence")
+          VirtualBox::FFI::Util.expects(:formal_params).with(@params, @args).once.returns(@formal_params).in_sequence(call_seq)
+          @proc.expects(:call).with(@parent, *@formal_params).once.in_sequence(call_seq)
+          VirtualBox::FFI::Util.expects(:values_from_formal_params).with(@params, @formal_params).once.returns(result).in_sequence(call_seq)
+          @struct.send(@name, *@args)
+        end
+      end
+    end
   end
 
   context "instance" do

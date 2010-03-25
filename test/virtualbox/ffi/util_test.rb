@@ -1,6 +1,60 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'test_helper')
 
 class FFIUtilTest < Test::Unit::TestCase
+  context "formal parameter lists" do
+    should "put primitives directly into arg list" do
+      spec = [:int, :string]
+      args = [7, "foo"]
+
+      assert_equal args, VirtualBox::FFI::Util.formal_params(spec, args)
+    end
+
+    should "convert Ruby strings into unicode strings" do
+      spec = [:unicode_string]
+      args = ["foo"]
+
+      VirtualBox::FFI::Util.expects(:string_to_utf16).with(args[0]).returns("bar")
+      assert_equal ["bar"], VirtualBox::FFI::Util.formal_params(spec, args)
+    end
+
+    should "convert output params into MemoryPointers" do
+      spec = [[:out, :int]]
+      args = []
+
+      pointer = mock("pointer")
+      VirtualBox::FFI::Util.expects(:pointer_for_type).with(:int).returns(pointer)
+      assert_equal [pointer], VirtualBox::FFI::Util.formal_params(spec, args)
+    end
+  end
+
+  context "values from a formal parameter list" do
+    should "return nil if there are no output parameters" do
+      spec = []
+      formal = []
+
+      assert_nil VirtualBox::FFI::Util.values_from_formal_params(spec, formal)
+    end
+
+    should "dereference the pointer with proper type" do
+      pointer = mock("pointer")
+      spec = [[:out, :foo]]
+      formal = [pointer]
+
+      result = mock("result")
+      VirtualBox::FFI::Util.expects(:dereference_pointer).with(pointer, :foo).once.returns(result)
+      assert_equal result, VirtualBox::FFI::Util.values_from_formal_params(spec, formal)
+    end
+
+    should "return an array for multiple values" do
+      spec = [:int, [:out, :foo], [:out, :bar]]
+      formal = [1,2,3]
+
+      result = mock("result")
+      VirtualBox::FFI::Util.stubs(:dereference_pointer).returns(result)
+      assert_equal [result, result], VirtualBox::FFI::Util.values_from_formal_params(spec, formal)
+    end
+  end
+
   context "inferring types" do
     should "return the proper values" do
       expectations = {

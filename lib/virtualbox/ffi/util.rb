@@ -88,6 +88,57 @@ module VirtualBox
           [c_type, type]
         end
 
+        # Takes a parameter list spec for a function, and the arguments to pass
+        # to it, and converts it to a formal argument list for the actual function.
+        # An example conversion is shown below with some pseudo-code:
+        #
+        #   spec = [:int, :unicode_string, [:out, :FooStruct]]
+        #   args = [7, "foo"]
+        #   formal_list = [7, "foo".to_utf16, MemoryPointer]
+        #
+        def formal_params(specs, args)
+          # Dup the args so they aren't clobbered by reference
+          args = args.dup
+
+          specs.collect do |spec|
+            if spec.is_a?(Array) && spec[0] == :out
+              # Output parameter, create the pointer for it and put it onto
+              # the array, ignoring the args
+              Util.pointer_for_type(spec[1])
+            elsif spec == :unicode_string
+              # We have to convert the string to a UTF16 string
+              Util.string_to_utf16(args.shift)
+            else
+              # Replace param with the next parameter in the args list,
+              # removing it as well
+              args.shift
+            end
+          end
+        end
+
+        # Takes a spec and a formal parameter list and returns the output from
+        # a function, properly dereferencing any output pointers.
+        #
+        # @param [Array] specs The parameter spec for the function
+        # @param [Array] formal The formal parameter list
+        def values_from_formal_params(specs, formal)
+          return_values = []
+          specs.each_with_index do |spec, i|
+            # Output parameters are all we care about
+            if spec.is_a?(Array) && spec[0] == :out
+              return_values << Util.dereference_pointer(formal[i], spec[1])
+            end
+          end
+
+          if return_values.empty?
+            nil
+          elsif return_values.length == 1
+            return_values.first
+          else
+            return_values
+          end
+        end
+
         # Converts a ruby string to a UTF16 string
         #
         # @param [String] Ruby String object

@@ -192,35 +192,13 @@ module VirtualBox
             # TODO: Verify parameters count and types
 
             # Generate the parameters array we're sending to the function
-            filtered_params = params.collect do |param|
-              if param.is_a?(Array) && param[0] == :out
-                # Output parameter, create the pointer for it and put it onto
-                # the array, ignoring the args
-                Util.pointer_for_type(param[1])
-              elsif param == :unicode_string
-                # We have to convert the string to a UTF16 string
-                Util.string_to_utf16(args.shift)
-              else
-                # Replace param with the next parameter in the args list,
-                # removing it as well
-                args.shift
-              end
-            end
+            filtered_params = Util.formal_params(params, args)
 
             # Call the function
             self[key].call(parent, *filtered_params)
 
-            # Grab return values
-            return_values = []
-            params.each_with_index do |param, i|
-              # Output parameters are all we care about
-              if param.is_a?(Array) && param[0] == :out
-                return_values << Util.dereference_pointer(filtered_params[i], param[1])
-              end
-            end
-
-            # Return the return values
-            return_values
+            # Extract return values and return
+            Util.values_from_formal_params(params, filtered_params)
           end
         end
 
