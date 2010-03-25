@@ -3,23 +3,28 @@ module VirtualBox
     ISESSION_IID_STR = "12F4DCDB-12B2-4EC1-B7CD-DDD9F6C5BF4D"
 
     # Callback types for ISession_vtbl
-    callback :GetState, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetType, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetMachine, [:pointer, :pointer], NSRESULT_TYPE
-    callback :GetConsole, [:pointer, :pointer], NSRESULT_TYPE
-    callback :Close, [:pointer], NSRESULT_TYPE
+    callback :isess_GetState, [:pointer, :pointer], NSRESULT_TYPE
+    callback :isess_GetType, [:pointer, :pointer], NSRESULT_TYPE
+    callback :isess_GetMachine, [:pointer, :pointer], NSRESULT_TYPE
+    callback :isess_GetConsole, [:pointer, :pointer], NSRESULT_TYPE
+    callback :isess_Close, [:pointer], NSRESULT_TYPE
 
-    class ISession < ::FFI::Struct
-      layout :vtbl, :pointer # Pointer to ISession_vtbl
+    class ISession < VTblParent
+      parent_of :ISession_vtbl
     end
 
-    class ISession_vtbl < ::FFI::Struct
-      layout  :nsisupports, NSISupports_vtbl,
-              :GetState, :GetState,
-              :GetType, :GetType,
-              :GetMachine, :GetMachine,
-              :GetConsole, :GetConsole,
-              :Close, :Close
+    class ISession_vtbl < VTbl
+      define_layout do
+        member :nsisupports, NSISupports_vtbl
+
+        with_opts(:function_type_prefix => :isess_) do
+          member :GetState, :getter, PRUint32
+          member :GetType, :getter, PRUint32
+          member :GetMachine, :getter, :IMachine
+          member :GetConsole, :getter, :IConsole
+          member :Close, :function, []
+        end
+      end
     end
   end
 end
