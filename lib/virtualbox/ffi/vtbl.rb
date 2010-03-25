@@ -87,24 +87,7 @@ module VirtualBox
         # pointer, since the actual resulting type is `ResultType`, and the pointer
         # is just a means to return it.
         def member_getter(key, type, opts={})
-          # Merge in default options
-          default_opts = {
-            :function_type => key,
-            :function_type_prefix => nil
-          }
-          opts = default_opts.merge(scoped_opts).merge(opts)
-
-          # Add the function to the layout args per normal
-          function_type = opts[:function_type_prefix] ? "#{opts[:function_type_prefix]}#{opts[:function_type]}".to_sym : opts[:function_type]
-          layout_args << [key, function_type]
-
-          # Define the getter
-          define_method(Util.functionify(key)) do
-            Util.pointer_for_type(type) do |pointer, inferred_type|
-              self[key].call(parent, pointer)
-              Util.dereference_pointer(pointer, type)
-            end
-          end
+          member_function(key, [[:out, type]], opts)
         end
 
         # This method adds an array getter function to the struct. The getter

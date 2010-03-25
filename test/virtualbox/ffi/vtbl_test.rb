@@ -80,79 +80,12 @@ class FFIVTblTest < Test::Unit::TestCase
     end
 
     context "getter member" do
-      def test_layout_args_with_type(expected_type, opts = {})
-        member_seq = sequence("member")
-        @layout_args.expects(:<<).with([:key, expected_type]).once.in_sequence(member_seq)
-        VirtualBox::FFI::VTbl.expects(:define_method).with(:key).once.in_sequence(member_seq)
-        VirtualBox::FFI::VTbl.member_getter(:key, :foo, opts)
-      end
-
-      should "add to layout args then define method" do
-        test_layout_args_with_type(:key)
-      end
-
-      should "use custom function type if given" do
-        test_layout_args_with_type(:custom_type, :function_type => :custom_type)
-      end
-
-      should "use scoped opts if given" do
-        VirtualBox::FFI::VTbl.stubs(:scoped_opts).returns(:function_type => :scoped_type)
-        test_layout_args_with_type(:scoped_type)
-      end
-
-      should "use custom function prefix if given" do
-        test_layout_args_with_type(:foo_key, :function_type_prefix => :foo_)
-      end
-
-      should "use custom function prefix with the function type if given" do
-        test_layout_args_with_type(:foo_bar, :function_type_prefix => :foo_, :function_type => :bar)
-      end
-
-      context "the defined method" do
-        class GetterFooStruct < VirtualBox::FFI::VTbl
-          define_layout do
-            member :int, :getter, :string
-          end
-        end
-
-        setup do
-          @name = :int
-          @type = :string
-
-          @parent = mock("parent")
-          @struct = GetterFooStruct.new(@parent)
-
-          @proc = mock("proc")
-          @proc.stubs(:call)
-          @struct.stubs(:[]).with(@name).returns(@proc)
-
-          @ptr = mock("pointer")
-          @ptr.stubs(:respond_to?).returns(true)
-          @ptr.stubs(:get_string).returns('foo')
-
-          VirtualBox::FFI::Util.stubs(:pointer_for_type).yields(@ptr, @type)
-        end
-
-        should "respond to the getter method" do
-          assert @struct.respond_to?(@name)
-        end
-
-        should "call the Util.pointer_for_type method" do
-          VirtualBox::FFI::Util.expects(:pointer_for_type).with(@type).once
-          @struct.send(@name)
-        end
-
-        should "call the proc with the given pointer and parent" do
-          @proc.expects(:call).with(@parent, @ptr).once
-          @struct.send(@name)
-        end
-
-        should "return the result of dereferencing the pointer" do
-          deref_seq = sequence("deref_seq")
-          @proc.expects(:call).with(@parent, @ptr).once.in_sequence(deref_seq)
-          VirtualBox::FFI::Util.expects(:dereference_pointer).with(@ptr, @type).once.in_sequence(deref_seq)
-          @struct.send(@name)
-        end
+      should "call the function member" do
+        @key = :key
+        @type = :foo
+        @opts = {:bar => :baz}
+        VirtualBox::FFI::VTbl.expects(:member_function).with(@key, [[:out, @type]], @opts).once
+        VirtualBox::FFI::VTbl.member_getter(@key, @type, @opts)
       end
     end
 
