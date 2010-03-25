@@ -47,12 +47,12 @@ module VirtualBox
         member :GetOperationDescription, :getter, :unicode_string
         member :GetOperationPercent, :getter, PRUint32
         member :GetTimeout, :getter, PRUint32
-        member :SetTimeout, :SetTimeout
-        member :SetCurrentOperationProgress, :SetCurrentOperationProgress
-        member :SetNextOperation, :SetNextOperation
-        member :WaitForCompletion, :WaitForCompletion
-        member :WaitForOperationCompletion, :WaitForOperationCompletion
-        member :Cancel, :Cancel
+        member :SetTimeout, :function, [PRUint32]
+        member :SetCurrentOperationProgress, :function, [PRUint32]
+        member :SetNextOperation, :function, [:unicode_string, PRUint32]
+        member :WaitForCompletion, :function, [PRInt32]
+        member :WaitForOperationCompletion, :function, [PRUint32, PRInt32]
+        member :Cancel, :function, []
       end
     end
   end
