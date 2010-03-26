@@ -159,7 +159,7 @@ module VirtualBox
         member :SetFirmwareType, :function, [PRUint32]
         member :GetSnapshotFolder, :getter, :unicode_string
         member :SetSnapshotFolder, :function, [:unicode_string]
-        member :GetVRDPServer, :GetVRDPServer
+        member :GetVRDPServer, :getter, :IVRDPServer
         member :GetMediumAttachments, :GetMediumAttachments
         member :GetUSBController, :GetUSBController
         member :GetAudioAdapter, :GetAudioAdapter
