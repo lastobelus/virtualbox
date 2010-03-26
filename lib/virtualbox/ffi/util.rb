@@ -223,11 +223,24 @@ module VirtualBox
           # things which aren't really exceptional
           if result != 2147500033 && (result & 0x8000_0000) != 0
             # Failure, raise exception with details of the error
-            raise Exceptions::FFIException.new({
+            raise exception_map(result).new({
               :function => function.to_s,
               :result_code => result
             })
           end
+        end
+
+        # Maps a result code to an exception. If no mapping currently exists,
+        # then a regular {Exceptions::FFIException} is returned.
+        #
+        # @param [Fixnum] code Result code
+        # @return [Class]
+        def exception_map(code)
+          map = {
+            0x80BB_0001 => Exceptions::ObjectNotFoundException
+          }
+
+          map[code] || Exceptions::FFIException
         end
       end
     end

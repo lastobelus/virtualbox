@@ -344,4 +344,14 @@ class FFIUtilTest < Test::Unit::TestCase
       }
     end
   end
+
+  context "result code mapping" do
+    should "return a mapped exception object if it exists" do
+      assert_equal VirtualBox::Exceptions::ObjectNotFoundException, VirtualBox::FFI::Util.exception_map(0x80BB_0001)
+    end
+
+    should "return FFIException if no mapping is found" do
+      assert_equal VirtualBox::Exceptions::FFIException, VirtualBox::FFI::Util.exception_map(-5)
+    end
+  end
 end

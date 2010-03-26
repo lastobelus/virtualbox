@@ -18,5 +18,8 @@ module VirtualBox
         super("Error in API call to #{data[:function]}: #{data[:result_code]}")
       end
     end
+
+    # FFI Exceptions
+    class ObjectNotFoundException < FFIException; end
   end
 end
