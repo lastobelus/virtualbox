@@ -197,7 +197,7 @@ module VirtualBox
         member :MountMedium, :function, [:unicode_string, PRInt32, PRInt32, :unicode_string, PRBool]
         member :GetMedium, :function, [:unicode_string, PRInt32, PRInt32, [:out, :IMedium]]
         member :GetMediumAttachmentsOfController, :GetMediumAttachmentsOfController
-        member :GetMediumAttachment, :GetMediumAttachment
+        member :GetMediumAttachment, :function, [:unicode_string, PRInt32, PRInt32, [:out, :IMediumAttachment]]
         member :GetNetworkAdapter, :GetNetworkAdapter
         member :AddStorageController, :AddStorageController
         member :GetStorageControllerByName, :GetStorageControllerByName
