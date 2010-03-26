@@ -309,4 +309,32 @@ class FFIUtilTest < Test::Unit::TestCase
       end
     end
   end
+
+  context "function calling and error checking" do
+    setup do
+      @function = mock("function")
+      @function.stubs(:call).returns(0)
+    end
+
+    should "raise an exception if an error occurred" do
+      @function.expects(:call).returns(0x8000_4001)
+      assert_raises(VirtualBox::Exceptions::FFIException) {
+        VirtualBox::FFI::Util.call_and_check(@function)
+      }
+    end
+
+    should "not raise an exception if an error did not occur" do
+      @function.expects(:call).returns(0x0000_0000)
+      assert_nothing_raised {
+        VirtualBox::FFI::Util.call_and_check(@function)
+      }
+    end
+
+    should "forward arguments" do
+      @function.expects(:call).with(1,2,3).returns(0)
+      assert_nothing_raised {
+        VirtualBox::FFI::Util.call_and_check(@function, 1, 2, 3)
+      }
+    end
+  end
 end

@@ -199,6 +199,9 @@ module VirtualBox
 
         # Converts a C-style member name such as `GetVersion` into a Ruby-style
         # method name such as `get_version`
+        #
+        # @param [String] c_string The original string
+        # @return [String]
         def functionify(c_string)
           # Replace the word breaks such as "GetFoo" with "Get Foo"
           c_string = c_string.to_s.gsub(/([a-z])([A-Z0-9])/, '\1 \2')
@@ -209,6 +212,20 @@ module VirtualBox
           # Strip any trailing whitespace, replaces spaces with underscores, and
           # downcase the whole thing. Ex: "Get DVD Images " => "get_dvd_images"
           c_string.strip.gsub(' ', '_').downcase.to_sym
+        end
+
+        # Checks the result of a method call for an error, and if an error
+        # occurs, then raises an exception.
+        def call_and_check(function, *args)
+          result = function.call(*args)
+
+          if (result & 0x8000_0000) != 0
+            # Failure, raise exception with details of the error
+            raise Exceptions::FFIException.new({
+              :function => function.to_s,
+              :result_code => result
+            })
+          end
         end
       end
     end
