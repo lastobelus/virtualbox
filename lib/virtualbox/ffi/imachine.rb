@@ -164,15 +164,15 @@ module VirtualBox
         member :GetUSBController, :getter, :IUSBController
         member :GetAudioAdapter, :getter, :IAudioAdapter
         member :GetStorageControllers, :array_getter, :IStorageController
-        member :GetSettingsFilePath, :GetSettingsFilePath
-        member :GetSettingsModified, :GetSettingsModified
-        member :GetSessionState, :GetSessionState
-        member :GetSessionType, :GetSessionType
-        member :GetSessionPid, :GetSessionPid
-        member :GetState, :GetState
-        member :GetLastStateChange, :GetLastStateChange
-        member :GetStateFilePath, :GetStateFilePath
-        member :GetLogFolder, :GetLogFolder
+        member :GetSettingsFilePath, :getter, :unicode_string
+        member :GetSettingsModified, :getter, PRBool
+        member :GetSessionState, :getter, PRUint32
+        member :GetSessionType, :getter, :unicode_string
+        member :GetSessionPid, :getter, PRUint32
+        member :GetState, :getter, PRUint32
+        member :GetLastStateChange, :getter, PRInt64
+        member :GetStateFilePath, :getter, :unicode_string
+        member :GetLogFolder, :getter, :unicode_string
         member :GetCurrentSnapshot, :GetCurrentSnapshot
         member :GetSnapshotCount, :GetSnapshotCount
         member :GetCurrentStateModified, :GetCurrentStateModified
