@@ -21,5 +21,16 @@ module VirtualBox
 
     # FFI Exceptions
     class ObjectNotFoundException < FFIException; end
+    class InvalidVMStateException < FFIException; end
+    class VMErrorException < FFIException; end
+    class FileErrorException < FFIException; end
+    class SubsystemException < FFIException; end
+    class PDMException < FFIException; end
+    class InvalidObjectStateException < FFIException; end
+    class HostErrorException < FFIException; end
+    class NotSupportedException < FFIException; end
+    class XMLErrorException < FFIException; end
+    class InvalidSessionStateException < FFIException; end
+    class ObjectInUseException < FFIException; end
   end
 end

@@ -237,7 +237,18 @@ module VirtualBox
         # @return [Class]
         def exception_map(code)
           map = {
-            0x80BB_0001 => Exceptions::ObjectNotFoundException
+            0x80BB_0001 => Exceptions::ObjectNotFoundException,
+            0x80BB_0002 => Exceptions::InvalidVMStateException,
+            0x80BB_0003 => Exceptions::VMErrorException,
+            0x80BB_0004 => Exceptions::FileErrorException,
+            0x80BB_0005 => Exceptions::SubsystemException,
+            0x80BB_0006 => Exceptions::PDMException,
+            0x80BB_0007 => Exceptions::InvalidObjectStateException,
+            0x80BB_0008 => Exceptions::HostErrorException,
+            0x80BB_0009 => Exceptions::NotSupportedException,
+            0x80BB_000A => Exceptions::XMLErrorException,
+            0x80BB_000B => Exceptions::InvalidSessionStateException,
+            0x80BB_000C => Exceptions::ObjectInUseException
           }
 
           map[code] || Exceptions::FFIException
