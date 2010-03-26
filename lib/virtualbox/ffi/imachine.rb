@@ -173,32 +173,29 @@ module VirtualBox
         member :GetLastStateChange, :getter, PRInt64
         member :GetStateFilePath, :getter, :unicode_string
         member :GetLogFolder, :getter, :unicode_string
-        member :GetCurrentSnapshot, :GetCurrentSnapshot
-        member :GetSnapshotCount, :GetSnapshotCount
-        member :GetCurrentStateModified, :GetCurrentStateModified
-        member :GetSharedFolders, :GetSharedFolders
-        member :GetClipboardMode, :GetClipboardMode
-        member :SetClipboardMode, :SetClipboardMode
-        member :GetGuestPropertyNotificationPatterns, :GetGuestPropertyNotificationPatterns
-        member :SetGuestPropertyNotificationPatterns, :SetGuestPropertyNotificationPatterns
-        member :GetTeleporterEnabled, :GetTeleporterEnabled
-        member :SetTeleporterEnabled, :SetTeleporterEnabled
-        member :GetTeleporterPort, :GetTeleporterPort
-        member :SetTeleporterPort, :SetTeleporterPort
-        member :GetTeleporterAddress, :GetTeleporterAddress
-        member :SetTeleporterAddress, :SetTeleporterAddress
-        member :GetTeleporterPassword, :GetTeleporterPassword
-        member :SetTeleporterPassword, :SetTeleporterPassword
-        member :SetBootOrder, :SetBootOrder
-
+        member :GetCurrentSnapshot, :getter, :ISnapshot
+        member :GetSnapshotCount, :getter, PRUint32
+        member :GetCurrentStateModified, :getter, PRBool
+        member :GetSharedFolders, :array_getter, :ISharedFolder
+        member :GetClipboardMode, :getter, PRUint32
+        member :SetClipboardMode, :function, [PRUint32]
+        member :GetGuestPropertyNotificationPatterns, :getter, :unicode_string
+        member :SetGuestPropertyNotificationPatterns, :function, [:unicode_string]
+        member :GetTeleporterEnabled, :getter, PRBool
+        member :SetTeleporterEnabled, :function, [PRBool]
+        member :GetTeleporterPort, :getter, PRUint32
+        member :SetTeleporterPort, :function, [PRUint32]
+        member :GetTeleporterAddress, :getter, :unicode_string
+        member :SetTeleporterAddress, :function, [:unicode_string]
+        member :GetTeleporterPassword, :getter, :unicode_string
+        member :SetTeleporterPassword, :function, [:unicode_string]
+        member :SetBootOrder, :function, [PRUint32, PRUint32]
         member :GetBootOrder, :function, [PRUint32, [:out, PRUint32]]
-        #member :GetBootOrder, :GetBootOrder
-
-        member :AttachDevice, :AttachDevice
-        member :DetachDevice, :DetachDevice
-        member :PassthroughDevice, :PassthroughDevice
-        member :MountMedium, :MountMedium
-        member :GetMedium, :GetMedium
+        member :AttachDevice, :function, [:unicode_string, PRInt32, PRInt32, PRUint32, :unicode_string]
+        member :DetachDevice, :function, [:unicode_string, PRInt32, PRInt32]
+        member :PassthroughDevice, :function, [:unicode_string, PRInt32, PRInt32, PRBool]
+        member :MountMedium, :function, [:unicode_string, PRInt32, PRInt32, :unicode_string, PRBool]
+        member :GetMedium, :function, [:unicode_string, PRInt32, PRInt32, [:out, :IMedium]]
         member :GetMediumAttachmentsOfController, :GetMediumAttachmentsOfController
         member :GetMediumAttachment, :GetMediumAttachment
         member :GetNetworkAdapter, :GetNetworkAdapter
