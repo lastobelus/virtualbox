@@ -161,8 +161,8 @@ module VirtualBox
         member :SetSnapshotFolder, :function, [:unicode_string]
         member :GetVRDPServer, :getter, :IVRDPServer
         member :GetMediumAttachments, :array_getter, :IMediumAttachment
-        member :GetUSBController, :GetUSBController
-        member :GetAudioAdapter, :GetAudioAdapter
+        member :GetUSBController, :getter, :IUSBController
+        member :GetAudioAdapter, :getter, :IAudioAdapter
         member :GetStorageControllers, :GetStorageControllers
         member :GetSettingsFilePath, :GetSettingsFilePath
         member :GetSettingsModified, :GetSettingsModified
