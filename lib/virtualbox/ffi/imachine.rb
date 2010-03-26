@@ -204,21 +204,21 @@ module VirtualBox
         member :GetStorageControllerByInstance, :function, [PRUint32, [:out, :IStorageController]]
         member :RemoveStorageController, :function, [:unicode_string]
         member :GetSerialPort, :function, [PRUint32, [:out, :ISerialPort]]
-        member :GetParallelPort, :GetParallelPort
-        member :GetExtraDataKeys, :GetExtraDataKeys
-        member :GetExtraData, :GetExtraData
-        member :SetExtraData, :SetExtraData
-        member :GetCpuProperty, :GetCpuProperty
-        member :SetCpuProperty, :SetCpuProperty
-        member :GetCpuIdLeaf, :GetCpuIdLeaf
-        member :SetCpuIdLeaf, :SetCpuIdLeaf
-        member :RemoveCpuIdLeaf, :RemoveCpuIdLeaf
-        member :RemoveAllCpuIdLeafs, :RemoveAllCpuIdLeafs
-        member :GetHWVirtExProperty, :GetHWVirtExProperty
-        member :SetHWVirtExProperty, :SetHWVirtExProperty
-        member :SaveSettings, :SaveSettings
-        member :DiscardSettings, :DiscardSettings
-        member :DeleteSettings, :DeleteSettings
+        member :GetParallelPort, :function, [PRUint32, [:out, :IParallelPort]]
+        member :GetExtraDataKeys, :array_getter, :unicode_string
+        member :GetExtraData, :function, [:unicode_string, [:out, :unicode_string]]
+        member :SetExtraData, :function, [:unicode_string, :unicode_string]
+        member :GetCpuProperty, :function, [PRUint32, [:out, PRBool]]
+        member :SetCpuProperty, :function, [PRUint32, PRBool]
+        member :GetCpuIdLeaf, :function, [PRUint32, [:out, PRUint32], [:out, PRUint32], [:out, PRUint32], [:out, PRUint32]]
+        member :SetCpuIdLeaf, :function, [PRUint32, PRUint32, PRUint32, PRUint32, PRUint32]
+        member :RemoveCpuIdLeaf, :function, [PRUint32]
+        member :RemoveAllCpuIdLeafs, :function, []
+        member :GetHWVirtExProperty, :function, [PRUint32, [:out, PRBool]]
+        member :SetHWVirtExProperty, :function, [PRUint32, [:out, PRBool]]
+        member :SaveSettings, :function, []
+        member :DiscardSettings, :function, []
+        member :DeleteSettings, :function, []
         member :Export, :Export
         member :GetSnapshot, :GetSnapshot
         member :FindSnapshot, :FindSnapshot
