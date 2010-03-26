@@ -219,23 +219,23 @@ module VirtualBox
         member :SaveSettings, :function, []
         member :DiscardSettings, :function, []
         member :DeleteSettings, :function, []
-        member :Export, :Export
-        member :GetSnapshot, :GetSnapshot
-        member :FindSnapshot, :FindSnapshot
-        member :SetCurrentSnapshot, :SetCurrentSnapshot
-        member :CreateSharedFolder, :CreateSharedFolder
-        member :RemoveSharedFolder, :RemoveSharedFolder
-        member :CanShowConsoleWindow, :CanShowConsoleWindow
-        member :ShowConsoleWindow, :ShowConsoleWindow
-        member :GetGuestProperty, :GetGuestProperty
-        member :GetGuestPropertyValue, :GetGuestPropertyValue
-        member :GetGuestPropertyTimestamp, :GetGuestPropertyTimestamp
-        member :SetGuestProperty, :SetGuestProperty
-        member :SetGuestPropertyValue, :SetGuestPropertyValue
+        member :Export, :function, [:IAppliance, [:out, :IVirtualSystemDescription]]
+        member :GetSnapshot, :function, [:unicode_string, [:out, :ISnapshot]]
+        member :FindSnapshot, :function, [:unicode_string, [:out, :ISnapshot]]
+        member :SetCurrentSnapshot, :function, [:unicode_string]
+        member :CreateSharedFolder, :function, [:unicode_string, :unicode_string, PRBool]
+        member :RemoveSharedFolder, :function, [:unicode_string]
+        member :CanShowConsoleWindow, :function, [[:out, PRBool]]
+        member :ShowConsoleWindow, :function, [[:out, PRUint64]]
+        member :GetGuestProperty, :function, [:unicode_string, [:out, :unicode_string], [:out, PRUint64], [:out, :unicode_string]]
+        member :GetGuestPropertyValue, :function, [:unicode_string, [:out, :unicode_string]]
+        member :GetGuestPropertyTimestamp, :function, [:unicode_string, [:out, PRUint64]]
+        member :SetGuestProperty, :function, [:unicode_string, :unicode_string, :unicode_string]
+        member :SetGuestPropertyValue, :function, [:unicode_string, :unicode_string]
         member :EnumerateGuestProperties, :EnumerateGuestProperties
-        member :QuerySavedThumbnailSize, :QuerySavedThumbnailSize
+        member :QuerySavedThumbnailSize, :function, [[:out, PRUint32], [:out, PRUint32], [:out, PRUint32]]
         member :ReadSavedThumbnailToArray, :ReadSavedThumbnailToArray
-        member :QuerySavedScreenshotPNGSize, :QuerySavedScreenshotPNGSize
+        member :QuerySavedScreenshotPNGSize, :function, [[:out, PRUint32], [:out, PRUint32], [:out, PRUint32]]
         member :ReadSavedScreenshotPNGToArray, :ReadSavedScreenshotPNGToArray
       end
     end
