@@ -317,7 +317,7 @@ class FFIUtilTest < Test::Unit::TestCase
     end
 
     should "raise an exception if an error occurred" do
-      @function.expects(:call).returns(0x8000_4001)
+      @function.expects(:call).returns(0x8000_4002)
       assert_raises(VirtualBox::Exceptions::FFIException) {
         VirtualBox::FFI::Util.call_and_check(@function)
       }
@@ -325,6 +325,13 @@ class FFIUtilTest < Test::Unit::TestCase
 
     should "not raise an exception if an error did not occur" do
       @function.expects(:call).returns(0x0000_0000)
+      assert_nothing_raised {
+        VirtualBox::FFI::Util.call_and_check(@function)
+      }
+    end
+
+    should "not raise an exception for NS_ERROR_NOT_IMPLEMENTED" do
+      @function.expects(:call).returns(0x8000_4001)
       assert_nothing_raised {
         VirtualBox::FFI::Util.call_and_check(@function)
       }

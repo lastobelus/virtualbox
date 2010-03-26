@@ -124,7 +124,7 @@ module VirtualBox
             count_pointer = Util.pointer_for_type(PRUint32)
             array_pointer = Util.pointer_for_type(type)
 
-            self[key].call(parent, count_pointer, array_pointer)
+            Util.call_and_check(self[key], parent, count_pointer, array_pointer)
 
             count = Util.dereference_pointer(count_pointer, PRUint32)
             Util.dereference_pointer_array(array_pointer, type, count)
@@ -178,7 +178,7 @@ module VirtualBox
             filtered_params = Util.formal_params(params, args)
 
             # Call the function
-            self[key].call(parent, *filtered_params)
+            Util.call_and_check(self[key], parent, *filtered_params)
 
             # Extract return values and return
             Util.values_from_formal_params(params, filtered_params)

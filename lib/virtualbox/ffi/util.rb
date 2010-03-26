@@ -219,7 +219,9 @@ module VirtualBox
         def call_and_check(function, *args)
           result = function.call(*args)
 
-          if (result & 0x8000_0000) != 0
+          # Ignore NS_ERROR_NOT_IMPLEMENTED, since it seems to be raised for
+          # things which aren't really exceptional
+          if result != 2147500033 && (result & 0x8000_0000) != 0
             # Failure, raise exception with details of the error
             raise Exceptions::FFIException.new({
               :function => function.to_s,

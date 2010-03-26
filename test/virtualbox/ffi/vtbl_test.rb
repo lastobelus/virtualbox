@@ -134,7 +134,6 @@ class FFIVTblTest < Test::Unit::TestCase
           @struct = ArrayGetterFooStruct.new(@parent)
 
           @proc = mock("proc")
-          @proc.stubs(:call)
           @struct.stubs(:[]).with(@name).returns(@proc)
 
           @ptr = mock("pointer")
@@ -148,6 +147,8 @@ class FFIVTblTest < Test::Unit::TestCase
 
           VirtualBox::FFI::Util.stubs(:dereference_pointer).returns('foo')
           VirtualBox::FFI::Util.stubs(:dereference_pointer_array).returns('foo')
+
+          VirtualBox::FFI::Util.stubs(:call_and_check)
         end
 
         should "respond to the getter method" do
@@ -155,7 +156,7 @@ class FFIVTblTest < Test::Unit::TestCase
         end
 
         should "call the proc with the proper pointer types" do
-          @proc.expects(:call).with(@parent, @count_ptr, @ptr)
+          VirtualBox::FFI::Util.expects(:call_and_check).with(@proc, @parent, @count_ptr, @ptr)
           @struct.send(@name)
         end
 
@@ -230,7 +231,6 @@ class FFIVTblTest < Test::Unit::TestCase
           @struct = FunctionFooStruct.new(@parent)
 
           @proc = mock("proc")
-          @proc.stubs(:call)
           @struct.stubs(:[]).with(@name).returns(@proc)
 
           @params = [:int]
@@ -242,7 +242,7 @@ class FFIVTblTest < Test::Unit::TestCase
           result = mock("result")
           call_seq = sequence("call_sequence")
           VirtualBox::FFI::Util.expects(:formal_params).with(@params, @args).once.returns(@formal_params).in_sequence(call_seq)
-          @proc.expects(:call).with(@parent, *@formal_params).once.in_sequence(call_seq)
+          VirtualBox::FFI::Util.expects(:call_and_check).with(@proc, @parent, *@formal_params).once.in_sequence(call_seq)
           VirtualBox::FFI::Util.expects(:values_from_formal_params).with(@params, @formal_params).once.returns(result).in_sequence(call_seq)
           @struct.send(@name, *@args)
         end
