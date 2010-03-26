@@ -198,11 +198,11 @@ module VirtualBox
         member :GetMedium, :function, [:unicode_string, PRInt32, PRInt32, [:out, :IMedium]]
         member :GetMediumAttachmentsOfController, :GetMediumAttachmentsOfController
         member :GetMediumAttachment, :function, [:unicode_string, PRInt32, PRInt32, [:out, :IMediumAttachment]]
-        member :GetNetworkAdapter, :GetNetworkAdapter
-        member :AddStorageController, :AddStorageController
-        member :GetStorageControllerByName, :GetStorageControllerByName
-        member :GetStorageControllerByInstance, :GetStorageControllerByInstance
-        member :RemoveStorageController, :RemoveStorageController
+        member :GetNetworkAdapter, :function, [PRUint32, [:out, :INetworkAdapter]]
+        member :AddStorageController, :function, [:unicode_string, PRUint32, [:out, :IStorageController]]
+        member :GetStorageControllerByName, :function, [:unicode_string, [:out, :IStorageController]]
+        member :GetStorageControllerByInstance, :function, [PRUint32, [:out, :IStorageController]]
+        member :RemoveStorageController, :function, [:unicode_string]
         member :GetSerialPort, :GetSerialPort
         member :GetParallelPort, :GetParallelPort
         member :GetExtraDataKeys, :GetExtraDataKeys
