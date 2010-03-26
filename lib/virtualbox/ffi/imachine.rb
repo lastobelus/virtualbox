@@ -203,7 +203,7 @@ module VirtualBox
         member :GetStorageControllerByName, :function, [:unicode_string, [:out, :IStorageController]]
         member :GetStorageControllerByInstance, :function, [PRUint32, [:out, :IStorageController]]
         member :RemoveStorageController, :function, [:unicode_string]
-        member :GetSerialPort, :GetSerialPort
+        member :GetSerialPort, :function, [PRUint32, [:out, :ISerialPort]]
         member :GetParallelPort, :GetParallelPort
         member :GetExtraDataKeys, :GetExtraDataKeys
         member :GetExtraData, :GetExtraData
