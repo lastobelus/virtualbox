@@ -163,7 +163,7 @@ module VirtualBox
         member :GetMediumAttachments, :array_getter, :IMediumAttachment
         member :GetUSBController, :getter, :IUSBController
         member :GetAudioAdapter, :getter, :IAudioAdapter
-        member :GetStorageControllers, :GetStorageControllers
+        member :GetStorageControllers, :array_getter, :IStorageController
         member :GetSettingsFilePath, :GetSettingsFilePath
         member :GetSettingsModified, :GetSettingsModified
         member :GetSessionState, :GetSessionState
