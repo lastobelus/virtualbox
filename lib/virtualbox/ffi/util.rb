@@ -48,6 +48,9 @@ module VirtualBox
         # @param [Fixnum] length The length of the array
         # @return [Array<Object>]
         def dereference_pointer_array(pointer, type, length)
+          # If there are no items in the pointer, just return an empty array
+          return [] if length == 0
+
           c_type, inferred_type = infer_type(type)
 
           array_pointer = pointer.get_pointer(0)

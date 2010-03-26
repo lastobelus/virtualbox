@@ -153,6 +153,10 @@ class FFIUtilTest < Test::Unit::TestCase
       VirtualBox::FFI::Util.dereference_pointer_array(@pointer, @type, @length)
     end
 
+    should "return an empty array if count is zero" do
+      assert_equal [], VirtualBox::FFI::Util.dereference_pointer_array(@pointer, @type, 0)
+    end
+
     should "call get_* method on array pointer if it exists" do
       result = mock("result")
       @array_pointer.expects(:respond_to?).with("get_array_of_#{@inferred_type}".to_sym).returns(true)
