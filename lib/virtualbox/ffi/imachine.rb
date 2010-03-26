@@ -154,7 +154,7 @@ module VirtualBox
         member :SetAccelerate2DVideoEnabled, :function, [PRBool]
         member :GetMonitorCount, :getter, PRUint32
         member :SetMonitorCount, :function, [PRUint32]
-        member :GetBIOSSettings, :GetBIOSSettings
+        member :GetBIOSSettings, :getter, :IBIOSSettings
         member :GetFirmwareType, :getter, PRUint32
         member :SetFirmwareType, :function, [PRUint32]
         member :GetSnapshotFolder, :getter, :unicode_string
