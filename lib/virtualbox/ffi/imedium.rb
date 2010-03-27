@@ -53,6 +53,10 @@ module VirtualBox
       map [:normal, :immutable, :write_through]
     end
 
+    class MediumVariant < Enum
+      map [:standard, :vmdk_split_2g, :vmdk_stream_optimized, :vmdk_esx, :fixed, :diff]
+    end
+
     class IMedium < VTblParent
       parent_of :IMedium_vtbl
     end
