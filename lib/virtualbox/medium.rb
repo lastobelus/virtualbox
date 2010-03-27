@@ -19,17 +19,24 @@ module VirtualBox
     #
     # @param [FFI::IMedium] imedium
     def load_attributes(imedium)
-      attr_map = {
-        :uuid => :get_id,
-        :location => :get_location,
-        :state => :refresh_state
-      }
-
+      attr_map = attribute_map
       attr_map.each do |key, value|
         attr_map[key] = imedium.send(value)
       end
 
       populate_attributes(attr_map)
+    end
+
+    # Returns a hash representing the mapping between an attribute name and
+    # the method on the IMedium used to retrieve the value of that attribute.
+    #
+    # @return [Hash]
+    def attribute_map
+      {
+        :uuid => :get_id,
+        :location => :get_location,
+        :state => :refresh_state
+      }
     end
 
     # Returns the basename of the images location (the file name +extension)

@@ -35,6 +35,12 @@ class MediumTest < Test::Unit::TestCase
       @instance = @klass.new(@imedium)
     end
 
+    context "attribute map" do
+      should "be a hash" do
+        assert @instance.attribute_map.is_a?(Hash)
+      end
+    end
+
     context "filename" do
       setup do
         @location = "/foo/bar/baz.rb"
