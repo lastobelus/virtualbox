@@ -35,7 +35,7 @@ module VirtualBox
           if pointer.respond_to?("get_#{inferred_type}".to_sym)
             # This handles reading the typical times such as :uint, :int, etc.
             result = pointer.send("get_#{inferred_type}".to_sym, 0)
-            result = !(result == '0') if type == PRBool
+            result = !(result == 0) if type == PRBool
             result
           else
             send("read_#{inferred_type}".to_sym, pointer, type)
@@ -117,6 +117,9 @@ module VirtualBox
             elsif spec == :unicode_string
               # We have to convert the string to a UTF16 string
               Util.string_to_utf16(args.shift)
+            elsif spec == PRBool
+              # Convert from boolean true/false to 0/1
+              args.shift ? 1 : 0
             else
               # Replace param with the next parameter in the args list,
               # removing it as well

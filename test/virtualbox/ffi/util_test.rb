@@ -17,6 +17,13 @@ class FFIUtilTest < Test::Unit::TestCase
       assert_equal ["bar"], VirtualBox::FFI::Util.formal_params(spec, args)
     end
 
+    should "convert PRBool into 1/0" do
+      spec = [VirtualBox::FFI::PRBool, VirtualBox::FFI::PRBool]
+      args = [true, false]
+
+      assert_equal [1, 0], VirtualBox::FFI::Util.formal_params(spec, args)
+    end
+
     should "convert output params into MemoryPointers" do
       spec = [[:out, :int]]
       args = []
@@ -124,13 +131,13 @@ class FFIUtilTest < Test::Unit::TestCase
     end
 
     should "return a false bool if type is PRBool and failure" do
-      @pointer.expects(:get_bar).returns("0")
+      @pointer.expects(:get_bar).returns(0)
       result = VirtualBox::FFI::Util.dereference_pointer(@pointer, VirtualBox::FFI::PRBool)
       assert_equal false, result
     end
 
     should "return a true bool if type is PRBool and success" do
-      @pointer.expects(:get_bar).returns("1")
+      @pointer.expects(:get_bar).returns(1)
       result = VirtualBox::FFI::Util.dereference_pointer(@pointer, VirtualBox::FFI::PRBool)
       assert_equal true, result
     end
