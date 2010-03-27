@@ -49,6 +49,10 @@ module VirtualBox
       map [:not_created, :created, :locked_read, :locked_write, :inaccessible, :creating, :deleting]
     end
 
+    class MediumType < Enum
+      map [:normal, :immutable, :write_through]
+    end
+
     class IMedium < VTblParent
       parent_of :IMedium_vtbl
     end
