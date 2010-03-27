@@ -86,7 +86,7 @@ module VirtualBox
         member :SetAutoReset, :function, [PRBool]
         member :GetLastAccessError, :getter, :unicode_string
         member :GetMachineIds, :array_getter, :unicode_string
-        member :RefreshState, :RefreshState
+        member :RefreshState, :getter, :MediumState
         member :GetSnapshotIds, :GetSnapshotIds
         member :LockRead, :LockRead
         member :UnlockRead, :UnlockRead

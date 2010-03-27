@@ -196,9 +196,9 @@ module VirtualBox
         # Reads an enum
         #
         # @return [Symbol]
-        def read_enum(value, original_type)
+        def read_enum(ptr, original_type)
           klass = FFI.const_get(original_type)
-          klass[value]
+          klass[ptr.get_uint(0)]
         end
 
         # Reads an array of structs from a pointer

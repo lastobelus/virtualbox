@@ -273,13 +273,16 @@ class FFIUtilTest < Test::Unit::TestCase
 
         @original_type = :foo
         @value = 7
+
+        @ptr = mock("ptr")
+        @ptr.stubs(:get_uint).returns(@value)
       end
 
       should "convert type to class and get the value" do
         result = mock("result")
         VirtualBox::FFI.expects(:const_get).with(@original_type).returns(@klass)
         @klass.expects(:[]).with(@value).returns(result)
-        assert_equal result, VirtualBox::FFI::Util.read_enum(@value, @original_type)
+        assert_equal result, VirtualBox::FFI::Util.read_enum(@ptr, @original_type)
       end
     end
 
