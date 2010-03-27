@@ -85,10 +85,19 @@ module VirtualBox
               c_type = :pointer
               type = :array
             elsif type.is_a?(Class) || FFI.const_get(type)
-              # The type is another struct (FFI::Struct), so we read it
-              # as a pointer but handle it as a generic struct
-              c_type = :pointer
-              type = :struct
+              klass = type.is_a?(Class) ? type : FFI.const_get(type)
+
+              if klass.superclass == Enum
+                # Enum type, we use a proper PRUint32, but mark the type as
+                # an :enum for proper reading
+                c_type = PRUint32
+                type = :enum
+              else
+                # The type is another struct (FFI::Struct), so we read it
+                # as a pointer but handle it as a generic struct
+                c_type = :pointer
+                type = :struct
+              end
             end
           rescue NameError
             # Do nothing
@@ -182,6 +191,14 @@ module VirtualBox
         def read_struct(ptr, original_type)
           klass = FFI.const_get(original_type)
           klass.new(ptr.get_pointer(0))
+        end
+
+        # Reads an enum
+        #
+        # @return [Symbol]
+        def read_enum(value, original_type)
+          klass = FFI.const_get(original_type)
+          klass[value]
         end
 
         # Reads an array of structs from a pointer

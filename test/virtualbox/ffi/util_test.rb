@@ -68,7 +68,8 @@ class FFIUtilTest < Test::Unit::TestCase
         :int => [:int, :int],
         :unicode_string => [:pointer, :unicode_string],
         :IHost => [:pointer, :struct],
-        [:array] => [:pointer, :array]
+        [:array] => [:pointer, :array],
+        :MediumVariant => [VirtualBox::FFI::PRUint32, :enum]
       }
 
       expectations.each do |original, result|
@@ -262,6 +263,23 @@ class FFIUtilTest < Test::Unit::TestCase
         VirtualBox::FFI.expects(:const_get).with(@original_type).returns(@klass)
         @klass.expects(:new).with(@ptr.get_pointer(0)).returns(@instance)
         assert_equal @instance, VirtualBox::FFI::Util.read_struct(@ptr, @original_type)
+      end
+    end
+
+    context "reading an enum" do
+      setup do
+        @klass = mock("enum_class")
+        @klass.stubs(:[])
+
+        @original_type = :foo
+        @value = 7
+      end
+
+      should "convert type to class and get the value" do
+        result = mock("result")
+        VirtualBox::FFI.expects(:const_get).with(@original_type).returns(@klass)
+        @klass.expects(:[]).with(@value).returns(result)
+        assert_equal result, VirtualBox::FFI::Util.read_enum(@value, @original_type)
       end
     end
 
