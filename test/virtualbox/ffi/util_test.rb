@@ -123,6 +123,18 @@ class FFIUtilTest < Test::Unit::TestCase
       assert_equal result, VirtualBox::FFI::Util.dereference_pointer(@pointer, @type)
     end
 
+    should "return a false bool if type is PRBool and failure" do
+      @pointer.expects(:get_bar).returns("0")
+      result = VirtualBox::FFI::Util.dereference_pointer(@pointer, VirtualBox::FFI::PRBool)
+      assert_equal false, result
+    end
+
+    should "return a true bool if type is PRBool and success" do
+      @pointer.expects(:get_bar).returns("1")
+      result = VirtualBox::FFI::Util.dereference_pointer(@pointer, VirtualBox::FFI::PRBool)
+      assert_equal true, result
+    end
+
     should "call read_* on Util if pointer doesn't support it" do
       result = mock("result")
       @pointer.expects(:respond_to?).with("get_#{@inferred_type}".to_sym).returns(false)
