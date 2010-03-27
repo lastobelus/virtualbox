@@ -160,6 +160,7 @@ module VirtualBox
         def utf16_to_string(pointer)
           result_pointer = pointer_for_type(:pointer)
           VirtualBox::Lib.xpcom[:pfnUtf16ToUtf8].call(pointer, result_pointer)
+          VirtualBox::Lib.xpcom[:pfnUtf16Free].call(pointer)
           result_pointer.read_pointer().read_string().to_s
         end
 
