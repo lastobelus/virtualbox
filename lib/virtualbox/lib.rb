@@ -5,43 +5,22 @@ module VirtualBox
     XPCOMC_VERSION = 0x00020000
 
     @@lib_path = nil
-    @@xpcom = nil
-    @@vbox = nil
-    @@session = nil
+    @@lib = nil
+
+    attr_reader :xpcom, :vbox, :session
 
     class <<self
-      # Resets everything by uninitializing everything. This method forces
-      # an {init} call on the next call to any of {xpcom}, {vbox}, or
-      # {session}
+      # Resets the initialized library (if there is any). This is primarily only
+      # used for testing.
       def reset!
-        @@xpcom = nil
-        @@vbox = nil
-        @@session = nil
+        @@lib = nil
       end
 
-      # The VBOXXPCOMC instance of the {VirtualBox::FFI} which allows interfacing
-      # with the VirtualBox XPCOM C interface.
-      def xpcom
-        init if @@xpcom.nil?
-        @@xpcom
-      end
-
-      # The IVirtualBox instance of the {VirtualBox::FFI} which allows
-      # interfacing with the VirtualBox methods. If the library was not
-      # yet initialized, {init} will automatically be called, so it is
-      # safe to just begin using this method.
-      def vbox
-        # If we haven't initialized the library, do so
-        init if @@vbox.nil?
-        @@vbox
-      end
-
-      # The {VirtualBox::FFI::ISession} instance. If the library was not
-      # yet initialized, {init} will automatically be called, so it is
-      # safe to just begin using this method.
-      def session
-        init if @@session.nil?
-        @@session
+      # The singleton instance of Lib.
+      #
+      # @return [Lib]
+      def lib
+        @@lib ||= new(lib_path)
       end
 
       # Sets the path to the VBoxXPCOMC library which is created with any
@@ -69,14 +48,10 @@ module VirtualBox
 
         File.expand_path(@@lib_path)
       end
+    end
 
-      # Initializes the VirtualBox library, setting up access to the
-      # {vbox} and {session} variables. Note that by calling these methods,
-      # {init} is automatically called if they aren't setup already.
-      def init
-        # Set the path to the library on the FFI module
-        @@xpcom, @@vbox, @@session = VirtualBox::FFI.init(lib_path)
-      end
+    def initialize(lib_path)
+      @xpcom, @vbox, @session = VirtualBox::FFI.init(lib_path)
     end
   end
 end
