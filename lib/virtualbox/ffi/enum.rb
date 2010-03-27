@@ -17,6 +17,11 @@ module VirtualBox
           @map[key]
         end
 
+        # Returns the index associated with a value
+        def index(key)
+          @map.index(key)
+        end
+
         # Provided mostly for testing purposes only, but resets the mapping
         # to nil.
         def reset!

@@ -14,6 +14,11 @@ class FFIEnumTest < Test::Unit::TestCase
       assert_equal :c, @enum[2]
     end
 
+    should "do the reverse mapping of value to index" do
+      @enum.map([:a, :b, :c])
+      assert_equal 1, @enum.index(:b)
+    end
+
     should "reset the map if another is given" do
       @enum.map([:a])
       @enum.map([:b])

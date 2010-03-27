@@ -9,6 +9,13 @@ class FFIUtilTest < Test::Unit::TestCase
       assert_equal args, VirtualBox::FFI::Util.formal_params(spec, args)
     end
 
+    should "convert Enums into their proper indexes" do
+      spec = [:MediumState]
+      args = [:locked_read]
+
+      assert_equal [2], VirtualBox::FFI::Util.formal_params(spec, args)
+    end
+
     should "convert Ruby strings into unicode strings" do
       spec = [:unicode_string]
       args = ["foo"]

@@ -130,9 +130,15 @@ module VirtualBox
               # Convert from boolean true/false to 0/1
               args.shift ? 1 : 0
             else
-              # Replace param with the next parameter in the args list,
-              # removing it as well
-              args.shift
+              klass = FFI.const_get(spec) rescue nil
+              if klass && klass.superclass == Enum
+                # Its an enum, make the argument value the reverse mapping
+                klass.index(args.shift)
+              else
+                # Replace param with the next parameter in the args list,
+                # removing it as well
+                args.shift
+              end
             end
           end
         end
