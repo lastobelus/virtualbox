@@ -17,6 +17,13 @@ module VirtualBox
           end
         end
       end
+
+      # Method missing simply forwards any methods to the vtbl child.
+      # This allows methods to be called on VTblParents as if they were
+      # their actual VTbls.
+      def method_missing(method, *args, &block)
+        vtbl.send(method, *args, &block)
+      end
     end
   end
 end
