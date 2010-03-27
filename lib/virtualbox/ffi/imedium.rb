@@ -69,42 +69,42 @@ module VirtualBox
         member :SetDescription, :SetDescription
         member :GetState, :getter, PRUint32
         member :GetLocation, :getter, :unicode_string
-        member :SetLocation, :SetLocation
+        member :SetLocation, :function, [:unicode_string]
         member :GetName, :getter, :unicode_string
         member :GetDeviceType, :getter, PRUint32
-        member :GetHostDrive, :GetHostDrive
+        member :GetHostDrive, :getter, PRBool
         member :GetSize, :getter, PRUint64
         member :GetFormat, :getter, :unicode_string
         member :GetType, :getter, PRUint32
-        member :SetType, :SetType
+        member :SetType, :function, [PRUint32]
         member :GetParent, :getter, :IMedium
         member :GetChildren, :array_getter, :IMedium
         member :GetBase, :getter, :IMedium
         member :GetReadOnly, :getter, PRBool
         member :GetLogicalSize, :getter, PRUint64
         member :GetAutoReset, :getter, PRBool
-        member :SetAutoReset, :SetAutoReset
+        member :SetAutoReset, :function, [PRBool]
         member :GetLastAccessError, :getter, :unicode_string
-        member :GetMachineIds, :GetMachineIds
+        member :GetMachineIds, :array_getter, :unicode_string
         member :RefreshState, :RefreshState
         member :GetSnapshotIds, :GetSnapshotIds
         member :LockRead, :LockRead
         member :UnlockRead, :UnlockRead
         member :LockWrite, :LockWrite
         member :UnlockWrite, :UnlockWrite
-        member :Close, :Close
-        member :GetProperty, :GetProperty
-        member :SetProperty, :SetProperty
+        member :Close, :function, []
+        member :GetProperty, :function, [:unicode_string, [:out, :unicode_string]]
+        member :SetProperty, :function, [:unicode_string, :unicode_string]
         member :GetProperties, :GetProperties
         member :SetProperties, :SetProperties
         member :CreateBaseStorage, :CreateBaseStorage
-        member :DeleteStorage, :DeleteStorage
+        member :DeleteStorage, :function, [[:out, :IProgress]]
         member :CreateDiffStorage, :CreateDiffStorage
-        member :MergeTo, :MergeTo
+        member :MergeTo, :function, [:unicode_string, [:out, :IProgress]]
         member :CloneTo, :CloneTo
-        member :Compact, :Compact
-        member :Resize, :Resize
-        member :Reset, :Reset
+        member :Compact, :function, [[:out, :IProgress]]
+        member :Resize, :function, [PRUint64, [:out, :IProgress]]
+        member :Reset, :function, [[:out, :IProgress]]
       end
     end
   end
