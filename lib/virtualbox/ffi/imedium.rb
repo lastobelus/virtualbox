@@ -88,20 +88,20 @@ module VirtualBox
         member :GetMachineIds, :array_getter, :unicode_string
         member :RefreshState, :getter, :MediumState
         member :GetSnapshotIds, :GetSnapshotIds
-        member :LockRead, :LockRead
-        member :UnlockRead, :UnlockRead
-        member :LockWrite, :LockWrite
-        member :UnlockWrite, :UnlockWrite
+        member :LockRead, :getter, :MediumState
+        member :UnlockRead, :getter, :MediumState
+        member :LockWrite, :getter, :MediumState
+        member :UnlockWrite, :getter, :MediumState
         member :Close, :function, []
         member :GetProperty, :function, [:unicode_string, [:out, :unicode_string]]
         member :SetProperty, :function, [:unicode_string, :unicode_string]
         member :GetProperties, :GetProperties
         member :SetProperties, :SetProperties
-        member :CreateBaseStorage, :CreateBaseStorage
+        member :CreateBaseStorage, :function, [PRUint64, :MediumVariant, [:out, :IProgress]]
         member :DeleteStorage, :function, [[:out, :IProgress]]
-        member :CreateDiffStorage, :CreateDiffStorage
+        member :CreateDiffStorage, :function, [:IMedium, :MediumVariant, [:out, :IProgress]]
         member :MergeTo, :function, [:unicode_string, [:out, :IProgress]]
-        member :CloneTo, :CloneTo
+        member :CloneTo, :function, [:IMedium, :MediumVariant, :IMedium, [:out, :IProgress]]
         member :Compact, :function, [[:out, :IProgress]]
         member :Resize, :function, [PRUint64, [:out, :IProgress]]
         member :Reset, :function, [[:out, :IProgress]]
