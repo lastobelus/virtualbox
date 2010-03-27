@@ -57,6 +57,10 @@ module VirtualBox
       map [:standard, :vmdk_split_2g, :vmdk_stream_optimized, :vmdk_esx, :fixed, :diff]
     end
 
+    class DeviceType < Enum
+      map [:null, :floppy, :dvd, :hard_disk, :network, :usb, :shared_folder]
+    end
+
     class IMedium < VTblParent
       parent_of :IMedium_vtbl
     end
@@ -69,11 +73,11 @@ module VirtualBox
           member :GetId, :getter, :unicode_string
           member :GetDescription, :getter, :unicode_string
           member :SetDescription, :function, [:unicode_string]
-          member :GetState, :getter, PRUint32
+          member :GetState, :getter, :MediumState
           member :GetLocation, :getter, :unicode_string
           member :SetLocation, :function, [:unicode_string]
           member :GetName, :getter, :unicode_string
-          member :GetDeviceType, :getter, PRUint32
+          member :GetDeviceType, :getter, :DeviceType
           member :GetHostDrive, :getter, PRBool
           member :GetSize, :getter, PRUint64
           member :GetFormat, :getter, :unicode_string

@@ -9,6 +9,7 @@ require 'nokogiri'
   'virtualbox/command',
   'virtualbox/abstract_model',
   'virtualbox/proxies/collection',
+  'virtualbox/medium',
   'virtualbox/image',
   'virtualbox/attached_device',
   'virtualbox/dvd',
