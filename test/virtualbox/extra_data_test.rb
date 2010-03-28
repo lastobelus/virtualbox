@@ -3,7 +3,8 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class ExtraDataTest < Test::Unit::TestCase
   setup do
     @parent = mock("parent")
-    @ed = VirtualBox::ExtraData.new(@parent)
+    @interface = mock("interface")
+    @ed = VirtualBox::ExtraData.new(@parent, @interface)
     @ed["foo"] = "bar"
     @ed.clear_dirty!
   end
@@ -58,7 +59,7 @@ class ExtraDataTest < Test::Unit::TestCase
 
   context "setting dirty state" do
     setup do
-      @ed = VirtualBox::ExtraData.new(@parent)
+      @ed = VirtualBox::ExtraData.new(@parent, @interface)
     end
 
     should "not be dirty initially" do
@@ -68,7 +69,7 @@ class ExtraDataTest < Test::Unit::TestCase
     should "be dirty when setting a value" do
       @ed["foo"] = "bar"
       assert @ed.changed?
-      assert @ed.changes.has_key?("foo")
+      assert @ed.changes.has_key?(:foo)
     end
   end
 
@@ -98,9 +99,39 @@ class ExtraDataTest < Test::Unit::TestCase
   end
 
   context "constructor" do
-    should "set the parent with the given argument" do
-      ed = VirtualBox::ExtraData.new("JOEY")
+    should "set the parent and interface with the given argument" do
+      ed = VirtualBox::ExtraData.new("JOEY", @interface)
       assert_equal "JOEY", ed.parent
+      assert_equal @interface, ed.interface
+    end
+  end
+
+  context "saving extra data" do
+    setup do
+      @interface.stubs(:set_extra_data)
+    end
+
+    should "only save changed keys" do
+      @interface.expects(:set_extra_data).never
+      @interface.expects(:set_extra_data).with("bar", "baz").once
+
+      @ed["bar"] = "baz"
+      @ed.save
+    end
+
+    should "clear the dirty status of keys" do
+      @ed["bar"] = "baz"
+      assert @ed.bar_changed?
+      @ed.save
+      assert !@ed.bar_changed?
+    end
+  end
+
+  context "deleteting extra data" do
+    should "call set_extra_data on the interface with the specified key and value set to nil" do
+      key = :foo
+      @interface.expects(:set_extra_data).with(key, nil).once
+      @ed.delete(key)
     end
   end
 end

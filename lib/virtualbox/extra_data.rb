@@ -35,6 +35,7 @@ module VirtualBox
     include AbstractModel::Dirty
 
     attr_accessor :parent
+    attr_reader :interface
 
     @@global_data = nil
 
@@ -58,7 +59,7 @@ module VirtualBox
       #
       # @return [Array<ExtraData>]
       def populate_relationship(caller, interface)
-        data = new(caller)
+        data = new(caller, interface)
 
         interface.get_extra_data_keys.each do |key|
           data[key] = interface.get_extra_data(key)
@@ -80,8 +81,9 @@ module VirtualBox
     # Initializes an extra data object.
     #
     # @param [Hash] data Initial attributes to populate.
-    def initialize(parent)
+    def initialize(parent, interface)
       @parent = parent
+      @interface = interface
     end
 
     # Set an extradata key-value pair. Overrides ruby hash implementation
@@ -98,17 +100,21 @@ module VirtualBox
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def save(raise_errors=false)
-      # TODO
+    def save
+      changes.each do |key, value|
+        interface.set_extra_data(key.to_s, value[1])
+        clear_dirty!(key)
+      end
     end
 
-    # Deletes the extra data.
+    # Deletes the specified extra data. This method works _immediately_. This means
+    # that as soon as you call {#delete}, the extra data value is actually deleted
+    # from the object. This may be changed in a future version to actually delete
+    # on {#save} instead.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
-    # @return [Boolean] True if command was successful, false otherwise.
-    def delete(key, raise_errors=false)
-      # TODO
+    # @param [String] key The extra data key to delete
+    def delete(key)
+      interface.set_extra_data(key, nil)
     end
   end
 end
