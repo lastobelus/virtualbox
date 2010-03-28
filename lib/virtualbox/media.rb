@@ -6,14 +6,15 @@ module VirtualBox
     relationship :dvds, DVD
 
     class <<self
-      def populate_relationship(caller, data)
-        new(caller, data)
+      def populate_relationship(caller, lib)
+        new(caller, lib)
       end
     end
 
-    def initialize(parent, document)
+    def initialize(parent, lib)
       populate_attributes({ :parent => parent }, :ignore_relationships => true)
-      populate_relationships(document)
+      populate_relationship(:hard_drives, lib.vbox.get_hard_disks)
+      populate_relationship(:dvds, lib.vbox.get_dvd_images)
     end
   end
 end

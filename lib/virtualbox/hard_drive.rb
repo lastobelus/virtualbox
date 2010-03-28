@@ -76,9 +76,10 @@ module VirtualBox
   #     attribute :format, :default => "VDI"
   #     attribute :size
   #
-  class HardDrive < Image
+  class HardDrive < Medium
     attribute :format, :default => "VDI"
-    attribute :size, :lazy => true
+    attribute :logical_size
+    attribute :physical_size, :readonly => true
 
     class <<self
       # Returns an array of all available hard drives as HardDrive
@@ -97,41 +98,25 @@ module VirtualBox
       #   will be raised if the command failed.
       # @return [HardDrive]
       def find(id, raise_errors=false)
-        raw = Command.vboxmanage("showhdinfo", id)
-
-        data = raw.split(/\n\n/).collect { |v| parse_block(v) }.find { |v| !v.nil? }
-
-        # Set equivalent fields
-        data[:format] = data[:"storage format"]
-        data[:size] = data[:"logical size"].split(/\s+/)[0] if data.has_key?(:"logical size")
-
-        # Return new object
-        new(data)
-      rescue Exceptions::CommandFailedException
-        raise if raise_errors
-        nil
+        # TODO
       end
 
-      def populate_relationship(caller, doc)
-        result = Proxies::Collection.new(caller)
-
-        doc.css("MediaRegistry HardDisks HardDisk").each do |hd_node|
-          data = {}
-          hd_node.attributes.each do |key, value|
-            data[key.downcase.to_sym] = value.to_s
-          end
-
-          # Strip the brackets off of UUID
-          data[:uuid] = data[:uuid][1..-2]
-
-          # Expand location relative to config location
-          data[:location] = Global.expand_path(data[:location]) if data[:location]
-
-          result << new(data)
-        end
-
-        result
+      # Override of {Medium.device_type}.
+      def device_type
+        :hard_disk
       end
+    end
+
+    # Override of {Medium#attribute_map}. Adds the additional size and
+    # format attributes to the map.
+    #
+    # @return [Hash]
+    def attribute_map
+      super.merge({
+        :format => :get_format,
+        :logical_size => :get_logical_size,
+        :physical_size => :get_size
+      })
     end
 
     # Clone hard drive, possibly also converting formats. All formats
@@ -147,26 +132,6 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [HardDrive] The new, cloned hard drive, or nil on failure.
     def clone(outputfile, format="VDI", raise_errors=false)
-      raw = Command.vboxmanage("clonehd", uuid, outputfile, "--format", format, "--remember")
-      return nil unless raw =~ /UUID: (.+?)$/
-
-      self.class.find($1.to_s)
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      nil
-    end
-
-    # Override of {Image#image_type}.
-    def image_type
-      "hdd"
-    end
-
-    # Validates a hard drive.
-    def validate
-      super
-
-      validates_presence_of :format
-      validates_presence_of :size
     end
 
     # Creates a new hard drive.
@@ -182,14 +147,8 @@ module VirtualBox
         return false
       end
 
-      raw = Command.vboxmanage("createhd", "--filename", location, "--size", size, "--format", read_attribute(:format), "--remember")
-      return nil unless raw =~ /UUID: (.+?)$/
+      # TODO
 
-      # Just replace our attributes with the newly created ones. This also
-      # will set new_record to false.
-      populate_attributes(self.class.find($1.to_s).attributes)
-
-      # Return the success of the command
       true
     rescue Exceptions::CommandFailedException
       raise if raise_errors
@@ -224,20 +183,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def destroy(raise_errors=false)
-      Command.vboxmanage("closemedium", "disk", uuid, "--delete")
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
-    end
-
-    # Lazy load the lazy attributes for this model.
-    def load_attribute(name)
-      # Since the lazy attributes are related, we just load them all at once
-      loaded_hd = self.class.find(uuid, true)
-
-      write_attribute(:size, loaded_hd.size)
-      write_attribute(:accessible, loaded_hd.accessible)
+      # TODO
     end
   end
 end
