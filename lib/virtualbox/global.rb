@@ -86,6 +86,7 @@ module VirtualBox
     end
 
     def load_relationship(name)
+      populate_relationship(:vms, lib.vbox.get_machines)
       populate_relationship(:media, lib)
       populate_relationship(:extra_data, lib.vbox)
     end

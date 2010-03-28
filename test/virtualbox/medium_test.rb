@@ -27,6 +27,11 @@ class MediumTest < Test::Unit::TestCase
         medium
       end
 
+      should "return a proxied collection" do
+        result = @klass.populate_relationship(nil, [])
+        assert result.is_a?(VirtualBox::Proxies::Collection)
+      end
+
       should "call new for every medium if device type is all" do
         media = []
         5.times { |i| media << mock_medium("m#{i}") }
