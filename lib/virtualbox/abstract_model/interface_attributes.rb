@@ -29,6 +29,29 @@ module VirtualBox
         write_attribute(key, getter.call(interface))
       end
 
+      # Saves all the attributes which have an interface setter.
+      def save_interface_attributes(interface)
+        self.class.attributes.each do |key, options|
+          save_interface_attribute(key, interface)
+        end
+      end
+
+      # Saves a single interface attribute
+      #
+      # @param [Symbol] key The attribute to write
+      # @param [VirtualBox::FFI::VTbl] interface The interface
+      # @param [Object] value The value to write
+      def save_interface_attribute(key, interface)
+        # Return unless we have a valid interface attribute with a setter
+        return unless has_attribute?(key)
+        setter = self.class.attributes[key.to_sym][:interface_setter]
+        return unless setter
+
+        # Convert the setter to a proc and call it
+        setter = spec_to_proc(setter)
+        setter.call(interface, read_attribute(key))
+      end
+
       # Converts a getter/setter specification to a Proc which can be called
       # to obtain or set a value. There are multiple ways to specify the getter
       # and/or setter of an interface attribute:
@@ -59,7 +82,7 @@ module VirtualBox
         if spec.is_a?(Symbol)
           # For symbols, wrap up a method send in a Proc and return
           # that
-          return Proc.new { |m| m.send(spec) }
+          return Proc.new { |m, *args| m.send(spec, *args) }
         end
       end
     end

@@ -7,7 +7,7 @@ class InterfaceAttributesTest < Test::Unit::TestCase
   end
 
   class InterfaceAttributeModel < EmptyInterfaceAttributeModel
-    attribute :foo, :interface_getter => :foo
+    attribute :foo, :interface_getter => :foo, :interface_setter => :foo
     attribute :bar
   end
 
@@ -23,6 +23,13 @@ class InterfaceAttributesTest < Test::Unit::TestCase
         proc = @instance.spec_to_proc(:foo)
         @interface.expects(:foo).once.returns(result)
         assert_equal result, proc.call(@interface)
+      end
+
+      should "forward all parameters" do
+        result = mock("result")
+        proc = @instance.spec_to_proc(:foo)
+        @interface.expects(:foo).with(1, 2, 3).once.returns(result)
+        assert_equal result, proc.call(@interface, 1, 2, 3)
       end
     end
 
@@ -64,6 +71,35 @@ class InterfaceAttributesTest < Test::Unit::TestCase
     end
   end
 
+  context "saving a single interface attribute" do
+    setup do
+      @instance = InterfaceAttributeModel.new
+      @interface = mock("interface")
+
+      @proc = Proc.new { |m| m.foo }
+      @instance.stubs(:spec_to_proc).returns(@proc)
+
+      @value = :bar
+      @instance.stubs(:read_attribute).with(:foo).returns(@value)
+    end
+
+    should "return immediately if not a valid attribute" do
+      @proc.expects(:call).never
+      @instance.load_interface_attribute(:baz, @interface)
+    end
+
+    should "return immediately if attribute doesn't have an interface setter" do
+      @proc.expects(:call).never
+      @instance.load_interface_attribute(:bar, @interface)
+    end
+
+    should "save the attribute with the value of the proc" do
+      key = :foo
+      @proc.expects(:call).with(@interface, @value).once
+      @instance.save_interface_attribute(key, @interface)
+    end
+  end
+
   context "loading all interface attributes" do
     setup do
       @instance = InterfaceAttributeModel.new
@@ -77,6 +113,22 @@ class InterfaceAttributesTest < Test::Unit::TestCase
       end
 
       @instance.load_interface_attributes(@interface)
+    end
+  end
+
+  context "saving all interface attributes" do
+    setup do
+      @instance = InterfaceAttributeModel.new
+      @interface = mock('interface')
+    end
+
+    should "save each" do
+      load_seq = sequence("load_seq")
+      InterfaceAttributeModel.attributes.each do |key, options|
+        @instance.expects(:save_interface_attribute).with(key, @interface)
+      end
+
+      @instance.save_interface_attributes(@interface)
     end
   end
 end
