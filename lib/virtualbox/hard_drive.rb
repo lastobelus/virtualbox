@@ -93,12 +93,10 @@ module VirtualBox
       # Finds one specific hard drive by UUID or file name. If the
       # hard drive can not be found, will return `nil`.
       #
-      # @param [String] id The UUID or name of the hard drive
-      # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-      #   will be raised if the command failed.
+      # @param [String] id The UUID of the hard drive
       # @return [HardDrive]
       def find(id, raise_errors=false)
-        # TODO
+        all.find { |hd| hd.uuid == id }
       end
 
       # Override of {Medium.device_type}.

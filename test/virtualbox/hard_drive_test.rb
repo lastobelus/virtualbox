@@ -21,4 +21,29 @@ class HardDriveTest < Test::Unit::TestCase
       assert_equal "foo", VirtualBox::HardDrive.all
     end
   end
+
+  context "finding a hard drive" do
+    setup do
+      @all = []
+      @klass.stubs(:all).returns(@all)
+    end
+
+    def mock_drive(uuid)
+      drive = mock("hd-#{uuid}")
+      drive.stubs(:uuid).returns(uuid)
+      drive
+    end
+
+    should "return nil if it doesn't exist" do
+      @all << mock_drive("foo")
+      assert_nil @klass.find("bar")
+    end
+
+    should "return the matching drive if it is found" do
+      drive = mock_drive("foo")
+      @all << mock_drive("bar")
+      @all << drive
+      assert_equal drive, @klass.find("foo")
+    end
+  end
 end
