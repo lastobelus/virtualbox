@@ -57,11 +57,11 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<ExtraData>]
-      def populate_relationship(caller, doc)
+      def populate_relationship(caller, interface)
         data = new(caller)
 
-        doc.css("ExtraData ExtraDataItem").each do |extradata|
-          data[extradata["name"].to_s] = extradata["value"].to_s
+        interface.get_extra_data_keys.each do |key|
+          data[key] = interface.get_extra_data(key)
         end
 
         data.clear_dirty!
@@ -80,8 +80,8 @@ module VirtualBox
     # Initializes an extra data object.
     #
     # @param [Hash] data Initial attributes to populate.
-    def initialize(parent=nil)
-      @parent = parent || "global"
+    def initialize(parent)
+      @parent = parent
     end
 
     # Set an extradata key-value pair. Overrides ruby hash implementation
@@ -89,19 +89,6 @@ module VirtualBox
     def []=(key,value)
       set_dirty!(key, self[key], value)
       super
-    end
-
-    # Special accessor for parent name attribute. This returns
-    # either the parent name if its a VM object, otherwise
-    # just returns the default.
-    #
-    # @return [String]
-    def parent_name
-      if parent.is_a?(VM)
-        parent.name
-      else
-        parent
-      end
     end
 
     # Saves extra data. This method does the same thing for both new
@@ -112,15 +99,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def save(raise_errors=false)
-      changes.each do |key, value|
-        Command.vboxmanage("setextradata", parent_name, key, value[1])
-        clear_dirty!(key)
-      end
-
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
+      # TODO
     end
 
     # Deletes the extra data.
@@ -129,12 +108,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def delete(key, raise_errors=false)
-      Command.vboxmanage("setextradata", parent_name, key)
-      super(key)
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
+      # TODO
     end
   end
 end

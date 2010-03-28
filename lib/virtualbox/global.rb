@@ -87,6 +87,7 @@ module VirtualBox
 
     def load_relationship(name)
       populate_relationship(:media, lib)
+      populate_relationship(:extra_data, lib.vbox)
     end
   end
 end
