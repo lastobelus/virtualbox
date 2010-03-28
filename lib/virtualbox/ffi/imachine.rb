@@ -121,6 +121,13 @@ module VirtualBox
       map [:disabled, :host_to_guest, :guest_to_host, :bidirectional]
     end
 
+    class MachineState < Enum
+      map [:null, :powered_off, :saved, :teleported, :aborted, :running, :paused, :stuck,
+            :teleporting, :live_snapshotting, :starting, :stopping, :saving, :restoring,
+            :teleporting_paused_vm, :teleporting_in, :restoring_snapshot, :deleting_snapshot,
+            :setting_up]
+    end
+
     class IMachine < VTblParent
       parent_of :IMachine_vtbl
     end
@@ -175,7 +182,7 @@ module VirtualBox
           member :GetSessionState, :getter, PRUint32
           member :GetSessionType, :getter, :unicode_string
           member :GetSessionPid, :getter, PRUint32
-          member :GetState, :getter, PRUint32
+          member :GetState, :getter, :MachineState
           member :GetLastStateChange, :getter, PRInt64
           member :GetStateFilePath, :getter, :unicode_string
           member :GetLogFolder, :getter, :unicode_string

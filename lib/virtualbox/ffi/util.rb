@@ -189,7 +189,9 @@ module VirtualBox
         #
         # @return [String]
         def read_unicode_string(ptr, original_type=nil)
-          utf16_to_string(ptr.get_pointer(0))
+          address = ptr.get_pointer(0)
+          return "" if address.null?
+          utf16_to_string(address)
         end
 
         # Reads a struct from the pointer

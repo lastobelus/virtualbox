@@ -251,9 +251,16 @@ class FFIUtilTest < Test::Unit::TestCase
     context "reading unicode string" do
       setup do
         @sub_ptr = mock("sub_ptr")
+        @sub_ptr.stubs(:null?).returns(false)
 
         @ptr = mock("pointer")
         @ptr.stubs(:get_pointer).returns(@sub_ptr)
+      end
+
+      should "return empty string for null pointer" do
+        @sub_ptr.expects(:null?).returns(true)
+        VirtualBox::FFI::Util.expects(:utf16_to_string).never
+        assert_equal "", VirtualBox::FFI::Util.read_unicode_string(@ptr)
       end
 
       should "call utf16_to_string on the dereferenced pointer" do
