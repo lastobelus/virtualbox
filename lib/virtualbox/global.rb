@@ -51,14 +51,11 @@ module VirtualBox
   #     relationship :extra_data, ExtraData
   #
   class Global < AbstractModel
-    # The path to the global VirtualBox XML configuration file. This is
-    # entirely system dependent and can be set with {vboxconfig=}. The default
-    # is guessed based on the platform.
-    @@vboxconfig = nil
+    attribute :lib, :readonly => true
 
     relationship :vms, VM, :lazy => true
-    relationship :media, Media
-    relationship :extra_data, ExtraData
+    relationship :media, Media, :lazy => true
+    relationship :extra_data, ExtraData, :lazy => true
 
     @@global_data = nil
 
@@ -71,73 +68,25 @@ module VirtualBox
       #
       # @param [Boolean] reload True if you want to force a reload of the data.
       # @return [Global]
-      def global(reload = false)
-        if !@@global_data || reload || reload?
-          @@global_data = new(config)
-          reloaded!
-        end
-
-        @@global_data
+      def global
+        @@global_data ||= new(Lib.lib)
       end
 
-      # Sets the path to the VirtualBox.xml file. This file should already
-      # exist. VirtualBox itself manages this file, not this library.
-      #
-      # @param [String] Full path to the VirtualBox.xml file
-      def vboxconfig=(value)
-        @@vboxconfig = value
-      end
-
-      # Returns the path to the virtual box configuration file. If the path
-      # has not yet been set, it attempts to infer it based on the
-      # platform ruby is running on.
-      def vboxconfig
-        if @@vboxconfig.nil?
-          if Platform.mac?
-            @@vboxconfig = "~/Library/VirtualBox/VirtualBox.xml"
-          elsif Platform.linux? || Platform.windows?
-            @@vboxconfig = "~/.VirtualBox/VirtualBox.xml"
-          else
-            @@vboxconfig = "Unknown"
-          end
-        end
-        
-        File.expand_path(@@vboxconfig)
-      end
-      
-      # Returns a boolean denoting whether or not the vboxconfig value is
-      # valid or not.
-      #
-      # @return [Boolean]
-      def vboxconfig?
-        File.file?(vboxconfig)
-      end
-
-      # Returns the XML document of the configuration. This will raise an
-      # {Exceptions::ConfigurationException} if the vboxconfig file doesn't
-      # exist.
-      #
-      # @return [Nokogiri::XML::Document]
-      def config
-        raise Exceptions::ConfigurationException.new("The path to the global VirtualBox config must be set. See Global.vboxconfig=") unless vboxconfig?
-        Command.parse_xml(vboxconfig)
-      end
-
-      # Expands path relative to the configuration file.
-      #
-      # @return [String]
-      def expand_path(path)
-        File.expand_path(path, File.dirname(vboxconfig))
+      # Resets the global data singleton. This is used for testing purposes.
+      def reset!
+        @@global_data = nil
       end
     end
 
-    def initialize(document)
-      @document = document
-      populate_attributes(@document)
+    def initialize(lib)
+      write_attribute(:lib, lib)
+
+      # Required to load lazy relationships
+      existing_record!
     end
 
     def load_relationship(name)
-      populate_relationship(:vms, @document)
+      populate_relationship(:media, lib)
     end
   end
 end
