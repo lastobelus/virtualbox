@@ -125,7 +125,8 @@ module VirtualBox
               Util.pointer_for_type(spec[1])
             elsif spec == :unicode_string
               # We have to convert the string to a UTF16 string
-              Util.string_to_utf16(args.shift)
+              arg = args.shift
+              arg.nil? ? nil : Util.string_to_utf16(arg)
             elsif spec == PRBool
               # Convert from boolean true/false to 0/1
               args.shift ? 1 : 0

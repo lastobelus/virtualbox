@@ -24,6 +24,14 @@ class FFIUtilTest < Test::Unit::TestCase
       assert_equal ["bar"], VirtualBox::FFI::Util.formal_params(spec, args)
     end
 
+    should "leave nil alone for unicode strings" do
+      spec = [:unicode_string]
+      args = [nil]
+
+      VirtualBox::FFI::Util.expects(:string_to_utf16).never
+      assert_equal [nil], VirtualBox::FFI::Util.formal_params(spec, args)
+    end
+
     should "convert PRBool into 1/0" do
       spec = [VirtualBox::FFI::PRBool, VirtualBox::FFI::PRBool]
       args = [true, false]
