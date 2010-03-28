@@ -125,12 +125,21 @@ class ExtraDataTest < Test::Unit::TestCase
       @ed.save
       assert !@ed.bar_changed?
     end
+
+    should "remove nil keys from the hash" do
+      @ed["bar"] = "baz"
+      @ed.save
+      @ed["bar"] = nil
+      assert @ed.bar_changed?
+      @ed.save
+      assert !@ed.keys.include?("bar")
+    end
   end
 
   context "deleteting extra data" do
-    should "call set_extra_data on the interface with the specified key and value set to nil" do
+    should "call set its value to nil" do
       key = :foo
-      @interface.expects(:set_extra_data).with(key, nil).once
+      @ed.expects(:[]=).with(key, nil).once
       @ed.delete(key)
     end
   end

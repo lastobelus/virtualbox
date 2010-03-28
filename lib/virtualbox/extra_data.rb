@@ -103,18 +103,26 @@ module VirtualBox
     def save
       changes.each do |key, value|
         interface.set_extra_data(key.to_s, value[1])
+
         clear_dirty!(key)
+
+        if value[1].nil?
+          # Remove the key from the hash altogether
+          hash_delete(key.to_s)
+        end
       end
     end
 
-    # Deletes the specified extra data. This method works _immediately_. This means
-    # that as soon as you call {#delete}, the extra data value is actually deleted
-    # from the object. This may be changed in a future version to actually delete
-    # on {#save} instead.
+    # Alias away the old delete method so its still accessible somehow
+    alias :hash_delete :delete
+
+    # Deletes the specified extra data. This method is deferred, meaning that
+    # although the key itself is marked to be deleted (by setting the value
+    # to nil), the deletion itself does not occur until {#save} is called.
     #
     # @param [String] key The extra data key to delete
     def delete(key)
-      interface.set_extra_data(key, nil)
+      self[key] = nil
     end
   end
 end
