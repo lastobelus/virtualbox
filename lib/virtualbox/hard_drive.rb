@@ -77,9 +77,9 @@ module VirtualBox
   #     attribute :size
   #
   class HardDrive < Medium
-    attribute :format, :default => "VDI"
-    attribute :logical_size
-    attribute :physical_size, :readonly => true
+    attribute :format, :default => "VDI", :interface_getter => :get_format
+    attribute :logical_size, :interface_getter => :get_logical_size
+    attribute :physical_size, :readonly => true, :interface_getter => :get_size
 
     class <<self
       # Returns an array of all available hard drives as HardDrive

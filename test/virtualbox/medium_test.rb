@@ -54,37 +54,15 @@ class MediumTest < Test::Unit::TestCase
 
   context "initializing" do
     should "load attributes from the medium" do
-      @klass.any_instance.expects(:load_attributes).with(@imedium).once
-      @klass.new(@imedium)
-    end
-  end
-
-  context "loading attributes" do
-    should "populate attributes with values of sending to IMedium" do
-      expected_value = "foo"
-      @imedium.expects(:send).with(anything).at_least(0).returns(expected_value)
-      @klass.any_instance.expects(:populate_attributes).with() do |hash|
-        hash.each do |key, value|
-          assert_equal expected_value, value
-        end
-
-        true
-      end
-
+      @klass.any_instance.expects(:load_interface_attributes).with(@imedium).once
       @klass.new(@imedium)
     end
   end
 
   context "with an instance" do
     setup do
-      @klass.any_instance.stubs(:load_attributes)
+      @klass.any_instance.stubs(:load_interface_attributes)
       @instance = @klass.new(@imedium)
-    end
-
-    context "attribute map" do
-      should "be a hash" do
-        assert @instance.attribute_map.is_a?(Hash)
-      end
     end
 
     context "filename" do
