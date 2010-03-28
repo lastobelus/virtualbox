@@ -123,7 +123,6 @@ class InterfaceAttributesTest < Test::Unit::TestCase
     end
 
     should "save each" do
-      load_seq = sequence("load_seq")
       InterfaceAttributeModel.attributes.each do |key, options|
         @instance.expects(:save_interface_attribute).with(key, @interface)
       end

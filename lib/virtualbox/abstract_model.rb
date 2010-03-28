@@ -126,6 +126,20 @@ module VirtualBox
       clear_dirty!(key)
     end
 
+    # Saves only changed interface attributes.
+    def save_changed_interface_attributes(interface)
+      changes.each do |key, values|
+        save_interface_attribute(key, interface)
+      end
+    end
+
+    # Overrides {InterfaceAttributes.save_interface_attribute} to clear the
+    # dirty state of the attribute.
+    def save_interface_attribute(key, interface)
+      super
+      clear_dirty!(key)
+    end
+
     # Overriding {Attributable#lazy_attribute?} to always return false for
     # new records, since new records shouldn't load lazy data.
     def lazy_attribute?(*args)

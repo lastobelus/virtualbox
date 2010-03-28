@@ -323,15 +323,45 @@ class AbstractModelTest < Test::Unit::TestCase
     end
   end
 
+  context "integrating interface attributes" do
+    setup do
+      @model = FakeModel.new
+    end
+
+    should "clear the dirty state of an attribute after saving" do
+      key = :foo
+      interface = :bar
+      @model.expects(:clear_dirty!).with(key).once
+      @model.save_interface_attribute(key, interface)
+    end
+  end
+
   context "integrating relatable" do
     setup do
       @model = FakeModel.new
     end
 
-    should "set dirty state when a relationship is set" do
-      assert !@model.changed?
-      @model.foos = "foo"
-      assert @model.changed?
+    context "saving all changed interface attributes" do
+      setup do
+        @changes = [[:a, []], [:b, []], [:c, []]]
+        @model.stubs(:changes).returns(@changes)
+      end
+
+      should "save each" do
+        @model.changes.each do |key, options|
+          @model.expects(:save_interface_attribute).with(key, @interface)
+        end
+
+        @model.save_changed_interface_attributes(@interface)
+      end
+    end
+
+    context "with dirty" do
+      should "set dirty state when a relationship is set" do
+        assert !@model.changed?
+        @model.foos = "foo"
+        assert @model.changed?
+      end
     end
   end
 

@@ -73,7 +73,7 @@ module VirtualBox
     attribute :uuid, :readonly => true
     attribute :port
     attribute :type, :readonly => true
-    relationship :image, Image
+    relationship :image, Medium
 
     class <<self
       # Populate relationship with another model.
