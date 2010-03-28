@@ -117,6 +117,10 @@ module VirtualBox
     callback :im_QuerySavedScreenshotPNGSize, [:pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
     callback :im_ReadSavedScreenshotPNGToArray, [:pointer, :pointer, :pointer, :pointer, :pointer], NSRESULT_TYPE
 
+    class ClipboardMode < Enum
+      map [:disabled, :host_to_guest, :guest_to_host, :bidirectional]
+    end
+
     class IMachine < VTblParent
       parent_of :IMachine_vtbl
     end
@@ -179,8 +183,8 @@ module VirtualBox
           member :GetSnapshotCount, :getter, PRUint32
           member :GetCurrentStateModified, :getter, PRBool
           member :GetSharedFolders, :array_getter, :ISharedFolder
-          member :GetClipboardMode, :getter, PRUint32
-          member :SetClipboardMode, :function, [PRUint32]
+          member :GetClipboardMode, :getter, :ClipboardMode
+          member :SetClipboardMode, :function, [:ClipboardMode]
           member :GetGuestPropertyNotificationPatterns, :getter, :unicode_string
           member :SetGuestPropertyNotificationPatterns, :function, [:unicode_string]
           member :GetTeleporterEnabled, :getter, PRBool

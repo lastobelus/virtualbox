@@ -1,4 +1,5 @@
 ['abstract_model/attributable',
+  'abstract_model/interface_attributes',
   'abstract_model/dirty',
   'abstract_model/relatable',
   'abstract_model/validatable'].each do |lib|
@@ -12,6 +13,7 @@ module VirtualBox
   # @abstract
   class AbstractModel
     include Attributable
+    include InterfaceAttributes
     include Dirty
     include Relatable
     include Validatable
