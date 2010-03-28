@@ -105,4 +105,39 @@ class VMTest < Test::Unit::TestCase
       assert !@instance.new_record?
     end
   end
+
+  context "instance methods" do
+    setup do
+      @klass.any_instance.stubs(:initialize_attributes)
+      @instance = @klass.new(@interface)
+    end
+
+    context "saving" do
+      setup do
+        @parent = mock("parent")
+        @session = mock("session")
+        @lib = mock("lib")
+        @lib.stubs(:session).returns(@session)
+        @uuid = :foo
+
+        VirtualBox::Lib.stubs(:lib).returns(@lib)
+        @interface.stubs(:get_parent).returns(@parent)
+        @instance.stubs(:imachine).returns(@interface)
+        @instance.stubs(:uuid).returns(@uuid)
+
+        @locked_interface = mock("locked_interface")
+      end
+
+      should "open the session, save, and close" do
+        save_seq = sequence("save_seq")
+        @parent.expects(:open_session).with(@session, @uuid).in_sequence(save_seq)
+        @session.expects(:get_machine).returns(@locked_interface).in_sequence(save_seq)
+        @instance.expects(:save_changed_interface_attributes).with(@locked_interface).in_sequence(save_seq)
+        @locked_interface.expects(:save_settings).once.in_sequence(save_seq)
+        @session.expects(:close).in_sequence(save_seq)
+
+        @instance.save
+      end
+    end
+  end
 end

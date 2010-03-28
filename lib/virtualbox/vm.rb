@@ -89,7 +89,7 @@ module VirtualBox
   #
   class VM < AbstractModel
     attribute :uuid, :readonly => true, :interface_getter => :get_id
-    attribute :name, :interface_getter => :get_name
+    attribute :name, :interface_getter => :get_name, :interface_setter => :set_name
     attribute :ostype, :interface_getter => :get_os_type_id
     attribute :description, :readonly => true, :interface_getter => :get_description
     attribute :memory, :interface_getter => :get_memory_size
@@ -214,8 +214,21 @@ module VirtualBox
     # Saves the virtual machine if modified. This method saves any modified
     # attributes of the virtual machine. If any related attributes were saved
     # as well (such as storage controllers), those will be saved, too.
-    def save(raise_errors=false)
-      # TODO
+    def save
+      # Set the session up
+      session = Lib.lib.session
+
+      # Open up a session for this virtual machine
+      imachine.get_parent.open_session(session, uuid)
+
+      # Use setters to save the attributes on the locked machine and persist
+      # the settings
+      machine = session.get_machine
+      save_changed_interface_attributes(machine)
+      machine.save_settings
+
+      # Close the session
+      session.close
     end
 
     # Exports a virtual machine. The virtual machine will be exported
