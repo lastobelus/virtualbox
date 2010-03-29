@@ -146,5 +146,25 @@ class VMTest < Test::Unit::TestCase
         @instance.save
       end
     end
+
+    context "state methods" do
+      should "check the proper results" do
+        methods = {
+          :running? => :running,
+          :powered_off? => :powered_off,
+          :paused? => :paused,
+          :saved? => :saved,
+          :aborted? => :aborted
+        }
+
+        methods.each do |method, value|
+          @instance.stubs(:state).returns(value)
+          assert @instance.send(method)
+
+          @instance.stubs(:state).returns(:nope)
+          assert !@instance.send(method)
+        end
+      end
+    end
   end
 end

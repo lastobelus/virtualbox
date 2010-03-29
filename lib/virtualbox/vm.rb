@@ -367,35 +367,35 @@ module VirtualBox
     #
     # @return [Boolean] True if virtual machine state is running
     def running?
-      state == 'running'
+      state == :running
     end
 
     # Returns true if the virtual machine state is powered off
     #
     # @return [Boolean] True if virtual machine state is powered off
     def powered_off?
-      state == 'poweroff'
+      state == :powered_off
     end
 
     # Returns true if the virtual machine state is paused
     #
     # @return [Boolean] True if virtual machine state is paused
     def paused?
-      state == 'paused'
+      state == :paused
     end
 
     # Returns true if the virtual machine state is saved
     #
     # @return [Boolean] True if virtual machine state is saved
     def saved?
-      state == 'saved'
+      state == :saved
     end
 
     # Returns true if the virtual machine state is aborted
     #
     # @return [Boolean] True if virtual machine state is aborted
     def aborted?
-      state == 'aborted'
+      state == :aborted
     end
   end
 end
