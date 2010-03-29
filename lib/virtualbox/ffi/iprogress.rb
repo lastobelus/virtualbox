@@ -21,7 +21,7 @@ module VirtualBox
     callback :ip_SetTimeout, [:pointer, PRUint32], NSRESULT_TYPE
     callback :ip_SetCurrentOperationProgress, [:pointer, PRUint32], NSRESULT_TYPE
     callback :ip_SetNextOperation, [:pointer, :pointer, PRUint32], NSRESULT_TYPE
-    callback :ip_WaitForCompletion, [:pointer, PRUint32], NSRESULT_TYPE
+    callback :ip_WaitForCompletion, [:pointer, PRInt32], NSRESULT_TYPE
     callback :ip_WaitForOperationCompletion, [:pointer, PRUint32, PRUint32], NSRESULT_TYPE
     callback :ip_Cancel, [:pointer], NSRESULT_TYPE
 

@@ -270,8 +270,18 @@ module VirtualBox
     # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def start(mode=:gui, raise_errors=false)
-      # TODO
+    def start(mode="gui")
+      return false if running?
+
+      # Open a new remote session, this will automatically start the machine
+      # as well
+      session = Lib.lib.session
+      imachine.get_parent.open_remote_session(session, uuid, mode.to_s, "").wait_for_completion(-1)
+
+      # Close our session to release our lock from the machine
+      session.close
+
+      true
     end
 
     # Shuts down the VM by directly calling "acpipowerbutton". Depending on the

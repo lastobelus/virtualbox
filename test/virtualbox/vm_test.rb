@@ -118,6 +118,40 @@ class VMTest < Test::Unit::TestCase
       @instance = @klass.new(@interface)
     end
 
+    context "starting" do
+      setup do
+        @parent = mock("parent")
+        @session = mock("session")
+        @lib = mock("lib")
+        @progress = mock("progress")
+
+        @session.stubs(:close)
+        @progress.stubs(:wait_for_completion)
+        @lib.stubs(:session).returns(@session)
+        @uuid = :foo
+
+        VirtualBox::Lib.stubs(:lib).returns(@lib)
+        @interface.stubs(:get_parent).returns(@parent)
+        @instance.stubs(:imachine).returns(@interface)
+        @instance.stubs(:uuid).returns(@uuid)
+        @instance.stubs(:running).returns(false)
+      end
+
+      should "open remote session using the given mode, wait for completion, then close" do
+        start_seq = sequence('start_seq')
+        mode = "foo"
+        @parent.expects(:open_remote_session).with(@session, @uuid, mode, "").once.returns(@progress).in_sequence(start_seq)
+        @progress.expects(:wait_for_completion).with(-1).in_sequence(start_seq)
+        @session.expects(:close).in_sequence(start_seq)
+        assert @instance.start(mode)
+      end
+
+      should "return false if state is running" do
+        @instance.expects(:running?).returns(true)
+        assert !@instance.start(nil)
+      end
+    end
+
     context "saving" do
       setup do
         @parent = mock("parent")
