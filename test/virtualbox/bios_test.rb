@@ -71,7 +71,7 @@ class BIOSTest < Test::Unit::TestCase
       end
 
       should "save the interface settings with the new bios settings" do
-        @instance.expects(:save_changed_interface_settings).with(@bios_settings).once
+        @instance.expects(:save_changed_interface_attributes).with(@bios_settings).once
         @instance.save(@new_interface)
       end
     end

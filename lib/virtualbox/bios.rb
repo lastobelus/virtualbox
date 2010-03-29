@@ -37,7 +37,7 @@ module VirtualBox
       bios = imachine.get_bios_settings
 
       # Save them
-      save_changed_interface_settings(bios)
+      save_changed_interface_attributes(bios)
 
       # Its not our job to persist, its up the {VM}, since this class is
       # just an extension of that.
