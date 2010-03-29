@@ -119,6 +119,7 @@ module VirtualBox
     attribute :imachine, :readonly => true
     relationship :bios, BIOS
     relationship :storage_controllers, StorageController, :dependent => :destroy
+    relationship :medium_attachments, MediumAttachment
     # relationship :nics, Nic
     # relationship :usbs, USB
     # relationship :shared_folders, SharedFolder
