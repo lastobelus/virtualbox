@@ -3,6 +3,7 @@ require 'nokogiri'
 
 # Internal Dependencies
 ['virtualbox/ext/platform',
+  'virtualbox/ext/subclass_listing',
   'virtualbox/ffi',
   'virtualbox/exceptions',
   'virtualbox/lib',

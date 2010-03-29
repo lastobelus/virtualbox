@@ -13,7 +13,23 @@ class MediumTest < Test::Unit::TestCase
       end
     end
 
-    context "populating relationship" do
+    context "populating relationships" do
+      setup do
+        @caller = mock("caller")
+      end
+
+      should "call populate_array_relationship for arrays" do
+        @klass.expects(:populate_array_relationship).with(@caller, []).once
+        @klass.populate_relationship(@caller, [])
+      end
+
+      should "call populate_single_relationship for non-arrays" do
+        @klass.expects(:populate_single_relationship).with(@caller, nil).once
+        @klass.populate_relationship(@caller, nil)
+      end
+    end
+
+    context "populating array relationship" do
       setup do
         @instance = mock("instance")
 
@@ -28,7 +44,7 @@ class MediumTest < Test::Unit::TestCase
       end
 
       should "return a proxied collection" do
-        result = @klass.populate_relationship(nil, [])
+        result = @klass.populate_array_relationship(nil, [])
         assert result.is_a?(VirtualBox::Proxies::Collection)
       end
 
@@ -44,15 +60,46 @@ class MediumTest < Test::Unit::TestCase
           expected_result << expected_value
         end
 
-        assert_equal expected_result, @klass.populate_relationship(nil, media)
+        assert_equal expected_result, @klass.populate_array_relationship(nil, media)
       end
 
       should "ignore non-matching devices if device_type is not :all" do
         @klass.stubs(:device_type).returns(:foo)
 
         media = [mock_medium(:foo), mock_medium(:bar)]
-        result = @klass.populate_relationship(nil, media)
+        result = @klass.populate_array_relationship(nil, media)
         assert_equal 1, result.length
+      end
+    end
+
+    context "populating a single relationship" do
+      setup do
+        @subclasses = []
+        @klass.stubs(:subclasses).returns(@subclasses)
+        @imedium.stubs(:get_device_type).returns(nil)
+      end
+
+      def mock_subclass(device_type)
+        subclass = mock("subclass")
+        subclass.stubs(:device_type).returns(device_type)
+        subclass
+      end
+
+      should "instantiate the matching subclass" do
+        type = :foo
+        result = mock("result")
+        matching = mock_subclass(type)
+        matching.expects(:new).with(@imedium).once.returns(result)
+        @subclasses << matching
+        @imedium.stubs(:get_device_type).returns(type)
+
+        assert_equal result, @klass.populate_single_relationship(nil, @imedium)
+      end
+
+      should "return a Medium if nothing matches" do
+        result = mock("result")
+        @klass.expects(:new).with(@imedium).returns(result)
+        assert_equal result, @klass.populate_single_relationship(nil, @imedium)
       end
     end
   end
