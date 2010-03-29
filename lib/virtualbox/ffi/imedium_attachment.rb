@@ -23,7 +23,7 @@ module VirtualBox
           member :GetController, :getter, :unicode_string
           member :GetPort, :getter, PRInt32
           member :GetDevice, :getter, PRInt32
-          member :GetType, :getter, PRInt32
+          member :GetType, :getter, :DeviceType
           member :GetPassthrough, :getter, PRBool
         end
       end
