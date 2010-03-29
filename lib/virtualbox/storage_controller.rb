@@ -43,6 +43,8 @@ module VirtualBox
     attribute :parent, :readonly => true
     attribute :name, :interface_getter => :get_name
     attribute :ports, :interface_getter => :get_port_count
+    attribute :bus, :interface_getter => :get_bus
+    attribute :controller_type, :interface_getter => :get_controller_type
     # relationship :devices, AttachedDevice, :dependent => :destroy
 
     class <<self
