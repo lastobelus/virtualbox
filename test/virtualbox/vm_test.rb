@@ -88,10 +88,16 @@ class VMTest < Test::Unit::TestCase
   context "initializing attributes" do
     setup do
       @klass.any_instance.stubs(:load_interface_attributes)
+      @klass.any_instance.stubs(:populate_relationships)
     end
 
     should "load interface attribtues" do
       @klass.any_instance.expects(:load_interface_attributes).with(@interface).once
+      @klass.new(@interface)
+    end
+
+    should "populate relationships" do
+      @klass.any_instance.expects(:populate_relationships).with(@interface).once
       @klass.new(@interface)
     end
 
@@ -133,6 +139,7 @@ class VMTest < Test::Unit::TestCase
         @parent.expects(:open_session).with(@session, @uuid).in_sequence(save_seq)
         @session.expects(:get_machine).returns(@locked_interface).in_sequence(save_seq)
         @instance.expects(:save_changed_interface_attributes).with(@locked_interface).in_sequence(save_seq)
+        @instance.expects(:save_relationships).with(@locked_interface).in_sequence(save_seq)
         @locked_interface.expects(:save_settings).once.in_sequence(save_seq)
         @session.expects(:close).in_sequence(save_seq)
 

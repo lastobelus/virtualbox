@@ -19,6 +19,7 @@ require 'nokogiri'
   'virtualbox/usb',
   'virtualbox/shared_folder',
   'virtualbox/storage_controller',
+  'virtualbox/bios',
   'virtualbox/vm',
   'virtualbox/media',
   'virtualbox/global',

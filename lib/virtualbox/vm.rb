@@ -125,6 +125,7 @@ module VirtualBox
     # attribute :vrdpauthtimeout
     attribute :state, :readonly => true, :interface_getter => :get_state
     attribute :imachine, :readonly => true
+    relationship :bios, BIOS
     # relationship :nics, Nic
     # relationship :usbs, USB
     # relationship :storage_controllers, StorageController, :dependent => :destroy
@@ -180,12 +181,14 @@ module VirtualBox
 
       write_attribute(:imachine, imachine)
       initialize_attributes(imachine)
-      #populate_relationships(data)
     end
 
     def initialize_attributes(machine)
       # Load the interface attributes
       load_interface_attributes(machine)
+
+      # Setup the relationships
+      populate_relationships(imachine)
 
       # Clear dirtiness, since this should only be called initially and
       # therefore shouldn't affect dirtiness
@@ -224,7 +227,11 @@ module VirtualBox
       # Use setters to save the attributes on the locked machine and persist
       # the settings
       machine = session.get_machine
+
+      # Save all the attributes and relationships
       save_changed_interface_attributes(machine)
+      save_relationships(machine)
+
       machine.save_settings
 
       # Close the session
