@@ -101,16 +101,8 @@ module VirtualBox
     # attribute :hwvirtexexcl
     # attribute :nestedpaging
     # attribute :vtxvpid
-    # attribute :acpi, :interface_getter => Proc.new { |m| m.get_bios_settings.get_acpi_enabled }
-    # attribute :ioapic, :interface_getter => Proc.new { |m| m.get_bios_settings.get_ioapic_enabled }
     attribute :accelerate3d, :interface_getter => :get_accelerate_3d_enabled, :interface_setter => :set_accelerate_3d_enabled
     attribute :accelerate2dvideo, :interface_getter => :get_accelerate_2d_video_enabled, :interface_setter => :set_accelerate_2d_video_enabled
-    # TODO: BIOS Settings
-    # attribute :biosbootmenu, :populate_key => :bootmenu
-    # attribute :boot1
-    # attribute :boot2
-    # attribute :boot3
-    # attribute :boot4
     attribute :clipboard, :interface_getter => :get_clipboard_mode, :interface_setter => :set_clipboard_count
     attribute :monitorcount, :interface_getter => :get_monitor_count, :interface_setter => :set_monitor_count
     # TODO: USB, Audio, VRDP settings
