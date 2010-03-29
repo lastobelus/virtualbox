@@ -296,7 +296,7 @@ module VirtualBox
     # of data. To prevent data loss, see {#shutdown}
     #
     # @return [Boolean] True if command was successful, false otherwise.
-    def stop(raise_errors=false)
+    def stop
       control(:power_down)
     end
 
@@ -304,14 +304,14 @@ module VirtualBox
     # again by calling {#resume}
     #
     # @return [Boolean] True if command was successful, false otherwise.
-    def pause(raise_errors=false)
+    def pause
       control(:pause)
     end
 
     # Resume a paused VM.
     #
     # @return [Boolean] True if command was successful, false otherwise.
-    def resume(raise_errors=false)
+    def resume
       control(:resume)
     end
 
@@ -319,7 +319,7 @@ module VirtualBox
     # again by calling "{#start}" again.
     #
     # @return [Boolean] True if command was successful, false otherwise.
-    def save_state(raise_errors=false)
+    def save_state
       control(:save_state)
     end
 
@@ -327,7 +327,7 @@ module VirtualBox
     # and can still be started by calling {#start}.
     #
     # @return [Boolean] True if command was successful, false otherwise.
-    def discard_state(raise_errors=false)
+    def discard_state
       control(:forget_saved_state, true)
     end
 
