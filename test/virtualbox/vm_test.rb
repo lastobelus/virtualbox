@@ -118,23 +118,27 @@ class VMTest < Test::Unit::TestCase
       @instance = @klass.new(@interface)
     end
 
+    def setup_session_mocks
+      @parent = mock("parent")
+      @session = mock("session")
+      @lib = mock("lib")
+      @progress = mock("progress")
+
+      @session.stubs(:close)
+      @progress.stubs(:wait_for_completion)
+      @lib.stubs(:session).returns(@session)
+      @uuid = :foo
+
+      VirtualBox::Lib.stubs(:lib).returns(@lib)
+      @interface.stubs(:get_parent).returns(@parent)
+      @instance.stubs(:imachine).returns(@interface)
+      @instance.stubs(:uuid).returns(@uuid)
+      @instance.stubs(:running).returns(false)
+    end
+
     context "starting" do
       setup do
-        @parent = mock("parent")
-        @session = mock("session")
-        @lib = mock("lib")
-        @progress = mock("progress")
-
-        @session.stubs(:close)
-        @progress.stubs(:wait_for_completion)
-        @lib.stubs(:session).returns(@session)
-        @uuid = :foo
-
-        VirtualBox::Lib.stubs(:lib).returns(@lib)
-        @interface.stubs(:get_parent).returns(@parent)
-        @instance.stubs(:imachine).returns(@interface)
-        @instance.stubs(:uuid).returns(@uuid)
-        @instance.stubs(:running).returns(false)
+        setup_session_mocks
       end
 
       should "open remote session using the given mode, wait for completion, then close" do
@@ -152,18 +156,65 @@ class VMTest < Test::Unit::TestCase
       end
     end
 
+    context "controlling" do
+      setup do
+        setup_session_mocks
+
+        @parent.stubs(:open_existing_session)
+
+        @console = mock("console")
+        @console.stubs(:send)
+        @session.stubs(:get_console).returns(@console)
+
+        @method = :foo
+      end
+
+      should "get an existing, session, send the command, and close" do
+        method = :foo
+        control_seq = sequence("control_seq")
+        @parent.expects(:open_existing_session).with(@session, @uuid).once.in_sequence(control_seq)
+        @console.expects(:send).with(@method).once.in_sequence(control_seq)
+        @session.expects(:close).in_sequence(control_seq)
+
+        @instance.control(@method)
+      end
+
+      should "wait for completion if an IProgress is returned" do
+        progress = mock("IProgress")
+        progress.stubs(:is_a?).with(VirtualBox::FFI::IProgress).returns(true)
+        progress.expects(:wait_for_completion).with(-1).once
+        @console.expects(:send).with(@method).returns(progress)
+        @instance.control(@method)
+      end
+
+      should "forward other args" do
+        @console.expects(:send).with(@method, 1, 2, 3).once
+        @instance.control(@method, 1, 2, 3)
+      end
+    end
+
+    context "control helpers" do
+      should "call the proper control method" do
+        methods = {
+          :shutdown => :power_button,
+          :stop => :power_down,
+          :pause => :pause,
+          :resume => :resume,
+          :save_state => :save_state,
+          :discard_state => [:forget_saved_state, true]
+        }
+
+        methods.each do |method, control|
+          control = [control] unless control.is_a?(Array)
+          @instance.expects(:control).with(*control).once
+          @instance.send(method)
+        end
+      end
+    end
+
     context "saving" do
       setup do
-        @parent = mock("parent")
-        @session = mock("session")
-        @lib = mock("lib")
-        @lib.stubs(:session).returns(@session)
-        @uuid = :foo
-
-        VirtualBox::Lib.stubs(:lib).returns(@lib)
-        @interface.stubs(:get_parent).returns(@parent)
-        @instance.stubs(:imachine).returns(@interface)
-        @instance.stubs(:uuid).returns(@uuid)
+        setup_session_mocks
 
         @locked_interface = mock("locked_interface")
       end

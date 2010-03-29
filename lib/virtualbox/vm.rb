@@ -286,61 +286,49 @@ module VirtualBox
     # installations don't respond to the ACPI power button at all. In such cases,
     # {#stop} or {#save_state} may be used instead.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def shutdown(raise_errors=false)
-      # TODO
+    def shutdown
+      control(:power_button)
     end
 
     # Stops the VM by directly calling "poweroff." Immediately halts the
     # virtual machine without saving state. This could result in a loss
     # of data. To prevent data loss, see {#shutdown}
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def stop(raise_errors=false)
-      # TODO
+      control(:power_down)
     end
 
     # Pauses the VM, putting it on hold temporarily. The VM can be resumed
     # again by calling {#resume}
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def pause(raise_errors=false)
-      # TODO
+      control(:pause)
     end
 
     # Resume a paused VM.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def resume(raise_errors=false)
-      # TODO
+      control(:resume)
     end
 
     # Saves the state of a VM and stops it. The VM can be resumed
     # again by calling "{#start}" again.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def save_state(raise_errors=false)
-      # TODO
+      control(:save_state)
     end
 
     # Discards any saved state on the current VM. The VM is not destroyed though
     # and can still be started by calling {#start}.
     #
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def discard_state(raise_errors=false)
-      # TODO
+      control(:forget_saved_state, true)
     end
 
     # Controls the virtual machine. This method is used by {#stop},
@@ -349,11 +337,18 @@ module VirtualBox
     # instead call those.
     #
     # @param [String] command The command to run on controlvm
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
-    def control(command, raise_errors=false)
-      # TODO
+    def control(command, *args)
+      # Grab the session using an existing session
+      session = Lib.lib.session
+      imachine.get_parent.open_existing_session(session, uuid)
+
+      # Send the proper command, waiting if we have to
+      result = session.get_console.send(command, *args)
+      result.wait_for_completion(-1) if result.is_a?(FFI::IProgress)
+
+      # Close the session
+      session.close
     end
 
     # Destroys the virtual machine. This method also removes all attached
