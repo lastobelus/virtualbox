@@ -260,15 +260,12 @@ module VirtualBox
     # variety of modes:
     #
     # * **gui** -- The VirtualBox GUI will open with the screen of the VM.
-    # * **headless** -- The VM will run in the background. No GUI will be
+    # * **vrdp** -- The VM will run in the background. No GUI will be
     #   present at all.
     #
-    # All modes will start their processes and return almost immediately.
-    # Both the GUI and headless mode will not block the ruby process.
+    # This method blocks while the external processes are starting.
     #
     # @param [Symbol] mode Described above.
-    # @param [Boolean] raise_errors If true, {Exceptions::CommandFailedException}
-    #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def start(mode="gui")
       return false if running?
