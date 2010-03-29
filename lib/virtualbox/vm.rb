@@ -118,9 +118,9 @@ module VirtualBox
     attribute :state, :readonly => true, :interface_getter => :get_state
     attribute :imachine, :readonly => true
     relationship :bios, BIOS
+    relationship :storage_controllers, StorageController, :dependent => :destroy
     # relationship :nics, Nic
     # relationship :usbs, USB
-    # relationship :storage_controllers, StorageController, :dependent => :destroy
     # relationship :shared_folders, SharedFolder
     # relationship :extra_data, ExtraData
     # relationship :forwarded_ports, ForwardedPort

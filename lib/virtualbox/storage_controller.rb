@@ -41,10 +41,9 @@ module VirtualBox
   #
   class StorageController < AbstractModel
     attribute :parent, :readonly => true
-    attribute :name
-    attribute :type
-    attribute :ports, :populate_key => :portcount
-    relationship :devices, AttachedDevice, :dependent => :destroy
+    attribute :name, :interface_getter => :get_name
+    attribute :ports, :interface_getter => :get_port_count
+    # relationship :devices, AttachedDevice, :dependent => :destroy
 
     class <<self
       # Populates a relationship with another model.
@@ -52,13 +51,11 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<StorageController>]
-      def populate_relationship(caller, doc)
+      def populate_relationship(caller, imachine)
         relation = Proxies::Collection.new(caller)
 
-        counter = 0
-        doc.css("StorageControllers StorageController").each do |sc|
-          relation << new(counter, caller, sc)
-          counter += 1
+        imachine.get_storage_controllers.each do |icontroller|
+          relation << new(caller, icontroller)
         end
 
         relation
@@ -86,19 +83,11 @@ module VirtualBox
     # this method shouldn't be called. Instead, storage controllers
     # can be retrieved through relationships of other models such
     # as {VM}.
-    def initialize(index, caller, data)
+    def initialize(caller, icontroller)
       super()
 
-      @index = index
-
-      # Setup the index specific attributes
-      populate_data = {}
-      data.attributes.each do |key,value|
-        populate_data[key.downcase.to_sym] = value.to_s
-      end
-
-      populate_attributes(populate_data.merge({:parent => caller}), :ignore_relationships => true)
-      populate_relationship(:devices, data)
+      populate_attributes({:parent => caller}, :ignore_relationships => true)
+      load_interface_attributes(icontroller)
     end
   end
 end
