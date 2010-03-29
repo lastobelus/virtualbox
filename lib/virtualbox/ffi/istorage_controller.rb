@@ -17,6 +17,14 @@ module VirtualBox
     callback :isc_GetIDEEmulationPort, [:pointer, PRInt32, :pointer], NSRESULT_TYPE
     callback :isc_SetIDEEmulationPort, [:pointer, PRInt32, PRInt32], NSRESULT_TYPE
 
+    class StorageBus < Enum
+      map [:null, :ide, :sata, :scsi, :floppy]
+    end
+
+    class StorageControllerType < Enum
+      map [:null, :lsi_logic, :bus_logic, :intel_ahci, :piix3, :piix4, :ich6, :i82078]
+    end
+
     class IStorageController < VTblParent
       parent_of :IStorageController_vtbl
     end
@@ -34,9 +42,9 @@ module VirtualBox
           member :SetInstance, :function, [PRUint32]
           member :GetPortCount, :getter, PRUint32
           member :SetPortCount, :function, [PRUint32]
-          member :GetBus, :getter, PRUint32
-          member :GetControllerType, :getter, PRUint32
-          member :SetControllerType, :function, [PRUint32]
+          member :GetBus, :getter, :StorageBus
+          member :GetControllerType, :getter, :StorageControllerType
+          member :SetControllerType, :function, [:StorageControllerType]
           member :GetIDEEmulationPort, :function, [PRInt32, [:out, PRInt32]]
           member :SetIDEEmulationPort, :function, [PRInt32, PRInt32]
         end
