@@ -109,7 +109,7 @@ module VirtualBox
       # member of the relationship.
       #
       # **This method typically won't be used except internally.**
-      def save_relationship(caller, data)
+      def save_relationship(caller, data, imachine)
         data.each do |fp|
           fp.save
         end

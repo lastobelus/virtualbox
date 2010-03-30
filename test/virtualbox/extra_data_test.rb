@@ -52,7 +52,7 @@ class ExtraDataTest < Test::Unit::TestCase
         object = mock("object")
         object.expects(:save).once
 
-        VirtualBox::ExtraData.save_relationship(@caller, object)
+        VirtualBox::ExtraData.save_relationship(@caller, object, @interface)
       end
     end
   end

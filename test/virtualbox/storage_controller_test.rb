@@ -66,6 +66,16 @@ class StorageControllerTest < Test::Unit::TestCase
       @instance = @klass.new(@parent, @interface)
       assert !@instance.new_record?
     end
+
+    should "setup parent" do
+      @instance = @klass.new(@parent, @interface)
+      assert_equal @parent, @instance.parent
+    end
+
+    should "setup interface" do
+      @instance = @klass.new(@parent, @interface)
+      assert_equal @interface, @instance.interface
+    end
   end
 
   context "instance methods" do

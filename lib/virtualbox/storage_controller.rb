@@ -41,10 +41,11 @@ module VirtualBox
   #
   class StorageController < AbstractModel
     attribute :parent, :readonly => true
+    attribute :interface, :readonly => true
     attribute :name, :interface_getter => :get_name
     attribute :ports, :interface_getter => :get_port_count
     attribute :bus, :interface_getter => :get_bus
-    attribute :controller_type, :interface_getter => :get_controller_type
+    attribute :controller_type, :interface_getter => :get_controller_type, :interface_setter => :set_controller_type
 
     class <<self
       # Populates a relationship with another model.
@@ -73,8 +74,8 @@ module VirtualBox
       # member of the relationship.
       #
       # **This method typically won't be used except internally.**
-      def save_relationship(caller, data)
-        data.each do |sc|
+      def save_relationship(caller, controllers, imachine)
+        controllers.each do |sc|
           sc.save
         end
       end
@@ -87,8 +88,19 @@ module VirtualBox
     def initialize(caller, icontroller)
       super()
 
-      populate_attributes({:parent => caller}, :ignore_relationships => true)
+      populate_attributes({
+        :parent => caller,
+        :interface => icontroller
+      }, :ignore_relationships => true)
       load_interface_attributes(icontroller)
+    end
+
+    # Saves the storage controller. This method shouldn't be called directly.
+    # Instead, {VM#save} should be called, which will save all attached storage
+    # controllers as well. This will setup the proper parameter for `interface`
+    # here.
+    def save
+      save_changed_interface_attributes(interface)
     end
   end
 end

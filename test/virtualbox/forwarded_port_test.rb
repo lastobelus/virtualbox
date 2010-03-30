@@ -8,6 +8,8 @@ class ForwardedPortTest < Test::Unit::TestCase
 
     @caller = mock("caller")
     @caller.stubs(:network_adapter).returns(@nics)
+
+    @interface = mock("interface")
   end
 
   context "validations" do
@@ -223,7 +225,7 @@ class ForwardedPortTest < Test::Unit::TestCase
           objects.push(object)
         end
 
-        VirtualBox::ForwardedPort.save_relationship(@caller, objects)
+        VirtualBox::ForwardedPort.save_relationship(@caller, objects, @interface)
       end
     end
 
