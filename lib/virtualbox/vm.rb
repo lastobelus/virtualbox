@@ -121,9 +121,9 @@ module VirtualBox
     relationship :storage_controllers, StorageController, :dependent => :destroy
     relationship :medium_attachments, MediumAttachment
     relationship :shared_folders, SharedFolder
+    relationship :extra_data, ExtraData
     # relationship :nics, Nic
     # relationship :usbs, USB
-    # relationship :extra_data, ExtraData
     # relationship :forwarded_ports, ForwardedPort
 
     class <<self
