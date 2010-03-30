@@ -55,7 +55,7 @@ module VirtualBox
     callback :im_GetCurrentSnapshot, [:pointer, :pointer], NSRESULT_TYPE
     callback :im_GetSnapshotCount, [:pointer, :pointer], NSRESULT_TYPE
     callback :im_GetCurrentStateModified, [:pointer, :pointer], NSRESULT_TYPE
-    callback :im_GetSharedFolders, [:pointer, :pointer], NSRESULT_TYPE
+    callback :im_GetSharedFolders, [:pointer, :pointer, :pointer], NSRESULT_TYPE
     callback :im_GetClipboardMode, [:pointer, :pointer], NSRESULT_TYPE
     callback :im_SetClipboardMode, [:pointer, PRUint32], NSRESULT_TYPE
     callback :im_GetGuestPropertyNotificationPatterns, [:pointer, :pointer], NSRESULT_TYPE

@@ -120,9 +120,9 @@ module VirtualBox
     relationship :bios, BIOS
     relationship :storage_controllers, StorageController, :dependent => :destroy
     relationship :medium_attachments, MediumAttachment
+    relationship :shared_folders, SharedFolder
     # relationship :nics, Nic
     # relationship :usbs, USB
-    # relationship :shared_folders, SharedFolder
     # relationship :extra_data, ExtraData
     # relationship :forwarded_ports, ForwardedPort
 

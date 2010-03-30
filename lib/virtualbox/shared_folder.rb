@@ -86,8 +86,8 @@ module VirtualBox
   #
   class SharedFolder < AbstractModel
     attribute :parent, :readonly => :readonly
-    attribute :name
-    attribute :hostpath
+    attribute :name,  :interface_getter => :get_name
+    attribute :hostpath, :interface_getter => :get_host_path
 
     class <<self
       # Populates the shared folder relationship for anything which is related to it.
@@ -95,27 +95,14 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<SharedFolder>]
-      def populate_relationship(caller, doc)
+      def populate_relationship(caller, imachine)
         relation = Proxies::Collection.new(caller)
 
-        counter = 1
-        doc.css("Hardware SharedFolders SharedFolder").each do |folder|
-          relation << new(counter, caller, folder)
-          counter += 1
+        imachine.get_shared_folders.each do |ishared|
+          relation << new(caller, ishared)
         end
 
         relation
-      end
-
-      # Saves the relationship. This simply calls {#save} on every
-      # member of the relationship.
-      #
-      # **This method typically won't be used except internally.**
-      def save_relationship(caller, data)
-        # Just call save on each folder with the VM
-        data.each do |sf|
-          sf.save
-        end
       end
     end
 
@@ -134,44 +121,23 @@ module VirtualBox
     def initialize(*args)
       super()
 
-      if args.length == 3
-        initialize_for_relationship(*args)
-      elsif args.length == 1
-        initialize_for_data(*args)
-      elsif args.length == 0
-        return
-      else
-        raise NoMethodError.new
-      end
+      initialize_attributes(*args)
     end
 
-    # Initializes the record for use in a relationship. This
-    # is automatically called by {#initialize} if it has three
-    # parameters.
-    #
-    # **This method typically won't be used except internally.**
-    def initialize_for_relationship(index, caller, data)
-      # Setup the index specific attributes
-      populate_data = {}
-      data.attributes.each do |key, value|
-        populate_data[key.downcase.to_sym] = value.to_s
-      end
+    # Initializes the attributes of an existing shared folder.
+    def initialize_attributes(parent, ishared)
+      # Set the parent
+      write_attribute(:parent, parent)
 
-      populate_attributes(populate_data.merge({
-        :parent => caller
-      }))
-    end
+      # Load the interface attributes
+      load_interface_attributes(ishared)
 
-    # Initializes a record with initial data but keeping it a "new
-    # record." This is called automatically if {#initialize} is given
-    # only a single parameter. View {#initialize} for documentation.
-    def initialize_for_data(data)
-      self.class.attributes.each do |name, options|
-        data[options[:populate_key]] = data[name]
-      end
+      # Clear dirtiness, since this should only be called initially and
+      # therefore shouldn't affect dirtiness
+      clear_dirty!
 
-      populate_attributes(data)
-      new_record!
+      # But this is an existing record
+      existing_record!
     end
 
     # Validates a shared folder.
@@ -189,24 +155,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def save(raise_errors=false)
-      return true unless changed?
-
-      if !valid?
-        raise Exceptions::ValidationFailedException.new(errors) if raise_errors
-        return false
-      end
-
-      # If this isn't a new record, we destroy it first
-      destroy(raise_errors) if !new_record?
-
-      Command.vboxmanage("sharedfolder", "add", parent.name, "--name", name, "--hostpath", hostpath)
-      existing_record!
-      clear_dirty!
-
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
+      # TODO
     end
 
     # Relationship callback when added to a collection. This is automatically
@@ -224,15 +173,7 @@ module VirtualBox
     #   will be raised if the command failed.
     # @return [Boolean] True if command was successful, false otherwise.
     def destroy(raise_errors=false)
-      # If the name changed, we have to be sure to use the previous
-      # one.
-      name_value = name_changed? ? name_was : name
-
-      Command.vboxmanage("sharedfolder", "remove", parent.name, "--name", name_value)
-      true
-    rescue Exceptions::CommandFailedException
-      raise if raise_errors
-      false
-    end
+     # TODO
+   end
   end
 end
