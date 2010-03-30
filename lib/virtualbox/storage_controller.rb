@@ -45,7 +45,6 @@ module VirtualBox
     attribute :ports, :interface_getter => :get_port_count
     attribute :bus, :interface_getter => :get_bus
     attribute :controller_type, :interface_getter => :get_controller_type
-    # relationship :devices, AttachedDevice, :dependent => :destroy
 
     class <<self
       # Populates a relationship with another model.

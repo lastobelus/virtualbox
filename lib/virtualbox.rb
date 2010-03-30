@@ -12,7 +12,6 @@ require 'nokogiri'
   'virtualbox/proxies/collection',
   'virtualbox/medium',
   'virtualbox/medium_attachment',
-  'virtualbox/attached_device',
   'virtualbox/dvd',
   'virtualbox/extra_data',
   'virtualbox/forwarded_port',
