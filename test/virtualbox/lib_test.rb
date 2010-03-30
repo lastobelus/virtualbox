@@ -7,39 +7,34 @@ class LibTest < Test::Unit::TestCase
     end
 
     should "return the path if its set" do
+      File.expects(:expand_path).with("foo").returns("expanded_foo")
       VirtualBox::Lib.lib_path = "foo"
-      File.expects(:expand_path).with("foo").returns("foo")
-      assert_equal "foo", VirtualBox::Lib.lib_path
+      assert_equal "expanded_foo", VirtualBox::Lib.lib_path
     end
 
     should "return Mac-path if on mac" do
-      result = "/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"
+      result = ["/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"]
       VirtualBox::Platform.stubs(:mac?).returns(true)
 
-      expanded_result = result + result
-      File.expects(:expand_path).with(result).returns(expanded_result)
-      assert_equal expanded_result, VirtualBox::Lib.lib_path
+      assert_equal result, VirtualBox::Lib.lib_path
     end
 
     should "return Windows-path if on windows" do
       result = "Unknown"
       VirtualBox::Platform.stubs(:mac?).returns(false)
+      VirtualBox::Platform.stubs(:linux?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(true)
 
-      expanded_result = result + result
-      File.expects(:expand_path).with(result).returns(expanded_result)
-      assert_equal expanded_result, VirtualBox::Lib.lib_path
+      assert_equal result, VirtualBox::Lib.lib_path
     end
 
     should "return Linux-path if on linux" do
-      result = "Unknown"
+      result = ["/opt/VirtualBox/VBoxXPCOMC.so", "/usr/lib/virtualbox/VBoxXPCOMC.so"]
       VirtualBox::Platform.stubs(:mac?).returns(false)
       VirtualBox::Platform.stubs(:windows?).returns(false)
       VirtualBox::Platform.stubs(:linux?).returns(true)
 
-      expanded_result = result + result
-      File.expects(:expand_path).with(result).returns(expanded_result)
-      assert_equal expanded_result, VirtualBox::Lib.lib_path
+      assert_equal result, VirtualBox::Lib.lib_path
     end
 
     should "return 'unknown' otherwise" do
@@ -48,9 +43,7 @@ class LibTest < Test::Unit::TestCase
       VirtualBox::Platform.stubs(:windows?).returns(false)
       VirtualBox::Platform.stubs(:linux?).returns(false)
 
-      expanded_result = result + result
-      File.expects(:expand_path).with(result).returns(expanded_result)
-      assert_equal expanded_result, VirtualBox::Lib.lib_path
+      assert_equal result, VirtualBox::Lib.lib_path
     end
   end
 

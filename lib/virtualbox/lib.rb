@@ -29,7 +29,7 @@ module VirtualBox
       #
       # @param [String] Full path to the VBoxXPCOMC library
       def lib_path=(value)
-        @@lib_path = value
+        @@lib_path = value.nil? ? value : File.expand_path(value)
       end
 
       # Returns the path to the virtual box library. If the path
@@ -38,15 +38,17 @@ module VirtualBox
       def lib_path
         if @@lib_path.nil?
           if Platform.mac?
-            @@lib_path = "/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"
-          elsif Platform.linux? || Platform.windows?
+            @@lib_path = ["/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"]
+          elsif Platform.linux?
+            @@lib_path = ["/opt/VirtualBox/VBoxXPCOMC.so", "/usr/lib/virtualbox/VBoxXPCOMC.so"]
+          elsif Platform.windows?
             @@lib_path = "Unknown"
           else
             @@lib_path = "Unknown"
           end
         end
 
-        File.expand_path(@@lib_path)
+        @@lib_path
       end
     end
 
