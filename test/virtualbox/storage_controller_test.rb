@@ -9,7 +9,26 @@ class StorageControllerTest < Test::Unit::TestCase
   end
 
   context "class methods" do
-    context "populating relationships" do
+    context "populating relationship" do
+      setup do
+        # Defaulting for non-specified parameters
+        @interface.stubs(:is_a?).returns(false)
+      end
+
+      should "populate array relationship if IMachine is given" do
+        @interface.expects(:is_a?).with(VirtualBox::FFI::IMachine).returns(true)
+        @klass.expects(:populate_array_relationship).once.with(@parent, @interface)
+        @klass.populate_relationship(@parent, @interface)
+      end
+
+      should "populate attachment relationship if MediumAttachment is given" do
+        @interface.expects(:is_a?).with(VirtualBox::MediumAttachment).returns(true)
+        @klass.expects(:populate_attachment_relationship).once.with(@parent, @interface)
+        @klass.populate_relationship(@parent, @interface)
+      end
+    end
+
+    context "populating array (has many) relationship" do
       setup do
         @instance = mock("instance")
 
@@ -25,7 +44,7 @@ class StorageControllerTest < Test::Unit::TestCase
       end
 
       should "return a proxied collection" do
-        result = @klass.populate_relationship(nil, @interface)
+        result = @klass.populate_array_relationship(nil, @interface)
         assert result.is_a?(VirtualBox::Proxies::Collection)
       end
 
@@ -42,7 +61,33 @@ class StorageControllerTest < Test::Unit::TestCase
           expected_result << expected_value
         end
 
-        assert_equal expected_result, @klass.populate_relationship(@parent, @interface)
+        assert_equal expected_result, @klass.populate_array_relationship(@parent, @interface)
+      end
+    end
+
+    context "populating relationship for a MediumAttachment" do
+      setup do
+        @controllers = []
+
+        @machine = mock("machine")
+        @machine.stubs(:storage_controllers).returns(@controllers)
+
+        @interface.stubs(:parent).returns(@machine)
+      end
+
+      should "return nil if no controllers match" do
+        assert_nil @klass.populate_attachment_relationship(@parent, @interface)
+      end
+
+      should "return the controller with matching name" do
+        name = :foo
+        @interface.stubs(:controller_name).returns(name)
+
+        controller = mock("controller")
+        controller.stubs(:name).returns(:foo)
+        @controllers << controller
+
+        assert_equal controller, @klass.populate_attachment_relationship(@parent, @interface)
       end
     end
   end

@@ -100,7 +100,7 @@ module VirtualBox
     attribute :clipboard, :interface_getter => :get_clipboard_mode, :interface_setter => :set_clipboard_count
     attribute :monitorcount, :interface_getter => :get_monitor_count, :interface_setter => :set_monitor_count
     attribute :state, :readonly => true, :interface_getter => :get_state
-    attribute :imachine, :readonly => true
+    attribute :interface, :readonly => true
     relationship :bios, BIOS
     relationship :storage_controllers, StorageController, :dependent => :destroy
     relationship :medium_attachments, MediumAttachment
@@ -155,7 +155,7 @@ module VirtualBox
     def initialize(imachine)
       super()
 
-      write_attribute(:imachine, imachine)
+      write_attribute(:interface, imachine)
       initialize_attributes(imachine)
     end
 
@@ -164,7 +164,7 @@ module VirtualBox
       load_interface_attributes(machine)
 
       # Setup the relationships
-      populate_relationships(imachine)
+      populate_relationships(machine)
 
       # Clear dirtiness, since this should only be called initially and
       # therefore shouldn't affect dirtiness
@@ -198,7 +198,7 @@ module VirtualBox
       session = Lib.lib.session
 
       # Open up a session for this virtual machine
-      imachine.get_parent.open_session(session, uuid)
+      interface.get_parent.open_session(session, uuid)
 
       # Use setters to save the attributes on the locked machine and persist
       # the settings
@@ -257,7 +257,7 @@ module VirtualBox
       # Open a new remote session, this will automatically start the machine
       # as well
       session = Lib.lib.session
-      imachine.get_parent.open_remote_session(session, uuid, mode.to_s, "").wait_for_completion(-1)
+      interface.get_parent.open_remote_session(session, uuid, mode.to_s, "").wait_for_completion(-1)
 
       # Close our session to release our lock from the machine
       session.close
@@ -325,7 +325,7 @@ module VirtualBox
     def control(command, *args)
       # Grab the session using an existing session
       session = Lib.lib.session
-      imachine.get_parent.open_existing_session(session, uuid)
+      interface.get_parent.open_existing_session(session, uuid)
 
       # Send the proper command, waiting if we have to
       result = session.get_console.send(command, *args)

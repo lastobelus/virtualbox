@@ -53,7 +53,20 @@ module VirtualBox
       # **This method typically won't be used except internally.**
       #
       # @return [Array<StorageController>]
-      def populate_relationship(caller, imachine)
+      def populate_relationship(caller, data)
+        if data.is_a?(FFI::IMachine)
+          populate_array_relationship(caller, data)
+        elsif data.is_a?(MediumAttachment)
+          populate_attachment_relationship(caller, data)
+        end
+      end
+
+      # Populates a has many relationship for a {VM}.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Array<StorageController>]
+      def populate_array_relationship(caller, imachine)
         relation = Proxies::Collection.new(caller)
 
         imachine.get_storage_controllers.each do |icontroller|
@@ -61,6 +74,18 @@ module VirtualBox
         end
 
         relation
+      end
+
+      # Populates a single relationship for a {MediumAttachment}.
+      #
+      # **This method typically won't be used except internally.**
+      #
+      # @return [Array<StorageController>]
+      def populate_attachment_relationship(caller, attachment)
+        # Find the storage controller with the matching name
+        attachment.parent.storage_controllers.find do |sc|
+          sc.name == attachment.controller_name
+        end
       end
 
       # Destroys a relationship with another model.
