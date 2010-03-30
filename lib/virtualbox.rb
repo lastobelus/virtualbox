@@ -17,7 +17,6 @@ require 'nokogiri'
   'virtualbox/forwarded_port',
   'virtualbox/hard_drive',
   'virtualbox/network_adapter',
-  'virtualbox/usb',
   'virtualbox/shared_folder',
   'virtualbox/storage_controller',
   'virtualbox/bios',
