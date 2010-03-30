@@ -95,26 +95,10 @@ module VirtualBox
     attribute :memory, :interface_getter => :get_memory_size, :interface_setter => :set_memory_size
     attribute :vram, :interface_getter => :get_vram_size, :interface_setter => :set_vram_size
     attribute :cpus, :interface_getter => :get_cpu_count, :interface_setter => :set_cpu_count
-    # TODO (in BIOS settings):
-    # attribute :pae
-    # attribute :hwvirtex
-    # attribute :hwvirtexexcl
-    # attribute :nestedpaging
-    # attribute :vtxvpid
     attribute :accelerate3d, :interface_getter => :get_accelerate_3d_enabled, :interface_setter => :set_accelerate_3d_enabled
     attribute :accelerate2dvideo, :interface_getter => :get_accelerate_2d_video_enabled, :interface_setter => :set_accelerate_2d_video_enabled
     attribute :clipboard, :interface_getter => :get_clipboard_mode, :interface_setter => :set_clipboard_count
     attribute :monitorcount, :interface_getter => :get_monitor_count, :interface_setter => :set_monitor_count
-    # TODO: USB, Audio, VRDP settings
-    # attribute :usb
-    # attribute :ehci
-    # attribute :audio
-    # attribute :audiocontroller
-    # attribute :audiodriver
-    # attribute :vrdp
-    # attribute :vrdpport
-    # attribute :vrdpauthtype
-    # attribute :vrdpauthtimeout
     attribute :state, :readonly => true, :interface_getter => :get_state
     attribute :imachine, :readonly => true
     relationship :bios, BIOS
@@ -123,7 +107,6 @@ module VirtualBox
     relationship :shared_folders, SharedFolder
     relationship :extra_data, ExtraData
     relationship :network_adapters, NetworkAdapter
-    # relationship :usbs, USB
     # relationship :forwarded_ports, ForwardedPort
 
     class <<self
