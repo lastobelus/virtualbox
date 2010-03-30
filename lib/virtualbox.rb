@@ -7,7 +7,6 @@ require 'nokogiri'
   'virtualbox/ffi',
   'virtualbox/exceptions',
   'virtualbox/lib',
-  'virtualbox/command',
   'virtualbox/abstract_model',
   'virtualbox/proxies/collection',
   'virtualbox/medium',
@@ -22,8 +21,7 @@ require 'nokogiri'
   'virtualbox/bios',
   'virtualbox/vm',
   'virtualbox/media',
-  'virtualbox/global',
-  'virtualbox/system_property'].each do |lib|
+  'virtualbox/global'].each do |lib|
   require File.expand_path(lib, File.dirname(__FILE__))
 end
 
@@ -31,7 +29,7 @@ module VirtualBox
   class <<self
     # Returns installed VirtualBox version like '3.1.2r56127'.
     def version
-      Command.vboxmanage("-v").chomp.strip
+      # TODO
     end
   end
 end
