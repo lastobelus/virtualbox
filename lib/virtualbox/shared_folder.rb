@@ -85,9 +85,11 @@ module VirtualBox
   #     attribute :hostpath
   #
   class SharedFolder < AbstractModel
-    attribute :parent, :readonly => :readonly
+    attribute :parent, :readonly => true
     attribute :name,  :interface_getter => :get_name
     attribute :hostpath, :interface_getter => :get_host_path
+    attribute :writable, :interface_getter => :get_writable
+    attribute :accessible, :readonly => true, :interface_getter => :get_accessible
 
     class <<self
       # Populates the shared folder relationship for anything which is related to it.
