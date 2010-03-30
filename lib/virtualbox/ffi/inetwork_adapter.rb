@@ -31,6 +31,14 @@ module VirtualBox
     callback :ina_AttachToHostOnlyInterface, [:pointer], NSRESULT_TYPE
     callback :ina_Detach, [:pointer], NSRESULT_TYPE
 
+    class NetworkAdapterType < Enum
+      map [:null, :Am79C970A, :Am79C973, :I82540EM, :I82543GC, :I82545EM, :Virtio]
+    end
+
+    class NetworkAttachmentType < Enum
+      map [:null, :nat, :bridged, :internal, :host_only]
+    end
+
     class INetworkAdapter < VTblParent
       parent_of :INetworkAdapter_vtbl
     end
@@ -40,14 +48,14 @@ module VirtualBox
         member :nsisupports, NSISupports_vtbl
 
         with_opts(:function_type_prefix => :ina_) do
-          member :GetAdapterType, :getter, PRUint32
-          member :SetAdapterType, :function, [PRUint32]
+          member :GetAdapterType, :getter, :NetworkAdapterType
+          member :SetAdapterType, :function, [:NetworkAdapterType]
           member :GetSlot, :getter, PRUint32
           member :GetEnabled, :getter, PRBool
           member :SetEnabled, :function, [PRBool]
           member :GetMACAddress, :getter, :unicode_string
           member :SetMACAddress, :function, [:unicode_string]
-          member :GetAttachmentType, :getter, PRUint32
+          member :GetAttachmentType, :getter, :NetworkAttachmentType
           member :GetHostInterface, :getter, :unicode_string
           member :SetHostInterface, :function, [:unicode_string]
           member :GetInternalNetwork, :getter, :unicode_string

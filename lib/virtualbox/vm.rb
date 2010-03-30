@@ -107,7 +107,7 @@ module VirtualBox
     relationship :shared_folders, SharedFolder
     relationship :extra_data, ExtraData
     relationship :network_adapters, NetworkAdapter
-    # relationship :forwarded_ports, ForwardedPort
+    relationship :forwarded_ports, ForwardedPort
 
     class <<self
       # Returns an array of all available VMs.
