@@ -198,8 +198,11 @@ module VirtualBox
         #
         # @return [::FFI::Struct]
         def read_struct(ptr, original_type)
+          ptr = ptr.get_pointer(0)
+          return nil if ptr.null?
+
           klass = FFI.const_get(original_type)
-          klass.new(ptr.get_pointer(0))
+          klass.new(ptr)
         end
 
         # Reads an enum

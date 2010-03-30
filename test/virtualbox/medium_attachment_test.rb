@@ -3,6 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class MediumAttachmentTest < Test::Unit::TestCase
   setup do
     @interface = mock("interface")
+    @interface.stubs(:get_medium)
     @parent = mock("parent")
 
     @klass = VirtualBox::MediumAttachment
@@ -45,6 +46,7 @@ class MediumAttachmentTest < Test::Unit::TestCase
   context "initializing" do
     setup do
       @klass.any_instance.stubs(:load_interface_attributes)
+      @klass.any_instance.stubs(:populate_relationship)
     end
 
     should "load interface attribtues" do

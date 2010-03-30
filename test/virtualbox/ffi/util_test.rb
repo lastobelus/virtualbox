@@ -277,6 +277,8 @@ class FFIUtilTest < Test::Unit::TestCase
         @klass = mock("foo_class")
 
         @sub_ptr = mock("sub_ptr")
+        @sub_ptr.stubs(:null?).returns(false)
+
         @ptr = mock("pointer")
         @ptr.stubs(:get_pointer).with(0).returns(@sub_ptr)
       end
@@ -285,6 +287,12 @@ class FFIUtilTest < Test::Unit::TestCase
         VirtualBox::FFI.expects(:const_get).with(@original_type).returns(@klass)
         @klass.expects(:new).with(@ptr.get_pointer(0)).returns(@instance)
         assert_equal @instance, VirtualBox::FFI::Util.read_struct(@ptr, @original_type)
+      end
+
+      should "return nil if pointer is null" do
+        @sub_ptr.expects(:null?).returns(true)
+        VirtualBox::FFI.expects(:const_get).never
+        assert_nil VirtualBox::FFI::Util.read_struct(@ptr, @original_type)
       end
     end
 

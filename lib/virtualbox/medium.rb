@@ -54,6 +54,8 @@ module VirtualBox
       #
       # @return [Medium]
       def populate_single_relationship(caller, medium)
+        return nil if medium.nil?
+
         subclasses.each do |subclass|
           # Skip this class unless the device type matches
           next unless subclass.device_type == medium.get_device_type

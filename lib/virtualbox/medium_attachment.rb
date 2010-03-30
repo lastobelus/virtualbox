@@ -6,6 +6,7 @@ module VirtualBox
     attribute :port, :readonly => true, :interface_getter => :get_port
     attribute :passthrough, :readonly => true, :interface_getter => :get_passthrough
     attribute :type, :readonly => true, :interface_getter => :get_type
+    relationship :medium, Medium
 
     class <<self
       # Populates a relationship with another model.
@@ -27,6 +28,7 @@ module VirtualBox
     def initialize(parent, imedium_attachment)
       populate_attributes({:parent => parent}, :ignore_relationships => true)
       load_interface_attributes(imedium_attachment)
+      populate_relationship(:medium, imedium_attachment.get_medium)
     end
   end
 end

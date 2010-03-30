@@ -101,6 +101,11 @@ class MediumTest < Test::Unit::TestCase
         @klass.expects(:new).with(@imedium).returns(result)
         assert_equal result, @klass.populate_single_relationship(nil, @imedium)
       end
+
+      should "return nil if medium given is nil" do
+        @klass.expects(:new).never
+        assert_nil @klass.populate_single_relationship(nil, nil)
+      end
     end
   end
 
