@@ -122,7 +122,7 @@ module VirtualBox
     relationship :medium_attachments, MediumAttachment
     relationship :shared_folders, SharedFolder
     relationship :extra_data, ExtraData
-    # relationship :nics, Nic
+    relationship :network_adapters, NetworkAdapter
     # relationship :usbs, USB
     # relationship :forwarded_ports, ForwardedPort
 
