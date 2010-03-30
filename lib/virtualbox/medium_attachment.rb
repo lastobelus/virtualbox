@@ -8,8 +8,8 @@ module VirtualBox
     attribute :device_slot, :readonly => true, :interface_getter => :get_device
     attribute :passthrough, :readonly => true, :interface_getter => :get_passthrough
     attribute :type, :readonly => true, :interface_getter => :get_type
-    relationship :medium, Medium
-    relationship :storage_controller, StorageController
+    relationship :medium, :Medium
+    relationship :storage_controller, :StorageController
 
     class <<self
       # Populates a relationship with another model.

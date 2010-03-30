@@ -2,8 +2,8 @@ module VirtualBox
   # Represents the media registry within the global VirtualBox configuration.
   class Media < AbstractModel
     attribute :parent, :readonly => true
-    relationship :hard_drives, HardDrive
-    relationship :dvds, DVD
+    relationship :hard_drives, :HardDrive
+    relationship :dvds, :DVD
 
     class <<self
       def populate_relationship(caller, lib)

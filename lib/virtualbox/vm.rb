@@ -101,13 +101,13 @@ module VirtualBox
     attribute :monitorcount, :interface_getter => :get_monitor_count, :interface_setter => :set_monitor_count
     attribute :state, :readonly => true, :interface_getter => :get_state
     attribute :interface, :readonly => true
-    relationship :bios, BIOS
-    relationship :storage_controllers, StorageController, :dependent => :destroy
-    relationship :medium_attachments, MediumAttachment
-    relationship :shared_folders, SharedFolder
-    relationship :extra_data, ExtraData
-    relationship :network_adapters, NetworkAdapter
-    relationship :forwarded_ports, ForwardedPort
+    relationship :bios, :BIOS
+    relationship :storage_controllers, :StorageController, :dependent => :destroy
+    relationship :medium_attachments, :MediumAttachment
+    relationship :shared_folders, :SharedFolder
+    relationship :extra_data, :ExtraData
+    relationship :network_adapters, :NetworkAdapter
+    relationship :forwarded_ports, :ForwardedPort
 
     class <<self
       # Returns an array of all available VMs.

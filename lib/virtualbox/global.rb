@@ -53,9 +53,9 @@ module VirtualBox
   class Global < AbstractModel
     attribute :lib, :readonly => true
 
-    relationship :vms, VM, :lazy => true
-    relationship :media, Media, :lazy => true
-    relationship :extra_data, ExtraData, :lazy => true
+    relationship :vms, :VM, :lazy => true
+    relationship :media, :Media, :lazy => true
+    relationship :extra_data, :ExtraData, :lazy => true
 
     @@global_data = nil
 
