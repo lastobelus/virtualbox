@@ -7,6 +7,7 @@ require 'nokogiri'
   'virtualbox/ffi',
   'virtualbox/exceptions',
   'virtualbox/lib',
+  'virtualbox/version',
   'virtualbox/abstract_model',
   'virtualbox/proxies/collection',
   'virtualbox/medium',
@@ -25,11 +26,7 @@ require 'nokogiri'
   require File.expand_path(lib, File.dirname(__FILE__))
 end
 
+# Setup the top-level module methods
 module VirtualBox
-  class <<self
-    # Returns installed VirtualBox version like '3.1.2r56127'.
-    def version
-      # TODO
-    end
-  end
+  extend Version
 end
