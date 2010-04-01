@@ -3,7 +3,7 @@ require 'nokogiri'
 
 # The virtualbox files which must be loaded prior to the rest
 libdir = File.dirname(__FILE__)
-%w{virtualbox/ext/platform virtualbox/ext/subclass_listing virtualbox/ffi
+%w{virtualbox/ext/platform virtualbox/ext/subclass_listing virtualbox/ffi virtualbox/com
   virtualbox/abstract_model virtualbox/medium}.each do |f|
   require File.expand_path(f, libdir)
 end

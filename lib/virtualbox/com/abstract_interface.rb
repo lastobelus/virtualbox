@@ -37,11 +37,11 @@ module VirtualBox
         # spec. The spec determines the arguments required, the order they
         # are required in, and any out-arguments.
         def function(name, spec, opts={})
-          members[name] = {
+          members << [name, {
             :type => :function,
             :spec => spec,
             :opts => opts
-          }
+          }]
 
           # Define the method to call the function
           define_method(name) { call_function(name) }
@@ -50,11 +50,11 @@ module VirtualBox
         # Adds a property to the interface with the given name, type, and
         # options.
         def property(name, type, opts={})
-          members[name] = {
+          members << [name, {
             :type => :property,
             :value_type => type,
             :opts => opts
-          }
+          }]
 
           # Define the method to read the property
           define_method(name) { read_property(name) }
@@ -63,22 +63,71 @@ module VirtualBox
           define_method("#{name}=".to_sym) { write_property(name) } unless opts[:readonly]
         end
 
-        # Returns the members of the interface as a hash. This hash contains
-        # both properties and functions (specified by the :type key in the value
-        # of a member).
+        # Returns the information for a given member
         #
         # @return [Hash]
-        def members
-          @members ||= {}
+        def member(name)
+          members.each do |current_name, opts|
+            if name == current_name
+              return opts
+            end
+          end
+
+          nil
         end
+
+        # Returns the members of the interface as an array.
+        #
+        # @return [Array]
+        def members
+          @members ||= []
+        end
+
+        # Returns the functions of the interface as an array in the order they
+        # were defined.
+        #
+        # @return [Array]
+        def functions
+          members.find_all do |data|
+            data[1][:type] == :function
+          end
+        end
+
+        # Returns the properties of the interface as an array in the order they
+        # were defined.
+        #
+        # @return [Array]
+        def properties
+          members.find_all do |data|
+            data[1][:type] == :property
+          end
+        end
+      end
+
+      # Reads a property with the given name by calling the read_property
+      # method on the implementer.
+      def read_property(name)
+      end
+
+      # Returns a boolean if a given function exists or not
+      def has_function?(name)
+        info = member(name)
+        !info.nil? && info[:type] == :function
       end
 
       # Returns a boolean if a given property exists or not.
       def has_property?(name)
-        members.has_key?(name) && members[name][:type] == :property
+        info = member(name)
+        !info.nil? && info[:type] == :property
       end
 
-      # Returns the members of the interface as a hash. This simply calls
+      # Returns the member of the interface specified by name. This simply
+      # calls {AbstractInterface.member}
+      def member(name)
+        self.class.member(name)
+      end
+
+      # Returns the members of the interface as an array. This simply calls
       # {AbstractInterface.members}.
       def members
         self.class.members
