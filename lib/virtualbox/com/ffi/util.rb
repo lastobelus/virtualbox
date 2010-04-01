@@ -6,6 +6,13 @@ module VirtualBox
       # function spec to a FFI parameter list to dereferencing pointers.
       class Util
         class <<self
+          # Converts a function spec from {AbstractInterface} to an FFI
+          # function spec. This handles custom types (unicode strings,
+          # arrays, and out-parameters) and will return a perfectly valid
+          # array ready to be passed into `callback`.
+          #
+          # @param [Array] spec The function spec
+          # @return [Array]
           def spec_to_ffi(spec)
             spec = spec.collect do |item|
               if item.is_a?(Array) && item[0] == :out
@@ -17,7 +24,7 @@ module VirtualBox
                   # A regular out parameter is just a single pointer
                   :pointer
                 end
-              elsif item == :unicode_string
+              elsif item == WSTRING
                 # Unicode strings are simply pointers
                 :pointer
               elsif item.to_s[0,1] == item.to_s[0,1].upcase
@@ -36,6 +43,12 @@ module VirtualBox
             spec.unshift(:pointer).flatten
           end
 
+          # An "almost complete" camel-caser. Camel cases a string with a few
+          # exceptions. For example: `get_foo` becomes `GetFoo`, but `get_os_type`
+          # becomes `GetOSType` since `os` is a special case.
+          #
+          # @param [String] string The string to camel case
+          # @return [String]
           def camelize(string)
             special_cases = {
               "os" => "OS",
@@ -48,7 +61,6 @@ module VirtualBox
             end
 
             parts.join("")
-            #string.to_s.gsub(/\/(.?)/) { "::" + $1.upcase }.gsub(/(^|_)(.)/) { $2.upcase }
           end
         end
       end
