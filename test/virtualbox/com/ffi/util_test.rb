@@ -44,7 +44,8 @@ class COMFFIUtilTest < Test::Unit::TestCase
         "foobar" => "Foobar",
         # Special cases below
         "guest_os_type" => "GuestOSType",
-        "dhcp_servers" => "DHCPServers"
+        "dhcp_servers" => "DHCPServers",
+        "dvd_images" => "DVDImages"
       }
 
       tests.each do |arg, expected|

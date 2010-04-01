@@ -39,7 +39,8 @@ module VirtualBox
           def camelize(string)
             special_cases = {
               "os" => "OS",
-              "dhcp" => "DHCP"
+              "dhcp" => "DHCP",
+              "dvd" => "DVD"
             }
 
             parts = string.to_s.split(/_/).collect do |part|
