@@ -5,6 +5,7 @@ module VirtualBox
       # file should be conditionally loaded based on OS, so that Windows users
       # don't have to wait for all this translation to occur.
       create_interface(:NSISupports)
+      create_interface(:Session, :NSISupports)
       create_interface(:VirtualBox, :NSISupports)
     end
   end
