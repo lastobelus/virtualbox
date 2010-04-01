@@ -213,4 +213,37 @@ class COMFFIInterfaceTest < Test::Unit::TestCase
       @klass.define_interface_function(@name, nil, @spec)
     end
   end
+
+  context "initializing" do
+    setup do
+      @pointer = mock("pointer")
+    end
+
+    should "initialize the vtbl structs" do
+      @klass.any_instance.expects(:initialize_vtbl).with(@pointer)
+      @klass.new(@pointer)
+    end
+  end
+
+  context "initializing vtbl" do
+    setup do
+      @pointer = mock("pointer")
+      @klass = VirtualBox::COM::FFI::VirtualBox
+    end
+
+    should "initialize the VtblParent then the Vtbl" do
+      vtbl_pointer = mock("vtbl_pointer")
+      vtbl_parent = mock("vtbl_parent")
+      vtbl_parent.stubs(:[]).with(:vtbl).returns(vtbl_pointer)
+      vtbl = mock("vtbl")
+
+      init_seq = sequence("init_seq")
+      @klass::VtblParent.expects(:new).with(@pointer).returns(vtbl_parent).in_sequence(init_seq)
+      @klass::Vtbl.expects(:new).with(vtbl_pointer).returns(vtbl).in_sequence(init_seq)
+
+      instance = @klass.new(@pointer)
+      assert_equal vtbl_parent, instance.vtbl_parent
+      assert_equal vtbl, instance.vtbl
+    end
+  end
 end

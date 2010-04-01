@@ -27,6 +27,9 @@ module VirtualBox
       class Interface
         extend ::FFI::Library
 
+        attr_reader :vtbl_parent
+        attr_reader :vtbl
+
         class <<self
           # Sets up the args to the FFI::Struct `layout` method. This
           # method defines all the callbacks necessary for working with
@@ -118,6 +121,19 @@ module VirtualBox
           def layout_args
             @_layout_args ||= []
           end
+        end
+
+        # Initializes the interface to the FFI struct with the given pointer. The
+        # pointer is used to initialize the VtblParent which is used to initialize
+        # the Vtbl itself.
+        def initialize(pointer)
+          initialize_vtbl(pointer)
+        end
+
+        def initialize_vtbl(pointer)
+          klass = self.class
+          @vtbl_parent = klass::VtblParent.new(pointer)
+          @vtbl = klass::Vtbl.new(vtbl_parent[:vtbl])
         end
       end
     end

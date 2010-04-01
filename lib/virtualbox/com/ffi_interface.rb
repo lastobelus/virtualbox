@@ -18,7 +18,13 @@ module VirtualBox
           # Get the pointer to the XPCOMC struct and use that to initialize
           pVBOXXPCOMC = VBoxGetXPCOMCFunctions(XPCOMC_VERSION)
           xpcom = FFI::VBOXXPCOMC.new(pVBOXXPCOMC)
-          vbox, session = xpcom.pfnComInitialize
+          vbox_ptr = ::FFI::MemoryPointer.new(:pointer)
+          session_ptr = ::FFI::MemoryPointer.new(:pointer)
+
+          # Initialize the xpcom library and the interfaces returned
+          xpcom[:pfnComInitialize].call(COM::Interface::VirtualBox::IID_STR, vbox_ptr, COM::Interface::Session::IID_STR, session_ptr)
+          vbox = Interface::VirtualBox.new(Implementer::FFI, vbox_ptr.get_pointer(0))
+          session = Interface::Session.new(Implementer::FFI, session_ptr.get_pointer(0))
           [xpcom, vbox, session]
         end
       end

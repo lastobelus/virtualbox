@@ -12,6 +12,11 @@ class AbstractInterfaceTest < Test::Unit::TestCase
     property :bar3, :int
   end
 
+  setup do
+    @impl = mock("implementer")
+    @impl.stubs(:new)
+  end
+
   context "class methods" do
     context "without any members defined" do
       setup do
@@ -71,9 +76,21 @@ class AbstractInterfaceTest < Test::Unit::TestCase
     end
   end
 
+  context "initialization" do
+    should "instantiate the implementer" do
+      @impl.expects(:new).with() do |interface, extra|
+        assert interface.is_a?(VirtualBox::COM::AbstractInterface)
+        assert_equal :foo, extra
+        true
+      end
+
+      BasicAITest.new(@impl, :foo)
+    end
+  end
+
   context "instance methods" do
     setup do
-      @interface = BasicAITest.new
+      @interface = BasicAITest.new(@impl)
     end
 
     context "checking for property existence" do

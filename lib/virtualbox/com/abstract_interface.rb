@@ -32,6 +32,8 @@ module VirtualBox
     # with a given interface.
     #
     class AbstractInterface
+      attr_reader :implementer
+
       class <<self
         # Adds a function to the interface with the given name and function
         # spec. The spec determines the arguments required, the order they
@@ -103,6 +105,12 @@ module VirtualBox
             data[1][:type] == :property
           end
         end
+      end
+
+      # Initializes the interface with the given implementer
+      def initialize(implementer, *args)
+        # Instantiate the implementer and set it
+        @implementer = implementer.new(self, *args)
       end
 
       # Reads a property with the given name by calling the read_property

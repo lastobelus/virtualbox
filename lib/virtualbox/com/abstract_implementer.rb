@@ -7,6 +7,8 @@ module VirtualBox
     # This abstraction is necessary to change the behavior of calls between
     # Windows (COM) and Unix (XPCOM), which have different calling conventions.
     class AbstractImplementer
+      attr_reader :interface
+
       # Initializes an implementer for the given {AbstractInterface}. The
       # implementor's other methods, such as {read_property} or
       # {call_function} are responsible for executing the said action on
@@ -14,6 +16,7 @@ module VirtualBox
       #
       # @param [AbstractInterface] interface
       def initialize(interface)
+        @interface = interface
       end
 
       # Read a property of the interface.

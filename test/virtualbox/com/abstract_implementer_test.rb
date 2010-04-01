@@ -6,6 +6,13 @@ class AbstractImplementerTest < Test::Unit::TestCase
     @interface = mock("interface")
   end
 
+  context "initialization" do
+    should "make the interface accessible" do
+      instance = @klass.new(@interface)
+      assert_equal @interface, instance.interface
+    end
+  end
+
   context "base methods" do
     setup do
       @instance = @klass.new(@interface)
