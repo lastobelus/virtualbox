@@ -14,8 +14,9 @@ module VirtualBox
               elsif item == :unicode_string
                 # Unicode strings are simply pointers
                 :pointer
-              elsif COM::Util.interface?(item)
-                # Other interfaces/structs are pointers
+              elsif item.to_s[0,1] == item.to_s[0,1].upcase
+                # Names that start with a capital letter are assumed to be
+                # classes; make them a pointer
                 :pointer
               else
                 # Unknown items are simply passed as-is, hopefully FFI
@@ -30,8 +31,17 @@ module VirtualBox
           end
 
           def camelize(string)
-            # Taken from Rails inflector
-            string.to_s.gsub(/\/(.?)/) { "::" + $1.upcase }.gsub(/(^|_)(.)/) { $2.upcase }
+            special_cases = {
+              "os" => "OS",
+              "dhcp" => "DHCP"
+            }
+
+            parts = string.to_s.split(/_/).collect do |part|
+              special_cases[part] || part.capitalize
+            end
+
+            parts.join("")
+            #string.to_s.gsub(/\/(.?)/) { "::" + $1.upcase }.gsub(/(^|_)(.)/) { $2.upcase }
           end
         end
       end

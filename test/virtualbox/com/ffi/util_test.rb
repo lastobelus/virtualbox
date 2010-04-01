@@ -37,7 +37,10 @@ class COMFFIUtilTest < Test::Unit::TestCase
     should "camel case strings" do
       tests = {
         "foo_bar" => "FooBar",
-        "foobar" => "Foobar"
+        "foobar" => "Foobar",
+        # Special cases below
+        "guest_os_type" => "GuestOSType",
+        "dhcp_servers" => "DHCPServers"
       }
 
       tests.each do |arg, expected|
