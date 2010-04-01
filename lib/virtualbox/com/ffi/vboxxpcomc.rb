@@ -25,18 +25,6 @@ module VirtualBox
                 :pfnUtf8ToUtf16, :pfnUtf8ToUtf16,
                 :pfnGetEventQueue, :pfnGetEventQueue,
                 :uEndVersion, :uint
-
-        # Initialiazes the VirtualBox XPCOM C interface, and returns the
-        # {IVirtualBox} and {ISession} instances.
-        #
-        # @return [Array] IVIrtualBox and ISession instance, respectively
-        def pfnComInitialize
-          vbox_ptr = ::FFI::MemoryPointer.new(:pointer)
-          session_ptr = ::FFI::MemoryPointer.new(:pointer)
-
-          self[:pfnComInitialize].call(COM::Interface::VirtualBox::IID_STR, vbox_ptr, COM::Interface::Session::IID_STR, session_ptr)
-          [VirtualBox.new(vbox_ptr.get_pointer(0)), Session.new(session_ptr.get_pointer(0))]
-        end
       end
     end
   end

@@ -7,6 +7,7 @@ module VirtualBox
       XPCOMC_VERSION = 0x00020000
 
       class <<self
+        # THIS IS ALL GOING TO BE REDONE. TODO
         def create(lib_path=nil)
           # Setup the path to the C library
           lib_path ||= "/Applications/VirtualBox.app/Contents/MacOS/VBoxXPCOMC.dylib"
