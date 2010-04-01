@@ -2,6 +2,8 @@ module VirtualBox
   module COM
     module Interface
       class VirtualBox < AbstractInterface
+        IID_STR = "2158464a-f706-414b-a8c4-fb589dfc6b62"
+
         property :version, WSTRING, :readonly => true
         property :revision, T_ULONG, :readonly => true
         property :package_type, WSTRING, :readonly => true
