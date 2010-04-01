@@ -9,8 +9,14 @@ module VirtualBox
           def spec_to_ffi(spec)
             spec = spec.collect do |item|
               if item.is_a?(Array) && item[0] == :out
-                # All "out" parameters are pointers
-                :pointer
+                if item[1].is_a?(Array)
+                  # The out is an array of items, so we add in two pointers:
+                  # one for size and one for the array
+                  [:pointer, :pointer]
+                else
+                  # A regular out parameter is just a single pointer
+                  :pointer
+                end
               elsif item == :unicode_string
                 # Unicode strings are simply pointers
                 :pointer
@@ -27,7 +33,7 @@ module VirtualBox
 
             # Prepend a :pointer to represent the `this` parameter required
             # for the FFI parameter lists
-            spec.unshift(:pointer)
+            spec.unshift(:pointer).flatten
           end
 
           def camelize(string)

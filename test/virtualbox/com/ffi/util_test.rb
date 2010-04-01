@@ -31,6 +31,10 @@ class COMFFIUtilTest < Test::Unit::TestCase
     should "add a pointer at the beginning for the `this` parameter" do
       assert_equal [:pointer], @klass.spec_to_ffi([])
     end
+
+    should "turn arrays into multiple pointers (one for size and one for the array)" do
+      assert_spec([[:out, [:int]]], [:pointer, :pointer])
+    end
   end
 
   context "camelizing" do
