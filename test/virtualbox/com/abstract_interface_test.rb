@@ -5,8 +5,8 @@ class AbstractInterfaceTest < Test::Unit::TestCase
   end
 
   class BasicAITest < EmptyAITest
-    function :foo, []
-    function :foo2, []
+    function :foo, :int, []
+    function :foo2, :int, []
     property :bar, :int
     property :bar2, :int
     property :bar3, :int
@@ -23,13 +23,13 @@ class AbstractInterfaceTest < Test::Unit::TestCase
 
       should "put defined functions in the members hash" do
         assert_nil @klass.member(:foo)
-        @klass.function(:foo, :bar)
+        @klass.function(:foo, :int, :bar)
         assert @klass.member(:foo)
       end
 
       should "define an method for functions" do
         @klass.expects(:define_method).with(:foo)
-        @klass.function(:foo, :bar)
+        @klass.function(:foo, :int, :bar)
       end
 
       should "put defined properties in the members hash" do

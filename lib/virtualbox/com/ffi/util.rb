@@ -28,6 +28,11 @@ module VirtualBox
             # for the FFI parameter lists
             spec.unshift(:pointer)
           end
+
+          def camelize(string)
+            # Taken from Rails inflector
+            string.to_s.gsub(/\/(.?)/) { "::" + $1.upcase }.gsub(/(^|_)(.)/) { $2.upcase }
+          end
         end
       end
     end

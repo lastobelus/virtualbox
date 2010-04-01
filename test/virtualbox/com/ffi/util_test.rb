@@ -32,4 +32,17 @@ class COMFFIUtilTest < Test::Unit::TestCase
       assert_equal [:pointer], @klass.spec_to_ffi([])
     end
   end
+
+  context "camelizing" do
+    should "camel case strings" do
+      tests = {
+        "foo_bar" => "FooBar",
+        "foobar" => "Foobar"
+      }
+
+      tests.each do |arg, expected|
+        assert_equal expected, @klass.camelize(arg)
+      end
+    end
+  end
 end

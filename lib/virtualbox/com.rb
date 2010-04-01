@@ -7,13 +7,8 @@ end
 # The com directory of the gem
 comdir = File.join(File.dirname(__FILE__), 'com')
 
-# Load in the initially required files, which must be loaded prior
-# to the rest
-%w{abstract_interface abstract_implementer ffi/interface}.each do |f|
-  require File.expand_path(f, comdir)
-end
-
-# Glob require the rest
-Dir[File.join(comdir, "**", "*.rb")].each do |f|
-  require File.expand_path(f)
-end
+# Require the abstract interface first then glob load all
+# of the interfaces
+require File.expand_path("abstract_interface", comdir)
+VirtualBox::GlobLoader.glob_require(File.join(comdir, "interface"))
+VirtualBox::GlobLoader.glob_require(comdir, %w{abstract_interface abstract_implementer util ffi/interface ffi/util})

@@ -36,9 +36,10 @@ module VirtualBox
         # Adds a function to the interface with the given name and function
         # spec. The spec determines the arguments required, the order they
         # are required in, and any out-arguments.
-        def function(name, spec, opts={})
+        def function(name, type, spec, opts={})
           members << [name, {
             :type => :function,
+            :value_type => type,
             :spec => spec,
             :opts => opts
           }]

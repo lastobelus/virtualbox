@@ -1,17 +1,9 @@
-# External Dependencies
-require 'nokogiri'
+# Load the glob loader, which will handle the loading of all the other files
+libdir = File.join(File.dirname(__FILE__), "virtualbox")
+require File.expand_path("ext/glob_loader", libdir)
 
-# The virtualbox files which must be loaded prior to the rest
-libdir = File.dirname(__FILE__)
-%w{virtualbox/ext/platform virtualbox/ext/subclass_listing virtualbox/ffi virtualbox/com
-  virtualbox/abstract_model virtualbox/medium}.each do |f|
-  require File.expand_path(f, libdir)
-end
-
-# Glob require the rest
-Dir[File.join(libdir, "virtualbox", "**", "*.rb")].each do |f|
-  require File.expand_path(f)
-end
+# Load them up
+VirtualBox::GlobLoader.glob_require(libdir, %w{ext/platform ext/subclass_listing ffi com abstract_model medium})
 
 # Setup the top-level module methods
 module VirtualBox

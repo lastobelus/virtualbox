@@ -2,9 +2,9 @@ module VirtualBox
   module COM
     module Interface
       class VirtualBox < AbstractInterface
-        function :create_machine, [WSTRING, WSTRING, WSTRING, WSTRING, [:out, :Machine]]
-        property :version, :readonly => true
-        property :revision, :readonly => true
+        function :create_machine, :Machine, [WSTRING, WSTRING, WSTRING, WSTRING]
+        property :version, WSTRING, :readonly => true
+        property :revision, WSTRING, :readonly => true
       end
     end
   end
