@@ -117,8 +117,8 @@ class COMImplementerFFITest < Test::Unit::TestCase
       should "return the proper values" do
         expectations = {
           :int => [:int, :int],
-          :unicode_string => [:pointer, :unicode_string]
-          #:IHost => [:pointer, :struct]
+          :unicode_string => [:pointer, :unicode_string],
+          :Host => [:pointer, :interface]
         }
 
         expectations.each do |original, result|
@@ -221,6 +221,31 @@ class COMImplementerFFITest < Test::Unit::TestCase
           @ptr.expects(:get_pointer).with(0).returns(@sub_ptr)
           @instance.expects(:utf16_to_string).with(@sub_ptr).returns(result)
           assert_equal result, @instance.read_unicode_string(@ptr)
+        end
+      end
+
+      context "reading interfaces" do
+        setup do
+          @original_type = :foo
+          @interface_klass = mock("foo_class")
+
+          @sub_ptr = mock("sub_ptr")
+          @sub_ptr.stubs(:null?).returns(false)
+
+          @ptr = mock("pointer")
+          @ptr.stubs(:get_pointer).with(0).returns(@sub_ptr)
+        end
+
+        should "convert type to a const and return instance" do
+          VirtualBox::COM::Interface.expects(:const_get).with(@original_type).returns(@interface_klass)
+          @interface_klass.expects(:new).with(@klass, @instance.lib, @ptr.get_pointer(0)).returns(@instance)
+          assert_equal @instance, @instance.read_interface(@ptr, @original_type)
+        end
+
+        should "return nil if pointer is null" do
+          @sub_ptr.expects(:null?).returns(true)
+          VirtualBox::COM::Interface.expects(:const_get).never
+          assert_nil @instance.read_interface(@ptr, @original_type)
         end
       end
     end

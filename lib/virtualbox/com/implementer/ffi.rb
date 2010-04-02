@@ -150,6 +150,12 @@ module VirtualBox
             if type == WSTRING
               # Handle strings as pointer types
               c_type = :pointer
+            else
+              # Try to get the class from the interfaces
+              interface = COM::Interface.const_get(type)
+
+              c_type = :pointer
+              type = :interface
             end
           rescue NameError
             # Do nothing
@@ -189,6 +195,17 @@ module VirtualBox
           address = ptr.get_pointer(0)
           return "" if address.null?
           utf16_to_string(address)
+        end
+
+        # Reads an interface from the pointer
+        #
+        # @return [::FFI::Struct]
+        def read_interface(ptr, original_type)
+          ptr = ptr.get_pointer(0)
+          return nil if ptr.null?
+
+          klass = COM::Interface.const_get(original_type)
+          klass.new(self.class, lib, ptr)
         end
       end
     end

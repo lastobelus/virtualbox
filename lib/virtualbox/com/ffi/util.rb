@@ -53,7 +53,8 @@ module VirtualBox
             special_cases = {
               "os" => "OS",
               "dhcp" => "DHCP",
-              "dvd" => "DVD"
+              "dvd" => "DVD",
+              "usb" => "USB"
             }
 
             parts = string.to_s.split(/_/).collect do |part|

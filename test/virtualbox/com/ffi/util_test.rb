@@ -45,7 +45,8 @@ class COMFFIUtilTest < Test::Unit::TestCase
         # Special cases below
         "guest_os_type" => "GuestOSType",
         "dhcp_servers" => "DHCPServers",
-        "dvd_images" => "DVDImages"
+        "dvd_images" => "DVDImages",
+        "usb_devices" => "USBDevices"
       }
 
       tests.each do |arg, expected|
