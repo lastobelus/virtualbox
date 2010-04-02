@@ -330,6 +330,26 @@ class COMImplementerFFITest < Test::Unit::TestCase
         end
       end
 
+      context "reading an enum" do
+        setup do
+          @enum_klass = mock("enum_class")
+          @enum_klass.stubs(:[])
+
+          @original_type = :foo
+          @value = 7
+
+          @ptr = mock("ptr")
+          @ptr.stubs(:get_uint).returns(@value)
+        end
+
+        should "convert type to class and get the value" do
+          result = mock("result")
+          VirtualBox::COM::Interface.expects(:const_get).with(@original_type).returns(@enum_klass)
+          @enum_klass.expects(:[]).with(@value).returns(result)
+          assert_equal result, @instance.read_enum(@ptr, @original_type)
+        end
+      end
+
       context "reading an array of interfaces" do
         setup do
           @type = :foo

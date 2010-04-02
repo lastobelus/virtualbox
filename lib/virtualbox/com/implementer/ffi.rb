@@ -201,7 +201,11 @@ module VirtualBox
               interface = COM::Interface.const_get(type)
 
               c_type = :pointer
-              type = :interface
+
+              # Depending on the class type, we're either dealing with an interface
+              # or an enum
+              type = :interface if interface.superclass == COM::AbstractInterface
+              type = :enum if interface.superclass == COM::AbstractEnum
             end
           rescue NameError
             # Do nothing
@@ -262,6 +266,14 @@ module VirtualBox
 
           klass = COM::Interface.const_get(original_type)
           klass.new(self.class, lib, ptr)
+        end
+
+        # Reads an enum
+        #
+        # @return [Symbol]
+        def read_enum(ptr, original_type)
+          klass = COM::Interface.const_get(original_type)
+          klass[ptr.get_uint(0)]
         end
 
         # Reads an array of structs from a pointer
