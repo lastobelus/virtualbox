@@ -43,6 +43,16 @@ class COMImplementerFFITest < Test::Unit::TestCase
       end
     end
 
+    context "calling a function" do
+      should "call call_vtbl_function with the proper arguments" do
+        @instance.expects(:call_vtbl_function).with(:say_hello, [:int, [:out, :string]], [1, 2, 3])
+        @instance.call_function(:say_hello, [1, 2, 3], {
+          :value_type => :string,
+          :spec => [:int]
+        })
+      end
+    end
+
     context "calling a vtbl function" do
       setup do
         @vtbl = mock("vtbl")
@@ -82,6 +92,14 @@ class COMImplementerFFITest < Test::Unit::TestCase
       should "replace single out items with a pointer" do
         @instance.expects(:pointer_for_type).with(:foo).returns(@pointer)
         assert_equal [@pointer], @instance.spec_to_args([[:out, :foo]])
+      end
+
+      should "convert Ruby strings into unicode strings" do
+        spec = [VirtualBox::COM::WSTRING]
+        args = ["foo"]
+
+        @instance.expects(:string_to_utf16).with(args[0]).returns("bar")
+        assert_equal ["bar"], @instance.spec_to_args(spec, args)
       end
 
       should "replace array types with two parameters" do

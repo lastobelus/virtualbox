@@ -47,7 +47,7 @@ module VirtualBox
           }]
 
           # Define the method to call the function
-          define_method(name) { call_function(name) }
+          define_method(name) { |*args| call_function(name, *args) }
         end
 
         # Adds a property to the interface with the given name, type, and
@@ -118,6 +118,12 @@ module VirtualBox
       def read_property(name)
         # Just call it on the implementer
         @implementer.read_property(name, member(name))
+      end
+
+      # Calls a function with the given name by calling call_function on the
+      # implementer.
+      def call_function(name, *args)
+        @implementer.call_function(name, args, member(name))
       end
 
       # Returns a boolean if a given function exists or not

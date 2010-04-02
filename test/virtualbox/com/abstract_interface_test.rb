@@ -121,5 +121,13 @@ class AbstractInterfaceTest < Test::Unit::TestCase
         assert_equal result, @interface.bar
       end
     end
+
+    context "calling a function" do
+      should "call the call function method on the implementer and return result" do
+        result = mock("result")
+        @impl_instance.expects(:call_function).with(:foo, [1, 2, 3], anything).returns(result)
+        assert_equal result, @interface.foo(1, 2, 3)
+      end
+    end
   end
 end

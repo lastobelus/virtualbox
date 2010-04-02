@@ -38,6 +38,15 @@ module VirtualBox
           call_vtbl_function("get_#{name}".to_sym, [[:out, opts[:value_type]]])
         end
 
+        # Calls a function from the interface with the given name and args. This
+        # method is called from the {AbstractInterface}.
+        def call_function(name, args, opts)
+          spec = opts[:spec].dup
+          spec << [:out, opts[:value_type]] if !opts[:value_type].nil?
+
+          call_vtbl_function(name.to_sym, spec, args)
+        end
+
         # Calls a function on the vtbl of the FFI struct. This function handles
         # converting the spec to proper arguments and also handles reading out
         # the arguments, dereferencing pointers, setting up objects, etc. so that
@@ -80,7 +89,8 @@ module VirtualBox
                 pointer_for_type(item[1])
               end
             elsif item == WSTRING
-              # TODO: Convert args to unicode string
+              # We have to convert the arg to a unicode string
+              string_to_utf16(args.shift)
             elsif item.to_s[0,1] == item.to_s[0,1].upcase
               # TODO: Get interface instance, create pointer to it
             else
@@ -214,6 +224,16 @@ module VirtualBox
           else
             pointer
           end
+        end
+
+        # Converts a ruby string to a UTF16 string
+        #
+        # @param [String] Ruby String object
+        # @return [::FFI::Pointer]
+        def string_to_utf16(string)
+          ptr = pointer_for_type(:pointer)
+          VirtualBox::Lib.lib.xpcom[:pfnUtf8ToUtf16].call(string, ptr)
+          ptr.read_pointer()
         end
 
         # Converts a UTF16 string to UTF8

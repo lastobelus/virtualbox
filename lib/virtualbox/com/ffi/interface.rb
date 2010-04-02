@@ -98,7 +98,7 @@ module VirtualBox
           def define_interface_functions(interface)
             interface.functions.each do |name, opts|
               # Define the function
-              define_interface_function(name, opts[:value_type], opts[:spec])
+              define_interface_function(name, opts[:value_type], opts[:spec].dup)
             end
           end
 

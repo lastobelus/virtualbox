@@ -125,8 +125,8 @@ class COMFFIInterfaceTest < Test::Unit::TestCase
     end
 
     should "define functions in order" do
-      add_function(:foo, :bar, :baz)
-      add_function(:bar, :baz, :foo)
+      add_function(:foo, :bar, [:baz])
+      add_function(:bar, :baz, [:foo])
 
       def_seq = sequence('define_seq')
       @functions.each do |name, opts|
