@@ -20,7 +20,7 @@ class AbstractImplementerTest < Test::Unit::TestCase
 
     should "implement the read_property function" do
       assert_nothing_raised {
-        @instance.read_property(:foo)
+        @instance.read_property(:foo, :bar)
       }
     end
 

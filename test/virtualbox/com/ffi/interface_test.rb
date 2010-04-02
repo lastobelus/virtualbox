@@ -94,8 +94,8 @@ class COMFFIInterfaceTest < Test::Unit::TestCase
     should "get the class in the context of the FFI namespace" do
       name = :foo
       klass = mock("klass")
-      Object.expects(:module_eval).with("::VirtualBox::COM::FFI::#{name}::VtblParent").returns(klass)
-      @klass.layout_args.expects(:<<).with([:vtbl_parent, klass])
+      Object.expects(:module_eval).with("::VirtualBox::COM::FFI::#{name}::Vtbl").returns(klass)
+      @klass.layout_args.expects(:<<).with([:superklass, klass])
       @klass.define_interface_parent(name)
     end
   end

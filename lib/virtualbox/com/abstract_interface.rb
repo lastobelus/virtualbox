@@ -116,6 +116,8 @@ module VirtualBox
       # Reads a property with the given name by calling the read_property
       # method on the implementer.
       def read_property(name)
+        # Just call it on the implementer
+        @implementer.read_property(name, member(name))
       end
 
       # Returns a boolean if a given function exists or not

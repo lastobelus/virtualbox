@@ -22,7 +22,7 @@ module VirtualBox
       # Read a property of the interface.
       #
       # @param [Symbol] name The propery name
-      def read_property(name)
+      def read_property(name, opts)
       end
 
       # Writes a property of the interface.

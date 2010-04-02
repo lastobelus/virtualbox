@@ -13,8 +13,9 @@ class AbstractInterfaceTest < Test::Unit::TestCase
   end
 
   setup do
+    @impl_instance = mock("impl_instance")
     @impl = mock("implementer")
-    @impl.stubs(:new)
+    @impl.stubs(:new).returns(@impl_instance)
   end
 
   context "class methods" do
@@ -110,6 +111,14 @@ class AbstractInterfaceTest < Test::Unit::TestCase
 
       should "return false non-existent function and properties" do
         assert !@interface.has_function?(:bar)
+      end
+    end
+
+    context "reading a property" do
+      should "call read property on the implementer and return result" do
+        result = mock("result")
+        @impl_instance.expects(:read_property).with(:bar, anything).returns(result)
+        assert_equal result, @interface.bar
       end
     end
   end

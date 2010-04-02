@@ -79,8 +79,8 @@ module VirtualBox
           def define_interface_parent(parent)
             return if parent.nil?
 
-            parent_klass = Object.module_eval("::VirtualBox::COM::FFI::#{parent}::VtblParent")
-            layout_args << [:vtbl_parent, parent_klass]
+            parent_klass = Object.module_eval("::VirtualBox::COM::FFI::#{parent}::Vtbl")
+            layout_args << [:superklass, parent_klass]
           end
 
           # Defines all the properties on a com interface.

@@ -57,8 +57,8 @@ module VirtualBox
         # Initialize the virtualbox API and get the global VirtualBox
         # interface and a session interface
         @xpcom[:pfnComInitialize].call(COM::Interface::VirtualBox::IID_STR, virtualbox_ptr, COM::Interface::Session::IID_STR, session_ptr)
-        @virtualbox = Interface::VirtualBox.new(Implementer::FFI, virtualbox_ptr.get_pointer(0))
-        @session = Interface::Session.new(Implementer::FFI, session_ptr.get_pointer(0))
+        @virtualbox = Interface::VirtualBox.new(Implementer::FFI, self, virtualbox_ptr.get_pointer(0))
+        @session = Interface::Session.new(Implementer::FFI, self, session_ptr.get_pointer(0))
       end
     end
   end
