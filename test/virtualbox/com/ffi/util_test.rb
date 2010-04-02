@@ -46,7 +46,13 @@ class COMFFIUtilTest < Test::Unit::TestCase
         "guest_os_type" => "GuestOSType",
         "dhcp_servers" => "DHCPServers",
         "dvd_images" => "DVDImages",
-        "usb_devices" => "USBDevices"
+        "usb_devices" => "USBDevices",
+        "vram_size" => "VRAMSize",
+        "accelerate_3d_enabled" => "Accelerate3DEnabled",
+        "bios_settings" => "BIOSSettings",
+        "vrdp_server" => "VRDPServer",
+        "get_hw_virt_ex_property" => "GetHWVirtExProperty",
+        "query_saved_screenshot_png_size" => "QuerySavedScreenshotPNGSize"
       }
 
       tests.each do |arg, expected|

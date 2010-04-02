@@ -54,7 +54,13 @@ module VirtualBox
               "os" => "OS",
               "dhcp" => "DHCP",
               "dvd" => "DVD",
-              "usb" => "USB"
+              "usb" => "USB",
+              "vram" => "VRAM",
+              "3d" => "3D",
+              "bios" => "BIOS",
+              "vrdp" => "VRDP",
+              "hw" => "HW",
+              "png" => "PNG"
             }
 
             parts = string.to_s.split(/_/).collect do |part|
