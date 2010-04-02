@@ -83,6 +83,15 @@ class COMImplementerFFITest < Test::Unit::TestCase
         @instance.expects(:pointer_for_type).with(:foo).returns(@pointer)
         assert_equal [@pointer], @instance.spec_to_args([[:out, :foo]])
       end
+
+      should "replace array types with two parameters" do
+        @counter_pointer = mock("count_pointer")
+        @pointer = mock("pointer")
+
+        @instance.expects(:pointer_for_type).with(VirtualBox::COM::T_UINT32).returns(@count_pointer)
+        @instance.expects(:pointer_for_type).with(:foo).returns(@pointer)
+        assert_equal [@count_pointer, @pointer], @instance.spec_to_args([[:out, [:foo]]])
+      end
     end
 
     context "values from a formal parameter list" do
@@ -100,6 +109,19 @@ class COMImplementerFFITest < Test::Unit::TestCase
 
         result = mock("result")
         @instance.expects(:dereference_pointer).with(pointer, :foo).once.returns(result)
+        assert_equal result, @instance.values_from_formal_args(spec, formal)
+      end
+
+      should "dereference the array pointer with the proper type" do
+        count_pointer = mock("count_pointer")
+        pointer = mock("pointer")
+        count = mock("count")
+        result = mock("result")
+        spec = [[:out, [:foo]]]
+        formal = [count_pointer, pointer]
+
+        @instance.expects(:dereference_pointer).with(count_pointer, VirtualBox::COM::T_UINT32).returns(count)
+        @instance.expects(:dereference_pointer_array).with(pointer, :foo, count).returns(result)
         assert_equal result, @instance.values_from_formal_args(spec, formal)
       end
 
@@ -200,6 +222,47 @@ class COMImplementerFFITest < Test::Unit::TestCase
       end
     end
 
+    context "dereferencing pointer array" do
+      setup do
+        @array_pointer = mock('array_pointer')
+        @array_pointer.stubs(:respond_to?).returns(true)
+        @array_pointer.stubs(:get_array_of_bar)
+
+        @pointer = mock('pointer')
+        @pointer.stubs(:get_pointer).with(0).returns(@array_pointer)
+
+        @type = :zoo
+        @length = 3
+
+        @c_type = :foo
+        @inferred_type = :bar
+        @instance.stubs(:infer_type).returns([@c_type, @inferred_type])
+      end
+
+      should "infer the type" do
+        @instance.expects(:infer_type).with(@type).returns([@c_type, @inferred_type])
+        @instance.dereference_pointer_array(@pointer, @type, @length)
+      end
+
+      should "return an empty array if count is zero" do
+        assert_equal [], @instance.dereference_pointer_array(@pointer, @type, 0)
+      end
+
+      should "call get_* method on array pointer if it exists" do
+        result = mock("result")
+        @array_pointer.expects(:respond_to?).with("get_array_of_#{@inferred_type}".to_sym).returns(true)
+        @array_pointer.expects("get_array_of_#{@inferred_type}".to_sym).with(0, @length).returns(result)
+        assert_equal result, @instance.dereference_pointer_array(@pointer, @type, @length)
+      end
+
+      should "call read_* on Util if pointer doesn't support it" do
+        result = mock("result")
+        @array_pointer.expects(:respond_to?).with("get_array_of_#{@inferred_type}".to_sym).returns(false)
+        @instance.expects("read_array_of_#{@inferred_type}".to_sym).with(@array_pointer, @type, @length).returns(result)
+        assert_equal result, @instance.dereference_pointer_array(@pointer, @type, @length)
+      end
+    end
+
     context "custom pointer dereferencers" do
       context "reading unicode string" do
         setup do
@@ -246,6 +309,39 @@ class COMImplementerFFITest < Test::Unit::TestCase
           @sub_ptr.expects(:null?).returns(true)
           VirtualBox::COM::Interface.expects(:const_get).never
           assert_nil @instance.read_interface(@ptr, @original_type)
+        end
+      end
+
+      context "reading an array of interfaces" do
+        setup do
+          @type = :foo
+          @length = 3
+
+          @pointers = []
+          @length.times do |i|
+            pointer = mock("pointer#{i}")
+            @pointers << pointer
+          end
+
+          @pointer = mock("pointer")
+          @pointer.stubs(:get_array_of_pointer).returns(@pointers)
+
+          @interface_klass = mock("foo_class")
+
+          @instance.stubs(:read_struct).returns("foo")
+        end
+
+        should "grab the array of pointers, then convert each to a struct" do
+          deref_seq = sequence("deref_seq")
+          VirtualBox::COM::Interface.expects(:const_get).with(@type).returns(@interface_klass)
+          @pointer.expects(:get_array_of_pointer).with(0, @length).returns(@pointers).in_sequence(deref_seq)
+          return_values = @pointers.collect do |pointer|
+            value = "struct_of_pointer: #{pointer}"
+            @interface_klass.expects(:new).with(@klass, @instance.lib, pointer).returns(value).in_sequence(deref_seq)
+            value
+          end
+
+          assert_equal return_values, @instance.read_array_of_interface(@pointer, @type, @length)
         end
       end
     end

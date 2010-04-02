@@ -73,7 +73,9 @@ module VirtualBox
           spec = spec.collect do |item|
             if item.is_a?(Array) && item[0] == :out
               if item[1].is_a?(Array)
-                # TODO
+                # For arrays we need two pointers: one for size, and one for the
+                # actual array
+                [pointer_for_type(T_UINT32), pointer_for_type(item[1][0])]
               else
                 pointer_for_type(item[1])
               end
@@ -86,7 +88,7 @@ module VirtualBox
               # list
               args.shift
             end
-          end
+          end.flatten
         end
 
         # Takes a spec and a formal parameter list and returns the output from
@@ -96,11 +98,23 @@ module VirtualBox
         # @param [Array] formal The formal parameter list
         def values_from_formal_args(specs, formal)
           return_values = []
-          specs.each_with_index do |spec, i|
+          i = 0
+          specs.each do |spec|
             # Output parameters are all we care about
             if spec.is_a?(Array) && spec[0] == :out
-              return_values << dereference_pointer(formal[i], spec[1])
+              if spec[1].is_a?(Array)
+                # We are dealing with formal[i] and formal[i+1] here, where
+                # the first has the size and the second has the contents
+                return_values << dereference_pointer_array(formal[i+1], spec[1][0], dereference_pointer(formal[i], T_UINT32))
+
+                # Increment once more to skip the size param
+                i += 1
+              else
+                return_values << dereference_pointer(formal[i], spec[1])
+              end
             end
+
+            i += 1
           end
 
           if return_values.empty?
@@ -131,6 +145,28 @@ module VirtualBox
             result
           else
             send("read_#{inferred_type}".to_sym, pointer, type)
+          end
+        end
+
+        # Dereferences an array out of a pointer into an array of proper Ruby
+        # objects.
+        #
+        # @param [FFI::MemoryPointer] pointer
+        # @param [Symbol] type The type of the pointer
+        # @param [Fixnum] length The length of the array
+        # @return [Array<Object>]
+        def dereference_pointer_array(pointer, type, length)
+          # If there are no items in the pointer, just return an empty array
+          return [] if length == 0
+
+          c_type, inferred_type = infer_type(type)
+
+          array_pointer = pointer.get_pointer(0)
+          if array_pointer.respond_to?("get_array_of_#{inferred_type}".to_sym)
+            # This handles reading the typical times such as :uint, :int, etc.
+            array_pointer.send("get_array_of_#{inferred_type}".to_sym, 0, length)
+          else
+            send("read_array_of_#{inferred_type}".to_sym, array_pointer, type, length)
           end
         end
 
@@ -206,6 +242,16 @@ module VirtualBox
 
           klass = COM::Interface.const_get(original_type)
           klass.new(self.class, lib, ptr)
+        end
+
+        # Reads an array of structs from a pointer
+        #
+        # @return [Array<::FFI::Struct>]
+        def read_array_of_interface(ptr, type, length)
+          klass = COM::Interface.const_get(type)
+          ptr.get_array_of_pointer(0, length).collect do |single_pointer|
+            klass.new(self.class, lib, single_pointer)
+          end
         end
       end
     end

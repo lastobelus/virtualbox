@@ -8,6 +8,7 @@ module VirtualBox
       create_interface(:Session, :NSISupports)
       create_interface(:VirtualBox, :NSISupports)
       create_interface(:Host, :NSISupports)
+      create_interface(:Machine, :NSISupports)
     end
   end
 end
