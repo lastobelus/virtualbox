@@ -52,7 +52,10 @@ class COMFFIUtilTest < Test::Unit::TestCase
         "bios_settings" => "BIOSSettings",
         "vrdp_server" => "VRDPServer",
         "get_hw_virt_ex_property" => "GetHWVirtExProperty",
-        "query_saved_screenshot_png_size" => "QuerySavedScreenshotPNGSize"
+        "query_saved_screenshot_png_size" => "QuerySavedScreenshotPNGSize",
+        "acpi_enabled" => "ACPIEnabled",
+        "io_apic_enabled" => "IOAPICEnabled",
+        "pxe_debug_enabled" => "PXEDebugEnabled"
       }
 
       tests.each do |arg, expected|

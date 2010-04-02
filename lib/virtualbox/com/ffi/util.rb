@@ -60,7 +60,11 @@ module VirtualBox
               "bios" => "BIOS",
               "vrdp" => "VRDP",
               "hw" => "HW",
-              "png" => "PNG"
+              "png" => "PNG",
+              "io" => "IO",
+              "apic" => "APIC",
+              "acpi" => "ACPI",
+              "pxe" => "PXE"
             }
 
             parts = string.to_s.split(/_/).collect do |part|
