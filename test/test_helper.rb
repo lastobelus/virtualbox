@@ -126,4 +126,56 @@ class Test::Unit::TestCase
 </VirtualBox>
 xml
   end
+
+  def mock_bridged_ifs_list
+    <<-TXT
+Sun VirtualBox Command Line Management Interface Version 3.1.4
+(C) 2005-2010 Sun Microsystems, Inc.
+All rights reserved.
+
+Name:            en0: Ethernet
+GUID:            0000000f-0000-f000-f000-00fffffffff1
+Dhcp:            Disabled
+IPAddress:       192.168.0.2
+NetworkMask:     255.255.255.0
+IPV6Address:     ffff:0000:0000:0000:0000:0000:0000:0001
+IPV6NetworkMaskPrefixLength: 64
+HardwareAddress: 00:ff:00:00:00:01
+MediumType:      Ethernet
+Status:          Up
+VBoxNetworkName: HostInterfaceNetworking-en0: Ethernet
+
+Name:            en1: AirPort
+GUID:            0000000f-0000-f000-f000-00fffffffff2
+Dhcp:            Enabled
+IPAddress:       192.168.0.3
+NetworkMask:     255.255.255.0
+IPV6Address:     ffff:0000:0000:0000:0000:0000:0000:0002
+IPV6NetworkMaskPrefixLength: 64
+HardwareAddress: 00:ff:00:00:00:02
+MediumType:      Ethernet
+Status:          Down
+VBoxNetworkName: HostInterfaceNetworking-en1: AirPort
+TXT
+  end
+  
+  def mock_host_only_ifs_list
+    <<-TXT
+Sun VirtualBox Command Line Management Interface Version 3.1.6
+(C) 2005-2010 Sun Microsystems, Inc.
+All rights reserved.
+
+Name:            vboxnet0
+GUID:            0000000f-0000-f000-f000-00fffffffff3
+Dhcp:            Disabled
+IPAddress:       192.168.56.1
+NetworkMask:     255.255.255.0
+IPV6Address:     
+IPV6NetworkMaskPrefixLength: 0
+HardwareAddress: 00:ff:00:00:00:03
+MediumType:      Ethernet
+Status:          Down
+VBoxNetworkName: HostInterfaceNetworking-vboxnet0
+TXT
+  end
 end

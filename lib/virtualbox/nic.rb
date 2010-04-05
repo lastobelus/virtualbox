@@ -31,7 +31,7 @@ module VirtualBox
   #     attribute :macaddress
   #     attribute :cableconnected
   #     attribute :bridgeadapter
-  #
+  #     attribute :interface_name
   class Nic < AbstractModel
     attribute :parent, :readonly => :readonly
     attribute :nic
@@ -39,7 +39,8 @@ module VirtualBox
     attribute :macaddress, :populate_key => "MACAddress"
     attribute :cableconnected, :populate_key => "cable"
     attribute :bridgeadapter
-
+    attribute :interface_name
+    
     class <<self
       # Populates the nic relationship for anything which is related to it.
       #
@@ -91,6 +92,7 @@ module VirtualBox
       # much
       if data["enabled"] == "true"
         write_attribute(:nic, data.children[1].name.downcase)
+        write_attribute(:interface_name, data.children[1]['name'])
       else
         write_attribute(:nic, "none")
       end
@@ -99,20 +101,24 @@ module VirtualBox
       clear_dirty!
     end
 
-    def attach_to_bridged_interface
+    def attach_to_bridged_interface(name="en0: Ethernet")
       write_attribute(:nic, 'bridgedinterface')
+      write_attribute(:interface_name, name)
     end
     
     def attach_to_nat
      write_attribute(:nic, 'nat')
+     write_attribute(:interface_name, nil)
     end
     
-    def attach_to_internal_network
+    def attach_to_internal_network(name="intnet")
       write_attribute(:nic, 'internalnetwork')
+      write_attribute(:interface_name, name)
     end
     
-    def attach_to_host_only_interface
+    def attach_to_host_only_interface(name="vboxnet0")
       write_attribute(:nic, 'hostonlyinterface')
+      write_attribute(:interface_name, name)
     end
     # Saves a single attribute of the nic. This method is automatically
     # called on {#save}.

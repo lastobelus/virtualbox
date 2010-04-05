@@ -59,7 +59,7 @@ module VirtualBox
     relationship :vms, VM, :lazy => true
     relationship :media, Media
     relationship :extra_data, ExtraData
-
+    relationship :bridged_ifs, BridgedIf, :lazy => true
     @@global_data = nil
 
     class <<self
@@ -137,7 +137,7 @@ module VirtualBox
     end
 
     def load_relationship(name)
-      populate_relationship(:vms, @document)
+      populate_relationship(name, @document)
     end
   end
 end
