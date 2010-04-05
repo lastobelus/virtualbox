@@ -49,7 +49,7 @@ module VirtualBox
       def populate_relationship(caller, doc)
         relation = Proxies::Collection.new(caller)
 
-        doc.css("Hardware Network Adapter").each do |adapter|
+        doc.css("Machine > Hardware Network Adapter").each do |adapter|
           relation << new(caller, adapter)
         end
 
