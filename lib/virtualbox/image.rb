@@ -1,4 +1,5 @@
 require 'virtualbox/ext/subclass_listing'
+require 'virtualbox/listable'
 
 module VirtualBox
   # An abstract class which encapsulates the shared behaviour of
@@ -15,6 +16,7 @@ module VirtualBox
   #
   # @abstract
   class Image < AbstractModel
+    include Listable
     include SubclassListing
 
     attribute :uuid, :readonly => true
@@ -22,48 +24,6 @@ module VirtualBox
     attribute :accessible, :readonly => true, :lazy => true
 
     class <<self
-      # Parses the raw output of virtualbox into image objects. Used by
-      # subclasses to parse the output of their respective listing functions.
-      #
-      # **This method typically won't be used except internally.**
-      #
-      # @return [Array<Image>]
-      def parse_raw(raw)
-        parse_blocks(raw).collect { |v| new(v) }
-      end
-
-      # Parses the blocks of the output from virtualbox. VirtualBox outputs
-      # image listing in "blocks" which are then parsed down to their attributes.
-      #
-      # **This method typically won't be used except internally.**
-      #
-      # @return [Array<Hash>]
-      def parse_blocks(raw)
-        raw.split(/\n\n/).collect { |v| parse_block(v.chomp) }.compact
-      end
-
-      # Parses a single block from VirtualBox output.
-      #
-      # **This method typically won't be used except internally.**
-      #
-      # @return [Hash]
-      def parse_block(block)
-        return nil unless block =~ /^UUID:/i
-        hd = {}
-
-        # Parses each line which should be in the format:
-        # KEY: VALUE
-        block.split("\n").each do |line|
-          next unless line =~ /^(.+?):\s+(.+?)$/
-          hd[$1.downcase.to_sym] = $2.to_s
-        end
-
-        # If we don't have a location but have a path, use that, as they
-        # are equivalent but not consistent.
-        hd[:location] = hd[:path] if hd.has_key?(:path)
-
-        hd
-      end
 
       # Searches the subclasses which implement all method, searching for
       # a matching UUID and returning that as the relationship.
