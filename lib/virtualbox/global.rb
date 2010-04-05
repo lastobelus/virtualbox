@@ -139,5 +139,10 @@ module VirtualBox
     def load_relationship(name)
       populate_relationship(name, @document)
     end
+    
+    def primary_bridged_if
+      bridged_ifs.detect{ |bridged_interface| bridged_interface.status }
+    end
+    
   end
 end
