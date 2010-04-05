@@ -99,11 +99,38 @@ module VirtualBox
       clear_dirty!
     end
 
+    def attach_to_bridged_interface
+      write_attribute(:nic, 'bridgedinterface')
+    end
+    
+    def attach_to_nat
+     write_attribute(:nic, 'nat')
+    end
+    
+    def attach_to_internal_network
+      write_attribute(:nic, 'internalnetwork')
+    end
+    
+    def attach_to_host_only_interface
+      write_attribute(:nic, 'hostonlyinterface')
+    end
     # Saves a single attribute of the nic. This method is automatically
     # called on {#save}.
     #
     # **This method typically won't be used except internally.**
     def save_attribute(key, value, vmname)
+      if key == :nic
+        value = case value
+        when 'bridgedinterface'
+          'bridged'
+        when 'internalnetwork'
+          'intnet'
+        when 'hostonlyinterface'
+          'hostonly'
+        else
+          value
+        end
+      end
       Command.vboxmanage("modifyvm", vmname, "--#{key}#{@index}", value)
       super
     end
