@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mitchell Hashimoto"]
-  s.date = %q{2010-03-17}
+  s.date = %q{2010-04-05}
   s.description = %q{Create and modify virtual machines in VirtualBox using pure ruby.}
   s.email = %q{mitchell.hashimoto@gmail.com}
   s.extra_rdoc_files = [
@@ -44,8 +44,8 @@ Gem::Specification.new do |s|
      "lib/virtualbox/forwarded_port.rb",
      "lib/virtualbox/global.rb",
      "lib/virtualbox/hard_drive.rb",
-     "lib/virtualbox/listable.rb",
      "lib/virtualbox/image.rb",
+     "lib/virtualbox/listable.rb",
      "lib/virtualbox/media.rb",
      "lib/virtualbox/nic.rb",
      "lib/virtualbox/proxies/collection.rb",
@@ -61,6 +61,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/abstract_model/validatable_test.rb",
      "test/virtualbox/abstract_model_test.rb",
      "test/virtualbox/attached_device_test.rb",
+     "test/virtualbox/bridged_if_test.rb",
      "test/virtualbox/command_test.rb",
      "test/virtualbox/dvd_test.rb",
      "test/virtualbox/ext/platform_test.rb",
@@ -93,6 +94,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/abstract_model/validatable_test.rb",
      "test/virtualbox/abstract_model_test.rb",
      "test/virtualbox/attached_device_test.rb",
+     "test/virtualbox/bridged_if_test.rb",
      "test/virtualbox/command_test.rb",
      "test/virtualbox/dvd_test.rb",
      "test/virtualbox/ext/platform_test.rb",

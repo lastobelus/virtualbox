@@ -31,7 +31,7 @@ module VirtualBox
   #     attribute :macaddress
   #     attribute :cableconnected
   #     attribute :bridgeadapter
-  #     attribute :interface_name
+  #     attribute :interfacename
   class Nic < AbstractModel
     attribute :parent, :readonly => :readonly
     attribute :nic
@@ -39,7 +39,7 @@ module VirtualBox
     attribute :macaddress, :populate_key => "MACAddress"
     attribute :cableconnected, :populate_key => "cable"
     attribute :bridgeadapter
-    attribute :interface_name
+    attribute :interfacename
     
     class <<self
       # Populates the nic relationship for anything which is related to it.
@@ -92,7 +92,7 @@ module VirtualBox
       # much
       if data["enabled"] == "true"
         write_attribute(:nic, data.children[1].name.downcase)
-        write_attribute(:interface_name, data.children[1]['name'])
+        write_attribute(:interfacename, data.children[1]['name'])
       else
         write_attribute(:nic, "none")
       end
@@ -103,41 +103,65 @@ module VirtualBox
 
     def attach_to_bridged_interface(name="en0: Ethernet")
       write_attribute(:nic, 'bridgedinterface')
-      write_attribute(:interface_name, name)
+      write_attribute(:interfacename, name)
     end
     
     def attach_to_nat
      write_attribute(:nic, 'nat')
-     write_attribute(:interface_name, nil)
+     write_attribute(:interfacename, nil)
     end
     
     def attach_to_internal_network(name="intnet")
       write_attribute(:nic, 'internalnetwork')
-      write_attribute(:interface_name, name)
+      write_attribute(:interfacename, name)
     end
     
     def attach_to_host_only_interface(name="vboxnet0")
       write_attribute(:nic, 'hostonlyinterface')
-      write_attribute(:interface_name, name)
+      write_attribute(:interfacename, name)
+    end
+    
+    def modifyvm_value_for_nic
+      case nic
+      when 'bridgedinterface'
+        'bridged'
+      when 'internalnetwork'
+        'intnet'
+      when 'hostonlyinterface'
+        'hostonly'
+      when 'nat'
+        'nat'
+      else
+        nic
+      end
+    end
+
+    def modifyvm_key_for_interface
+      case nic
+      when 'bridgedinterface'
+        'bridgeadapter'
+      when 'internalnetwork'
+        'intnet'
+      when 'hostonlyinterface'
+        'hostonlyadapter'
+      else
+        false
+      end      
     end
     # Saves a single attribute of the nic. This method is automatically
     # called on {#save}.
     #
     # **This method typically won't be used except internally.**
     def save_attribute(key, value, vmname)
-      if key == :nic
-        value = case value
-        when 'bridgedinterface'
-          'bridged'
-        when 'internalnetwork'
-          'intnet'
-        when 'hostonlyinterface'
-          'hostonly'
-        else
-          value
-        end
+      
+      value = modifyvm_value_for_nic if key == :nic
+
+      if key == :interfacename
+        ifkey = modifyvm_key_for_interface
+        Command.vboxmanage("modifyvm", vmname, "--#{ifkey}#{@index}", interfacename) if ifkey
+      else
+        Command.vboxmanage("modifyvm", vmname, "--#{key}#{@index}", value)
       end
-      Command.vboxmanage("modifyvm", vmname, "--#{key}#{@index}", value)
       super
     end
   end

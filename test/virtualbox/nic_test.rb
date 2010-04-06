@@ -37,6 +37,37 @@ class NicTest < Test::Unit::TestCase
       nic.save(@vmname)
     end
 
+    should "save with a bridged nic" do
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--nic1", "bridged")
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--bridgeadapter1", "Bob")
+      nic = @nic[0]
+      nic.attach_to_bridged_interface("Bob")
+      assert nic.nic_changed?
+      assert nic.interfacename_changed?
+      nic.save(@vmname)
+    end
+    
+    should "save with a host_only nic" do
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--nic1", "hostonly")
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--hostonlyadapter1", "Bob")
+      nic = @nic[0]
+      nic.attach_to_host_only_interface("Bob")
+      assert nic.nic_changed?
+      assert nic.interfacename_changed?
+      nic.save(@vmname)
+    end
+    
+    should "save with a internal network nic" do
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--nic1", "intnet")
+      VirtualBox::Command.expects(:vboxmanage).with("modifyvm", @vmname, "--intnet1", "Bob")
+      nic = @nic[0]
+      nic.attach_to_internal_network("Bob")
+      assert nic.nic_changed?
+      assert nic.interfacename_changed?
+      nic.save(@vmname)
+    end
+    
+    
     should "raise a CommandFailedException if it fails" do
       VirtualBox::Command.stubs(:vboxmanage).raises(VirtualBox::Exceptions::CommandFailedException)
 

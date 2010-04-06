@@ -141,7 +141,16 @@ module VirtualBox
     end
     
     def primary_bridged_if
-      bridged_ifs.detect{ |bridged_interface| bridged_interface.status }
+      bridged_ifs.find{ |bridged_interface| bridged_interface.status }
+    end
+    
+    def secondary_bridged_if
+      active_ifs = bridged_ifs.find_all{ |bridged_interface| bridged_interface.status }
+      if active_ifs.length > 1
+        active_ifs[1]
+      else
+        nil
+      end
     end
     
   end
