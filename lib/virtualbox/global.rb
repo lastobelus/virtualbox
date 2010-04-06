@@ -60,6 +60,7 @@ module VirtualBox
     relationship :media, Media
     relationship :extra_data, ExtraData
     relationship :bridged_ifs, BridgedIf, :lazy => true
+    relationship :hostonly_ifs, HostOnlyIf, :lazy => true
     @@global_data = nil
 
     class <<self
