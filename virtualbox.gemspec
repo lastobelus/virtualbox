@@ -44,6 +44,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/forwarded_port.rb",
      "lib/virtualbox/global.rb",
      "lib/virtualbox/hard_drive.rb",
+     "lib/virtualbox/interface.rb",
      "lib/virtualbox/image.rb",
      "lib/virtualbox/listable.rb",
      "lib/virtualbox/media.rb",

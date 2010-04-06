@@ -3,6 +3,7 @@ module VirtualBox::Listable
     base.extend ClassMethods
   end
 
+  
   module ClassMethods
     def value_adapter(key, value, new_value)
       value_adapters[key] ||= {}
@@ -10,7 +11,7 @@ module VirtualBox::Listable
     end
 
     def value_adapters
-      @value_adapters ||= {}
+      @@value_adapters ||= {}
     end
     
     def adapt_value(key, value)
