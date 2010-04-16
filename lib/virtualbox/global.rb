@@ -81,6 +81,5 @@ module VirtualBox
       populate_relationship(:extra_data, lib.virtualbox)
       populate_relationship(:system_properties, lib.virtualbox.system_properties)
     end
-    
   end
 end
