@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
      "lib/virtualbox/appliance.rb",
      "lib/virtualbox/audio_adapter.rb",
      "lib/virtualbox/bios.rb",
+     "lib/virtualbox/bridged_if.rb",
      "lib/virtualbox/com.rb",
      "lib/virtualbox/com/abstract_enum.rb",
      "lib/virtualbox/com/abstract_implementer.rb",
@@ -121,11 +122,19 @@ Gem::Specification.new do |s|
      "lib/virtualbox/forwarded_port.rb",
      "lib/virtualbox/global.rb",
      "lib/virtualbox/hard_drive.rb",
+<<<<<<< HEAD
      "lib/virtualbox/lib.rb",
+=======
+     "lib/virtualbox/host_only_if.rb",
+     "lib/virtualbox/interface.rb",
+     "lib/virtualbox/lib.rb",
+     "lib/virtualbox/listable.rb",
+>>>>>>> a5b2cc92501e5fb0163d2c93cd1e794657aa7347
      "lib/virtualbox/media.rb",
      "lib/virtualbox/medium.rb",
      "lib/virtualbox/medium_attachment.rb",
      "lib/virtualbox/network_adapter.rb",
+     "lib/virtualbox/nic.rb",
      "lib/virtualbox/proxies/collection.rb",
      "lib/virtualbox/shared_folder.rb",
      "lib/virtualbox/storage_controller.rb",
@@ -144,6 +153,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/appliance_test.rb",
      "test/virtualbox/audio_adapter_test.rb",
      "test/virtualbox/bios_test.rb",
+     "test/virtualbox/bridged_if_test.rb",
      "test/virtualbox/com/abstract_enum_test.rb",
      "test/virtualbox/com/abstract_implementer_test.rb",
      "test/virtualbox/com/abstract_interface_test.rb",
@@ -162,6 +172,10 @@ Gem::Specification.new do |s|
      "test/virtualbox/forwarded_port_test.rb",
      "test/virtualbox/global_test.rb",
      "test/virtualbox/hard_drive_test.rb",
+<<<<<<< HEAD
+=======
+     "test/virtualbox/host_only_if_test.rb",
+>>>>>>> a5b2cc92501e5fb0163d2c93cd1e794657aa7347
      "test/virtualbox/lib_test.rb",
      "test/virtualbox/medium_attachment_test.rb",
      "test/virtualbox/medium_test.rb",
@@ -193,6 +207,7 @@ Gem::Specification.new do |s|
      "test/virtualbox/appliance_test.rb",
      "test/virtualbox/audio_adapter_test.rb",
      "test/virtualbox/bios_test.rb",
+     "test/virtualbox/bridged_if_test.rb",
      "test/virtualbox/com/abstract_enum_test.rb",
      "test/virtualbox/com/abstract_implementer_test.rb",
      "test/virtualbox/com/abstract_interface_test.rb",
@@ -211,6 +226,10 @@ Gem::Specification.new do |s|
      "test/virtualbox/forwarded_port_test.rb",
      "test/virtualbox/global_test.rb",
      "test/virtualbox/hard_drive_test.rb",
+<<<<<<< HEAD
+=======
+     "test/virtualbox/host_only_if_test.rb",
+>>>>>>> a5b2cc92501e5fb0163d2c93cd1e794657aa7347
      "test/virtualbox/lib_test.rb",
      "test/virtualbox/medium_attachment_test.rb",
      "test/virtualbox/medium_test.rb",
