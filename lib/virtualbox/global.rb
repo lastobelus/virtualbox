@@ -81,5 +81,17 @@ module VirtualBox
       populate_relationship(:extra_data, lib.virtualbox)
       populate_relationship(:system_properties, lib.virtualbox.system_properties)
     end
+    
+    def network_interfaces
+      lib.interface.virtualbox.host.network_interfaces
+    end
+    
+    def bridged_network_interfaces
+      lib.interface.virtualbox.host.find_host_network_interfaces_of_type(:bridged)
+    end
+
+    def host_only_network_interfaces
+      lib.interface.virtualbox.host.find_host_network_interfaces_of_type(:host_only)
+    end
   end
 end
