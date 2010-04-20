@@ -122,6 +122,49 @@ module VirtualBox
       clear_dirty!(:attachment_type)
     end
 
+    def attach_to_nat_interface
+      self.attachment_type = :nat
+      self.enabled = true
+    end
+    
+    # attaches the network adapter to an internal network. By default, it  will
+    # attach to the default internal network that VirtualBox creates, which is 
+    # called "intnet". To attach to a different internal network, pass its name
+    def attach_to_internal_network(name="intnet")
+      # couldn't find a way to get VirtualBox to list internal networks over FFI
+      self.attachment_type = :internal_network
+      self.internal_network = name
+      self.enabled = true
+    end
+    
+    # attaches the networks adapter to a host_only network. By default it will
+    # attach to the first host_only interface in the global list (this is normally
+    # "vboxnet0")
+    def attach_to_host_only_interface(name=nil)
+      ho_ifs = VirtualBox::Global.global.host_only_network_interfaces
+      if name.nil?
+        name = ho_ifs.first.name unless ho_ifs.empty?
+      else
+        logger.warn("attach_to_host_only_interface: Host interface named #{name} either does not exist or is not a host-only interface") if( ho_ifs.empty? || ho_ifs.none?{|i| i.name == name} )            
+      end
+      self.host_interface = name if name
+      self.attachment_type = :host_only
+      self.enabled = true
+    end
+    
+    def attach_to_bridged_interface(name=nil)
+      br_ifs = VirtualBox::Global.global.bridged_network_interfaces_network_interfaces
+      if name.nil?
+        name = br_ifs.first.name unless br_ifs.empty?
+      else
+        logger.warn("attach_to_host_only_interface: Host interface named #{name} either does not exist or is not a bridged interface") if( br_ifs.empty? || br_ifs.none?{|i| i.name == name} )            
+      end
+
+      self.host_interface = name if name
+      self.attachment_type = :bridged
+      self.enabled = true
+    end
+    
     # Opens a session, yields the adapter and then saves the machine at
     # the end
     def modify_adapter
